@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class NPPS implements Runnable,Sorter, Scheduler {
+public class NPPS implements Runnable, Sorter, Scheduler {
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private ArrayList<Process> processToQueue = new ArrayList<>();
     private GanttChart ganttChart;
-    int timer = 1;
+    private int timer = 1; // Timer initialization
 
     public NPPS(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
@@ -52,12 +52,8 @@ public class NPPS implements Runnable,Sorter, Scheduler {
         return processToQueue;
     }
 
-
-
     @Override
     public void run() {
-        int timer = 1;
-
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
             // Add arriving processes to ready queue
             int finalTimer = timer;
@@ -74,56 +70,29 @@ public class NPPS implements Runnable,Sorter, Scheduler {
                     ganttChart.addProcess(currentProcess);
                 }
                 System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
+                currentProcess.addTimeStarted(timer);
 
+                // Simulate process execution by decrementing burst time
                 while (currentProcess.getBurstTime() > 0) {
                     currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                    timer++; // Increment the timer for each time unit processed
                 }
+
                 System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+                currentProcess.addTimeEnded(timer);
                 readyQueue.remove(currentProcess);
             } else {
-                System.out.println("NPPS"+"Idling at time " + timer);
+                System.out.println("NPPS: Idling at time " + timer);
+                timer++; // Increment timer even if idling
             }
-            timer++; // Increment the timer outside the if-else block
         }
     }
 
     public ArrayList<Process> getGanttChartArray() {
         return this.ganttChart.getProcesses();
     }
-    public void runProcessess(Process highestPriorityProcess) {
 
-
-        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
-            // Add arriving processes to ready queue
-            int finalTimer = timer;
-            readyQueue.addAll(processToQueue.stream()
-                    .filter(process -> process.getArrivalTime() == finalTimer)
-                    .toList());
-            processToQueue.removeAll(readyQueue);
-
-            if (!readyQueue.isEmpty()) {
-                readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
-                Process currentProcess = readyQueue.get(0);
-                if (!currentProcess.getHasExecuted()) {
-                    currentProcess.setTimeStarted(timer);
-                }
-                System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
-
-                while (currentProcess.getBurstTime() > 0) {
-                    currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-                }
-                System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                readyQueue.remove(currentProcess);
-            } else {
-                System.out.println("NPPS: Idling at time " + timer);
-            }
-            timer++; // Increment the timer outside the if-else block
-        }
+    public int getCurrentTime() {
+        return this.timer;
     }
-    public int getCurrentTime(){
-       return this.timer;
-    }
-
-
-
 }

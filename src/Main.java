@@ -13,7 +13,9 @@ public class Main implements Sorter{
         processes.add(new Process(7, 1000, 20, 1));
         processes.add(new Process(8, 1000, 33, 1));
         processes.add(new Process(9, 993, 99, 1));
-        processes.add(new Process(10, 1000, 41, 3));
+        processes.add(new Process(10, 1000, 41, 4,1));
+        processes.add(new Process(13, 1000, 41, 4,3));
+        processes.add(new Process(12, 1000, 41, 4,2));
 
             ArrayList<Process> rrArray = Sorter.sortByPriority(processes, 1);
         ArrayList<Process> srtfArray = processes.stream()
@@ -22,6 +24,8 @@ public class Main implements Sorter{
         ArrayList<Process> sjfArray = processes.stream()
                 .filter(p -> p.getPrioritySchedule() == 3)
                 .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Process> nppsArray = Sorter.sortByPriority(processes, 4);
+
 
 
         /*
@@ -33,19 +37,23 @@ public class Main implements Sorter{
         RoundRobinScheduler rr = new RoundRobinScheduler(rrArray);
         SJF shortest = new SJF(sjfArray);
         SRTF shortesremain = new SRTF(srtfArray);
+        NPPS npps = new NPPS(nppsArray);
 
         Thread thread1 = new Thread(rr);
         Thread thread2 = new Thread(shortesremain);
         Thread thread3 = new Thread(shortest);
+        Thread thread4 = new Thread(npps);
 
         thread1.start();
         thread2.start();
         thread3.start();
+        thread4.start();
 
         try {
             thread1.join();
             thread2.join();
             thread3.join();
+            thread4.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

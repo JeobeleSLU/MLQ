@@ -44,7 +44,6 @@ public class SRTF implements Sorter, Scheduler {
 
                 // Execute the current process
                 System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
-                currentProcess.updatePriority();
                 currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
 
                 // Check for preemption
