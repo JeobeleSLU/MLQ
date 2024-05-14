@@ -68,10 +68,8 @@ public class SJF implements  Sorter,Scheduler {
             if (!readyQueue.isEmpty()) {
                 readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
                 Process currentProcess = readyQueue.get(0);
-                if (!currentProcess.getHasExecuted()){
-                    currentProcess.setTimeStarted(timer);
-                    ganttChart.addProcess(currentProcess);
-                }
+
+                currentProcess.addTimeStarted(timer);
                 System.out.println("SJF"+"Executing process " + currentProcess.getPid() + " at time " + timer);
 
                     currentProcess.updatePriority();
@@ -79,6 +77,8 @@ public class SJF implements  Sorter,Scheduler {
                     currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
                 }
                 System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+                currentProcess.addTimeEnded(timer);
+                ganttChart.addProcess(currentProcess);
                 readyQueue.remove(currentProcess);
             } else {
                 System.out.println("Idling at time " + timer);

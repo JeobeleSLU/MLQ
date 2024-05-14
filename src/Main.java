@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 public class Main implements Sorter{
     public static void main(String[] args) {
         ArrayList<Process> processes = new ArrayList<>();
-        processes.add(new Process(1, 999, 53,2));
+        processes.add(new Process(1, 990, 53,2));
         processes.add(new Process(2, 1000, 20, 1));
         processes.add(new Process(3, 1000, 33, 3));
         processes.add(new Process(4, 993, 99, 3));
@@ -59,7 +59,10 @@ public class Main implements Sorter{
         }
         GanttChart gantt = new GanttChart();
         shortesremain.getGanttChartArray();
-        gantt = shortesremain.getGanttChart();
+        gantt.addProcess(npps.getGanttChartArray());
+        gantt.addProcess(shortesremain.getGanttChartArray());
+        gantt.addProcess(shortest.getGanttChartArray());
+
         gantt.displayChart();
 
 

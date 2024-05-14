@@ -28,6 +28,9 @@ public class GanttChart {
             this.processes.add(process);
         }
     }
+    void addProcess(ArrayList<Process> gantt){
+        processes.addAll(gantt);
+    }
 
     public ArrayList<Process> getProcesses() {
         return this.processes;

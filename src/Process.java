@@ -166,6 +166,12 @@ public class Process {
         return timeEnd;
     }
 
+    public void setTimesStarted(ArrayList<Integer> timesStarted) {
+        this.timesStarted = timesStarted;
+    }
+    public ArrayList<Integer> setTimesEnded(ArrayList<Integer> timesEnded) {
+        return timesEnded;
+    }
 
     void lowerPriority(){
         this.hasExecuted = true;

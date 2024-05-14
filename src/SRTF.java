@@ -5,12 +5,20 @@ public class SRTF implements Sorter, Scheduler {
     private ArrayList<Process> processToQueue;
     private GanttChart ganttChart;
     private int timer = 0;
+    private ArrayList<Integer> startTime;
+    private ArrayList<Integer> endTime;
+
+
+
 
 
     public SRTF(ArrayList<Process> processes) {
         this.processToQueue = new ArrayList<>(processes);
         this.readyQueue = new ArrayList<>();
         this.ganttChart = new GanttChart();
+        startTime = new ArrayList<>();
+        endTime = new ArrayList<>();
+
     }
 
 //    @Override
@@ -39,19 +47,25 @@ public class SRTF implements Sorter, Scheduler {
                 // Log start time if it's the first execution
                 if (currentProcess.isFirstExecution()) {
                     currentProcess.addTimeStarted(timer);
+//                    startTime.add(timer);
                     currentProcess.setFirstExecution(false);
                 }
 
                 // Execute the current process
                 System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
                 currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+//                startTime.add(timer);
+
 
                 // Check for preemption
                 if (!processToQueue.isEmpty()) {
+                    startTime.add(timer);
                     for (Process process : processToQueue) {
                         if (process.getArrivalTime() == timer && process.getBurstTime() < currentProcess.getBurstTime()) {
                             // Preemption occurred
                             currentProcess.setFirstExecution(true);
+//                            startTime.add(timer);
+                            endTime.add(timer);
                             readyQueue.set(0, currentProcess);
                             ganttChart.addProcess(currentProcess);
                             readyQueue.remove(currentProcess);
@@ -64,16 +78,23 @@ public class SRTF implements Sorter, Scheduler {
                 // Check if the process has completed execution
                 if (currentProcess.getBurstTime() == 0) {
                     currentProcess.addTimeEnded(timer);
+                    endTime.add(timer);
                     System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
                     ganttChart.addProcess(currentProcess);
                     readyQueue.remove(currentProcess);
                     System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
                 }
+    currentProcess.setTimesStarted(startTime);
+                currentProcess.setTimesEnded(endTime);
+                System.out.println("TESTTTT" + currentProcess.getTimesStarted());
+                System.out.println("TEST END!!!" + currentProcess.getTimesEnded());
             } else {
                 // Idling if no processes are ready
                 System.out.println("Idling at time " + timer);
             }
+
             timer++;
+
         }
     }
 

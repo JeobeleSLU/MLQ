@@ -65,10 +65,8 @@ public class NPPS implements Runnable, Sorter, Scheduler {
             if (!readyQueue.isEmpty()) {
                 readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
                 Process currentProcess = readyQueue.get(0);
-                if (!currentProcess.getHasExecuted()) {
-                    currentProcess.setTimeStarted(timer);
-                    ganttChart.addProcess(currentProcess);
-                }
+                currentProcess.setTimeStarted(timer);
+
                 System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
                 currentProcess.addTimeStarted(timer);
 
@@ -79,7 +77,8 @@ public class NPPS implements Runnable, Sorter, Scheduler {
                 }
 
                 System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                currentProcess.addTimeEnded(timer);
+                currentProcess.setTimeEnd(timer);
+                ganttChart.addProcess(currentProcess);
                 readyQueue.remove(currentProcess);
             } else {
                 System.out.println("NPPS: Idling at time " + timer);
