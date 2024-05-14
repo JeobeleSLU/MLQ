@@ -15,6 +15,13 @@ public class Process {
     private ArrayList<Integer> timesStarted;
     private ArrayList<Integer> timesEnded;
     private int processPriority;
+    private int responseTime;
+    private int turnAroundTime;
+    private int waitingTime;
+    private int timeNow;
+    private int lastExecutedTime = 0;
+    private int remainingBurstTime;
+    private int originalBurst;
 
 
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority) {
@@ -22,12 +29,17 @@ public class Process {
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.schedulerPriority = schedulerPriority;
-        timesExecuted = 0;
-        isRunning = false;
-        hasExecuted = false;
-        timesStarted = new ArrayList<>();
-        timesEnded = new ArrayList<>();
-        isFirstExecution = true;
+        this.timesExecuted = 0;
+        this.isRunning = false;
+        this.hasExecuted = false;
+        this.timesStarted = new ArrayList<>();
+        this.timesEnded = new ArrayList<>();
+        this.isFirstExecution = true;
+        this.timeNow = 0;
+        this.turnAroundTime = 0;
+        this.waitingTime =0;
+        this.remainingBurstTime = burstTime;
+        this.originalBurst = burstTime;
     }
 
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority, int processPriority) {
@@ -53,6 +65,14 @@ public class Process {
         hasExecuted = false;
         timesStarted = new ArrayList<>();
         timesEnded = new ArrayList<>();
+    }
+
+    public void setRemainingBurstTime(int remainingBurstTime) {
+        this.remainingBurstTime = remainingBurstTime;
+    }
+
+    public int getRemainingBurstTime() {
+        return remainingBurstTime;
     }
 
     public void setTimeEnd(int timeEnd) {
@@ -103,7 +123,7 @@ public class Process {
     }
 
     public void setFirstExecution(boolean firstExecution) {
-        isFirstExecution = firstExecution;
+        this.isFirstExecution = firstExecution;
     }
 
 
@@ -172,6 +192,13 @@ public class Process {
     public ArrayList<Integer> setTimesEnded(ArrayList<Integer> timesEnded) {
         return timesEnded;
     }
+    public void setLastExecutedTime(int time) {
+        lastExecutedTime = time;
+    }
+
+    public int getLastExecutedTime() {
+        return lastExecutedTime;
+    }
 
     void lowerPriority(){
         this.hasExecuted = true;
@@ -189,5 +216,50 @@ public class Process {
     }
     boolean getHasExecuted() {
         return hasExecuted;
+    }
+
+    public void setResponseTime(int responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public void setTimeNow(int timeNow) {
+        this.timeNow = timeNow;
+        this.responseTime =timeNow-this.arrivalTime;
+        System.out.println(responseTime);
+    }
+
+    public void setTurnAroundTime(int turnAroundTime) {
+        this.turnAroundTime = turnAroundTime;
+    }
+
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
+    public int getTimeNow() {
+        return timeNow;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public int getTurnAroundTime() {
+        return turnAroundTime;
+    }
+
+    public int getResponseTime() {
+        return responseTime;
+    }
+    public void calculateTurnAroundTime() {
+        this.turnAroundTime = this.timeEnd - this.timeStarted;
+    }
+    public void updateTimes() {
+        calculateTurnAroundTime();
+        calculateWaitingTime();
+    }
+
+    public void calculateWaitingTime() {
+        this.waitingTime = this.turnAroundTime - this.originalBurst;
     }
 }

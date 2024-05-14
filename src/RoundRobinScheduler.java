@@ -59,9 +59,7 @@ public class RoundRobinScheduler implements Scheduler {
         int quantumTimer = 0;
         int quantumCounter = 0;
 
-
         while (!readyQueue.isEmpty() || !processToQueue.isEmpty()) {
-
             // Add arriving processes to ready queue
             int finalTimer = timer;
             readyQueue.addAll(processToQueue.stream()
@@ -70,37 +68,50 @@ public class RoundRobinScheduler implements Scheduler {
             processToQueue.removeAll(readyQueue);
 
             if (!readyQueue.isEmpty()) {
-                Process currentProcess = readyQueue.get(0); /** start? */
-                System.out.println("rr"+"Executing process " + currentProcess.getPid() + " at time " + timer);
-                currentProcess.addTimeStarted(timer);
-                System.out.println(currentProcess.getPrioritySchedule());
-                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                Process currentProcess = readyQueue.get(0); // Start process
 
+                // Add the time started the first time the process is executed
+                if (currentProcess.isFirstExecution()) {
+                    currentProcess.setFirstExecution(false);
+                    currentProcess.setTimeNow(timer);
+                    currentProcess.setTimeStarted(timer);
+                    ganttChart.addProcess(currentProcess);
+
+                }
+
+
+                System.out.println("Executing process " + currentProcess.getPid() + " at time " + timer);
+                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                System.out.println(currentProcess.getBurstTime());
                 quantumTimer++;
+                if (quantumTime == quantumTimer){
+                    currentProcess.addTimeStarted(timer);
+                }
+
                 if (quantumTimer == quantumTime || currentProcess.getBurstTime() == 0) {
                     quantumTimer = 0;
                     quantumCounter++;
-                    currentProcess.addTimeStarted(timer);
+                    currentProcess.addTimeEnded(timer);
                     if (quantumCounter == 5) {
                         quantumCounter = 0;
                     }
+
                     if (currentProcess.getBurstTime() == 0) {
                         System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                        currentProcess.addTimeEnded(timer);
-                        readyQueue.remove(currentProcess);  /** end? */
+                        currentProcess.setTimeEnd(timer);
+                        readyQueue.remove(currentProcess);
                     } else {
-                        readyQueue.remove(currentProcess); /** end? */
-                        readyQueue.add(currentProcess); /** end? */
+                        readyQueue.remove(currentProcess);
+                        readyQueue.add(currentProcess);
                     }
                 }
             } else {
-                System.out.println("RR"+"Idling at time " + timer);
+                System.out.println("Idling at time " + timer);
             }
             timer++;
-
         }
     }
     public ArrayList<Process> getGanttChartArray() {
-        return this.ganttChart.getProcesses();
+       return ganttChart.getProcesses();
     }
 }

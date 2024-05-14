@@ -21,7 +21,7 @@ public class MultiLevelQueueProcessor {
         this.batchQueue = new NPPS(sortedProcessesByPriority4);
     }
 
-    public void run(int numCores) {
+    public void run() {
         System.out.println("HI");
         // Execute real-time queue on core 1 if there are processes
         if (!realTimeQueue.processessToQueue().isEmpty()) {

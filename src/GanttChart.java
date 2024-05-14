@@ -1,12 +1,15 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class GanttChart {
     private ArrayList<Process> processes;
 
-
     public GanttChart() {
         this.processes = new ArrayList<>();
+    }
 
+    void updateAllValues(){
+        processes.forEach(Process::updateTimes);
     }
 
     public void addProcess(Process process) {
@@ -28,7 +31,8 @@ public class GanttChart {
             this.processes.add(process);
         }
     }
-    void addProcess(ArrayList<Process> gantt){
+
+    void addProcess(ArrayList<Process> gantt) {
         processes.addAll(gantt);
     }
 
@@ -36,13 +40,25 @@ public class GanttChart {
         return this.processes;
     }
 
+    public int getAverage(){
+        updateAllValues();//ensure that all values are up to date
+        int totalResponse = processes.stream().mapToInt(Process::getResponseTime).sum();
+        System.out.println(totalResponse/processes.size());
+        return totalResponse / processes.size();
+
+    }
+
     public void displayChart() {
         System.out.println("Gantt Chart:");
-        System.out.println(processes.size());
-    for (Process process : processes) {
-            process.getTimeStarted();
-            process.getTimesEnded();
-            System.out.println("pid"+process.getPid()+"\t"+process.getTimesStarted().size());
+
+        // Print header
+        System.out.printf("%-5s %-20s %-20s\n", "PID", "Start Times", "End Times");
+
+        // Iterate through each process and print their details
+        for (Process process : processes) {
+            String startTimes = process.getTimesStarted().toString();
+            String endTimes = process.getTimesEnded().toString();
+            System.out.printf("%-5d %-20s\n", process.getPid(), startTimes);
         }
     }
 }

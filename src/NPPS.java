@@ -5,7 +5,7 @@ public class NPPS implements Runnable, Sorter, Scheduler {
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private ArrayList<Process> processToQueue = new ArrayList<>();
     private GanttChart ganttChart;
-    private int timer = 1; // Timer initialization
+    private int timer = 0 ; // Timer initialization
 
     public NPPS(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
@@ -65,8 +65,12 @@ public class NPPS implements Runnable, Sorter, Scheduler {
             if (!readyQueue.isEmpty()) {
                 readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
                 Process currentProcess = readyQueue.get(0);
-                currentProcess.setTimeStarted(timer);
-
+                if (!currentProcess.getHasExecuted()) {
+                    currentProcess.setTimeStarted(timer);
+                    currentProcess.addTimeStarted(timer);
+                    currentProcess.setTimeNow(timer);
+                    ganttChart.addProcess(currentProcess);
+                }
                 System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
                 currentProcess.addTimeStarted(timer);
 
@@ -77,12 +81,12 @@ public class NPPS implements Runnable, Sorter, Scheduler {
                 }
 
                 System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+                currentProcess.addTimeEnded(timer);
                 currentProcess.setTimeEnd(timer);
-                ganttChart.addProcess(currentProcess);
                 readyQueue.remove(currentProcess);
             } else {
                 System.out.println("NPPS: Idling at time " + timer);
-                timer++; // Increment timer even if idling
+                timer++;   // Increment timer even if idling
             }
         }
     }

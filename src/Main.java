@@ -8,7 +8,8 @@ public class Main implements Sorter{
         processes.add(new Process(2, 1000, 20, 1));
         processes.add(new Process(3, 1000, 33, 3));
         processes.add(new Process(4, 993, 99, 3));
-        processes.add(new Process(5, 1000, 41, 2));
+        processes.add(new Process(15, 993, 99, 2));
+        processes.add(new Process(5, 998, 41, 2));
         processes.add(new Process(6, 999, 3, 2));
         processes.add(new Process(7, 1000, 20, 1));
         processes.add(new Process(8, 1000, 33, 1));
@@ -16,6 +17,7 @@ public class Main implements Sorter{
         processes.add(new Process(10, 1000, 41, 4,1));
         processes.add(new Process(13, 1000, 41, 4,3));
         processes.add(new Process(12, 1000, 41, 4,2));
+
 
             ArrayList<Process> rrArray = Sorter.sortByPriority(processes, 1);
         ArrayList<Process> srtfArray = processes.stream()
@@ -62,10 +64,18 @@ public class Main implements Sorter{
         gantt.addProcess(npps.getGanttChartArray());
         gantt.addProcess(shortesremain.getGanttChartArray());
         gantt.addProcess(shortest.getGanttChartArray());
+        gantt.addProcess(rr.getGanttChartArray());
 
+        ArrayList<Process> NPPSGANT = npps.getGanttChartArray();
+
+        System.out.println("NPPS");
         gantt.displayChart();
+        NPPSGANT.forEach(e-> System.out.println("PID:"+e.getPid()+"time Ended"+e.getTimesEnded()));
 
+        System.out.println("SJF");
+        shortest.getGanttChartArray().forEach(e-> System.out.println("PID:"+e.getPid()+"time Ended"+e.getTimesEnded()));
 
+        System.out.println("SJF");
 
 
 //        SJF sjf = new SJF(processes);

@@ -5,7 +5,7 @@ public class SJF implements  Sorter,Scheduler {
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private ArrayList<Process> processToQueue = new ArrayList<>();
     private GanttChart ganttChart;
-    private int timer = 1;
+    private int timer = 0;
 
     public SJF(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
@@ -69,15 +69,15 @@ public class SJF implements  Sorter,Scheduler {
                 readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
                 Process currentProcess = readyQueue.get(0);
 
-                currentProcess.addTimeStarted(timer);
                 System.out.println("SJF"+"Executing process " + currentProcess.getPid() + " at time " + timer);
+                currentProcess.setTimeStarted(timer);
+                currentProcess.setTimeNow(timer);
 
-                    currentProcess.updatePriority();
                 while (currentProcess.getBurstTime() > 0) {
                     currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
                 }
                 System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                currentProcess.addTimeEnded(timer);
+                currentProcess.setTimeEnd(timer);
                 ganttChart.addProcess(currentProcess);
                 readyQueue.remove(currentProcess);
             } else {

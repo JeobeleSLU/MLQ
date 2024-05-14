@@ -9,9 +9,6 @@ public class SRTF implements Sorter, Scheduler {
     private ArrayList<Integer> endTime;
 
 
-
-
-
     public SRTF(ArrayList<Process> processes) {
         this.processToQueue = new ArrayList<>(processes);
         this.readyQueue = new ArrayList<>();
@@ -21,33 +18,36 @@ public class SRTF implements Sorter, Scheduler {
 
     }
 
-//    @Override
-//    public int getCurrentTime() {
-//        return this.timer;
-//    }
+
 
     @Override
     public void run() {
-
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
             // Add arriving processes to ready queue
             for (Process process : processToQueue) {
-                if (process.getArrivalTime() == timer) {
-                    readyQueue.add(process);
+                if (process.getArrivalTime() == timer) {//checks if the process have arrived
+                        readyQueue.add(process);//added it to the queue
+                    System.out.println("Ready Queue size");
+                    System.out.println(readyQueue.size());
                 }
             }
-            processToQueue.removeAll(readyQueue);
+            processToQueue.removeAll(readyQueue);// remove all the process that are == to the processToQueue from ready queue
+            System.out.println("PROCESS2Q" + processToQueue);
+//            System.out.println("READYQ" + readyQueue);
+
 
             // Sort ready queue by burst time
-            readyQueue = Sorter.sortByBurstTime(readyQueue);
+            readyQueue = Sorter.sortByBurstTime(readyQueue);// sort all the burst time of the processes in the ready queue
+            System.out.println("READYQFize" + readyQueue.size());
 
-            if (!readyQueue.isEmpty()) {
-                Process currentProcess = readyQueue.get(0);
-
+            if (!readyQueue.isEmpty()) {// if ready queue have an element inside it
+                Process currentProcess = readyQueue.get(0); //gets the first element of the ready queue
                 // Log start time if it's the first execution
-                if (currentProcess.isFirstExecution()) {
-                    currentProcess.addTimeStarted(timer);
-//                    startTime.add(timer);
+                if (currentProcess.isFirstExecution()) {//checks if the process have already executed
+//                    currentProcess.addTimeStarted(timer);
+                    startTime.add(timer);// add start time
+                    currentProcess.setTimeNow(timer);
+                    currentProcess.setTimeStarted(timer);
                     currentProcess.setFirstExecution(false);
                 }
 
@@ -58,15 +58,18 @@ public class SRTF implements Sorter, Scheduler {
 
 
                 // Check for preemption
+                System.out.println("ReadyQ" + readyQueue.size());
+                System.out.println("Process to Queue"+ processToQueue.size());
                 if (!processToQueue.isEmpty()) {
-                    startTime.add(timer);
                     for (Process process : processToQueue) {
+                        System.out.println("Checkign preemption");
+
                         if (process.getArrivalTime() == timer && process.getBurstTime() < currentProcess.getBurstTime()) {
                             // Preemption occurred
-                            currentProcess.setFirstExecution(true);
-//                            startTime.add(timer);
-                            endTime.add(timer);
-                            readyQueue.set(0, currentProcess);
+                            System.out.println("A process was Preempted");
+                            startTime.add(timer - currentProcess.getArrivalTime());
+                            currentProcess.addTimeEnded(timer);
+                            readyQueue.set(0, process);
                             ganttChart.addProcess(currentProcess);
                             readyQueue.remove(currentProcess);
                             readyQueue.add(process);
@@ -77,14 +80,15 @@ public class SRTF implements Sorter, Scheduler {
 
                 // Check if the process has completed execution
                 if (currentProcess.getBurstTime() == 0) {
-                    currentProcess.addTimeEnded(timer);
-                    endTime.add(timer);
+//                    endTime.add(timer);
                     System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
                     ganttChart.addProcess(currentProcess);
+                    currentProcess.setTimeEnd(timer);
+
                     readyQueue.remove(currentProcess);
                     System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
                 }
-    currentProcess.setTimesStarted(startTime);
+                currentProcess.setTimesStarted(startTime);
                 currentProcess.setTimesEnded(endTime);
                 System.out.println("TESTTTT" + currentProcess.getTimesStarted());
                 System.out.println("TEST END!!!" + currentProcess.getTimesEnded());
@@ -92,11 +96,78 @@ public class SRTF implements Sorter, Scheduler {
                 // Idling if no processes are ready
                 System.out.println("Idling at time " + timer);
             }
-
             timer++;
 
         }
     }
+
+//    @Override
+//    public void run() {
+//        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
+//            for (Process process : processToQueue) {
+//                if (process.getArrivalTime() == timer) {
+//                    readyQueue.add(process);
+//                    System.out.println(timer);
+//                }
+//            }
+//            processToQueue.removeAll(readyQueue);
+//
+//            if (!readyQueue.isEmpty()) {
+//                Process currentProcess = readyQueue.get(0);
+//
+//                if (currentProcess.isFirstExecution()) {
+//                    currentProcess.addTimeStarted(timer);
+//                    currentProcess.setFirstExecution(false);
+//                }
+//
+//                System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
+//                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+//
+//
+//                // Check for preemption
+//                    if (!processToQueue.isEmpty()) {
+//                        System.out.println("OUTER IF");
+//                        for (Process process : processToQueue) {
+//                        System.out.println("TIMER" + timer);
+//                        System.out.println("PROCESS ARRIVAL " + process.getArrivalTime());
+//                        if (process.getArrivalTime() == ++timer) {
+//                                System.out.println("INNER IF");
+//                                if (process.getBurstTime() < currentProcess.getRemainingBurstTime()) {
+//                                    // Preemption occurred
+//                                    System.out.println("INNER INNER IF");
+//
+//                                    currentProcess.setRemainingBurstTime(currentProcess.getBurstTime());
+//                                    currentProcess.setFirstExecution(true);
+//                                    readyQueue.set(0, currentProcess);
+//                                    ganttChart.addProcess(currentProcess);
+//                                    readyQueue.remove(currentProcess);
+//                                    readyQueue.add(process);
+//                                    break; // No need to continue checking
+//                                }
+//                        }
+//                    }
+//                }
+//                if (currentProcess.getBurstTime() == 0) {
+//                    currentProcess.addTimeEnded(timer);
+////                    endTime.add(timer);
+//                    System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+//                    ganttChart.addProcess(currentProcess);
+//                    readyQueue.remove(currentProcess);
+//                    System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
+//                }
+//
+//                System.out.println("SRTF Time Started" + currentProcess.getTimesStarted());
+//                System.out.println("SRTF time Ended" + currentProcess.getTimesEnded());
+//            } else {
+//                // ...
+//                System.out.println("SRTF Idling at time " + timer);
+//            }
+//            timer++;
+//        }
+//    }
+
+
+
 
     @Override
     public ArrayList<Process> getProcesses() {
