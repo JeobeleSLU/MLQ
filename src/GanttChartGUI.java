@@ -1,0 +1,1 @@
+currentProcess.addTimeStarted(timer);
