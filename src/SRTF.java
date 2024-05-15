@@ -54,6 +54,7 @@
 //                // Execute the current process
 //                System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
 //                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+//                currentProcess.addTimeEnded(timer+currentProcess.getBurstTime());
 ////                startTime.add(timer);
 //
 //
@@ -68,7 +69,7 @@
 //                            // Preemption occurred
 //                            System.out.println("A process was Preempted");
 //                            startTime.add(timer - currentProcess.getArrivalTime());
-//                            currentProcess.addTimeEnded(timer);
+//                            endTime.add(timer);
 //                            readyQueue.set(0, process);
 //                            ganttChart.addProcess(currentProcess);
 //                            readyQueue.remove(currentProcess);
@@ -83,7 +84,7 @@
 ////                    endTime.add(timer);
 //                    System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
 //                    ganttChart.addProcess(currentProcess);
-//                    currentProcess.setTimeEnd(timer);
+//                    endTime.add(timer);
 //
 //                    readyQueue.remove(currentProcess);
 //                    System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
@@ -226,104 +227,96 @@
 //}
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 
-public class SRTF implements  Sorter,Scheduler {
-    private ArrayList<Process> readyQueue = new ArrayList<>();
-    private ArrayList<Process> processToQueue = new ArrayList<>();
-    private GanttChart ganttChart;
-    private int timer = 0;
+public class SRTF {
+    protected ArrayList<String> ganttChart;
+    private GanttChart gChart;
+    private ArrayList <Process> processToQueue;
 
-    public SRTF(ArrayList<Process> processes) {
-        this.processToQueue.addAll(processes);
-        ganttChart = new GanttChart();
+    public SRTF (ArrayList<Process> processes ) {
 
     }
 
-    public int getCurrentTime() {
-        return this.timer;
-    }
-
-    public void addToQueue(Process process) {
-        readyQueue.add(process);
-    }
-
-    public void removeFromQueue(Process process) {
-        readyQueue.remove(process);
-    }
-
-    @Override
-    public int getQueueSize() {
-        return readyQueue.size();
-    }
-
-    @Override
-    public Process getNextProcess() {
-        if (!readyQueue.isEmpty()) {
-            return readyQueue.get(0); // Return the process with the shortest burst time
-        } else {
-            return null; // Queue is empty
-        }
-    }
-
-    @Override
-    public ArrayList<Process> getProcesses() {
-        return readyQueue;
-    }
-
-    @Override
-    public int getHighestPriority() {
-        return readyQueue.stream()
-                .mapToInt(Process::getPrioritySchedule)
-                .max()
-                .orElse(Integer.MIN_VALUE); // Return Integer.MIN_VALUE if the queue is empty
-    }
+    public static ArrayList<Process> scheduleSRTF(ArrayList<Process> processes) {
+        int currentTime = 0;
+        int totalWaitingTime = 0;
+        this.processToQueue = processes;
 
 
+        // Sort processes by arrival time
+        processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
 
-    @Override
-    public void run() {
+        LinkedList<Process> queue = new LinkedList<>();
+        int completedProcesses = 0;
+        int[] remainingTime = new int[processes.size()];
+        ganttChart = new ArrayList<>();
 
-        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
-            // Add arriving processes to ready queue
-            int finalTimer = timer;
-            readyQueue.addAll(processToQueue.stream()
-                    .filter(process -> process.getArrivalTime() == finalTimer)
-                    .toList());
-            processToQueue.removeAll(readyQueue);
-
-            while () {
-            if (!readyQueue.isEmpty()) {
-                readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
-                    Process currentProcess = readyQueue.get(0);
-                if (currentProcess.getBurstTime() > getNextProcess().getBurstTime()) {
-
-                    System.out.println("SRTF" + "Executing process " + currentProcess.getPid() + " at time " + timer);
-                    currentProcess.addTimeStarted(timer);
-                    currentProcess.setTimeNow(timer);
-
-                    while (currentProcess.getBurstTime() > 0) {
-                        currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-                    }
-                    System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                    currentProcess.addTimeEnded(timer);
-                    ganttChart.addProcess(currentProcess);
-                    readyQueue.remove(currentProcess);
+        while (completedProcesses < processes.size()) {
+            // Add arrived processes to the queue
+            for (int i = 0; i < processes.size(); i++) {
+                if (processes.get(i).getArrivalTime() <= currentTime && remainingTime[i] == 0) {
+                    processes.get(i).getPrioritySchedule();
+                    queue.add(processes.get(i));
+                    remainingTime[i] = processes.get(i).getBurstTime();
                 }
-            } else {
-                System.out.println("Idling at time " + timer);
             }
-            timer++; // Increment the timer outside the if-else block
+
+            // If the queue is empty, move to the next arrival time
+            if (queue.isEmpty()) {
+                currentTime = processes.get(completedProcesses).getArrivalTime();
+                continue;
+            }
+
+            // Find process with shortest remaining time
+            Process shortestProcess = queue.stream().min(Comparator.comparingInt(p -> p.getRemainingBurstTime())).get();
+
+            // Execute the shortest process for one unit
+            shortestProcess.setRemainingBurstTime(shortestProcess.getRemainingBurstTime()-1);
+            currentTime++;
+
+            // Update waiting time for other processes in the queue
+//            for (Process process : queue) {
+//                if (process != shortestProcess) {
+//                    process.setwaitingTime++;
+//                }
+//            }
+
+            // Process completed
+            if (shortestProcess.getRemainingBurstTime() == 0) {
+                totalWaitingTime += shortestProcess.getWaitingTime();
+//                shortestProcess.setTurnAroundTime(currentTime - shortestProcess.getArrivalTime((((); // Calculate turnaround time after completion
+                queue.remove(shortestProcess);
+                completedProcesses++;
+                ganttChart.add("P"+shortestProcess.getPid()+" ["+(currentTime-shortestProcess.getBurstTime())+"]");
+                ganttChart.add(shortestProcess);
+            }
+
         }
-            }
+        System.out.println("Shortest Remaining Time Results:");
+//        printProcessDetails(processes); // Use the modified printProcessDetails method
+        System.out.println("Total Waiting Time: " + totalWaitingTime);
+        return processes;
     }
 
-    public ArrayList<Process> getGanttChartArray() {
-        return this.ganttChart.getProcesses();
-    }
-    public ArrayList<Process> processessToQueue() {
-        return processToQueue;
+    private static int getCpuBurst(LinkedList<Process> queue) {
+        int minRemainingTime = Integer.MAX_VALUE;
+        for (Process process : queue) {
+            minRemainingTime = Math.min(minRemainingTime, process.getRemainingBurstTime());
+        }
+        return minRemainingTime;
     }
 
-
+    // Modified printProcessDetails method to include classification
+//    public static void printProcessDetails(ArrayList<Process> processes) {
+//        System.out.println("| PID | Arrival Time | Burst Time | Waiting Time | Turnaround Time | Classification |");
+//        System.out.println("|---|---|---|---|---|---|");
+//        for (Process process : processes) {
+//            System.out.println(String.format("| %d | %d | %d | %d | %d | %s |",
+//                    process.pid, process.arrivalTime, process.burstTime, process.waitingTime, process.turnAroundTime, process.classification));
+//        }
+//        System.out.println(ganttChart);
+//    }
 }

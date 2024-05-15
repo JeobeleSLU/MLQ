@@ -1,16 +1,21 @@
 import java.util.ArrayList;
 
 public class RoundRobinScheduler implements Scheduler {
-    private final int quantumTime = 3;
+    private  int quantumTime;
     ArrayList<Process> readyQueue = new ArrayList<>();
     ArrayList<Process> processToQueue = new ArrayList<>();
 
     public RoundRobinScheduler(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
+        int quantumTime = 0;
     }
     public void addToQueue(Process process) {
         readyQueue.add(process);
+    }
+
+    public void setQuantumTime(int quantumTime) {
+        this.quantumTime = quantumTime;
     }
 
     public void removeFromQueue(Process process) {
