@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InputProcess extends JFrame implements Sorter {
+public class InputProcessProcessWithRandom extends JFrame implements Sorter {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 900;
     private static final int MAX_INPUTS = 15;
@@ -27,13 +27,14 @@ public class InputProcess extends JFrame implements Sorter {
 
     private Map<String, String> priorityToProcessorMap;
 
-    public InputProcess() {
+    public InputProcessProcessWithRandom() {
         initializeProcessorMapping();
         processes = new ArrayList<>();
+        JButton continueButton = new JButton("Continue");
+
 
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setBackground(new Color(248, 233, 227));
@@ -58,6 +59,47 @@ public class InputProcess extends JFrame implements Sorter {
         gbc.gridy++;
         priorityField = new JTextField(10);
         userInput.add(priorityField, gbc);
+
+        // Add a button to generate a random process
+        JButton generateButton = new JButton("Generate Random Process");
+        gbc.gridy++;
+        userInput.add(generateButton, gbc);
+
+        final boolean[] generateQuantum = {true};
+
+        // Action listener for the generate button
+        generateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Generate a random priority level between 1 and 4
+                for (int i = 0; i <= 15; i++) {
+                    int randomPriority = (int) (Math.random() * 4) + 1;
+                    priorityField.setText(String.valueOf(randomPriority));
+
+                    // Generate random values for burst time and arrival time
+                    int randomBurstTime = (int) (Math.random() * 20) + 1; // Example range: 1 to 20
+                    int randomArrivalTime = (int) (Math.random() * 10); // Example range: 0 to 9
+                    burstTimeField.setText(String.valueOf(randomBurstTime));
+                    arrivalTimeField.setText(String.valueOf(randomArrivalTime));
+
+                    // Generate random time quantum for priority level 1
+                    if (randomPriority == 1 && generateQuantum[0]) {
+                        generateQuantum[0] = false;
+                        int randomTimeQuantum = (int) (Math.random() * 10) + 1; // Example range: 1 to 10
+                        timeQuantumField.setText(String.valueOf(randomTimeQuantum));
+                    }
+
+                    // Generate random priority for priority level 4
+                    if (randomPriority == 4) {
+                        int randomProcessPriority = (int) (Math.random() * 10) + 1; // Example range: 1 to 10
+                        priorityField1.setText(String.valueOf(randomProcessPriority));
+                    }
+                    addToTable();
+                    continueButton.setEnabled(true);
+                }
+            }
+        });
+
 
         gbc.gridy++;
         userInput.add(new JLabel("Burst Time:"), gbc);
@@ -87,7 +129,6 @@ public class InputProcess extends JFrame implements Sorter {
         gbc.gridy++;
         userInput.add(addButton, gbc);
 
-        JButton continueButton = new JButton("Continue");
         continueButton.setEnabled(false); // Initially disabled
         gbc.gridy++;
         userInput.add(continueButton, gbc);
@@ -270,6 +311,7 @@ public class InputProcess extends JFrame implements Sorter {
                     progressPanel.add(progressBars[i]);
                 }
 
+
                 // Simulate some progress (based on burst time)
                 Timer timer = new Timer(100, new ActionListener() {
                     private int[] remainingTime = new int[MAX_INPUTS]; // Store remaining burst time for each process
@@ -297,14 +339,14 @@ public class InputProcess extends JFrame implements Sorter {
                                 if (progress == 100) {
                                     progressBars[i].setForeground(Color.RED);
                                 }
-                            }   
+                            }
                         }
 
                         if (allFinished) {
                             ((Timer) e.getSource()).stop(); // Stop the timer if all processes have finished
                         }
                         try {
-                            Thread.sleep(4000); // Delay for 1 second (1000 milliseconds)
+                            Thread.sleep(900); // Delay for 1 second (1000 milliseconds)
                         } catch (InterruptedException ex) {
                             ex.printStackTrace();
                         }
@@ -367,10 +409,16 @@ public class InputProcess extends JFrame implements Sorter {
                 JButton playButton = new JButton("Play");
                 JButton resetButton = new JButton("Reset");
 
+                playButton.setEnabled(false);
+
                 stopButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Add action for stop button
+                        new Thread(() -> {
+                            timer.stop();
+                            stopButton.setEnabled(false);
+                            playButton.setEnabled(true);
+                        }).start();
                     }
                 });
 
@@ -378,6 +426,11 @@ public class InputProcess extends JFrame implements Sorter {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Add action for play button
+                        new Thread(() -> {
+                            timer.start();
+                            playButton.setEnabled(false);
+                            stopButton.setEnabled(true);
+                        }).start();
                     }
                 });
 
@@ -385,6 +438,13 @@ public class InputProcess extends JFrame implements Sorter {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Add action for reset button
+                        new Thread(() -> {
+                            for (int i = 0; i < MAX_INPUTS; i++) {
+                                progressBars[i].setValue(0);
+                            }
+                            playButton.setEnabled(true);
+
+                        }).start();
                     }
                 });
 
@@ -393,6 +453,7 @@ public class InputProcess extends JFrame implements Sorter {
                 buttonPanel.add(resetButton);
 
                 JPanel containerPanel = new JPanel(new BorderLayout());
+                containerPanel.add(buttonPanel, BorderLayout.NORTH);
                 containerPanel.add(cpuPanel, BorderLayout.WEST);
                 containerPanel.add(progressPanel, BorderLayout.CENTER);
                 containerPanel.add(tablePanel, BorderLayout.EAST);
@@ -432,6 +493,57 @@ public class InputProcess extends JFrame implements Sorter {
                 return "";
         }
     }
+    void addToTable(){
+        if (inputCount < MAX_INPUTS) {
+            // Get input values from text fields
+            String priority = priorityField.getText();
+            String burstTime = burstTimeField.getText();
+            String arrivalTime = arrivalTimeField.getText();
+            String timeQuantum = timeQuantumField.getText();
+            String processPriority = priorityField1.getText();
+            String processId = "P" + (inputCount + 1);
+
+            // Validate priority level
+            int priorityValue;
+            try {
+                priorityValue = Integer.parseInt(priority);
+                if (priorityValue < 1 || priorityValue > 4) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Priority level must be an integer between 1 and 4.");
+                return;
+            }
+
+            String priorityName = getPriorityName(priorityValue);
+
+            // Lock the time quantum field after the first input
+            if (!timeQuantumLocked) {
+                timeQuantumLocked = true;
+
+                timeQuantumField.setEditable(false);
+                firstTimeQuantum = timeQuantum;
+            } else {
+                timeQuantum = firstTimeQuantum; // Use the first time quantum for subsequent inputs
+            }
+
+            // Add input values to the table model
+            Object[] rowData = {processId, processPriority, priority, burstTime, arrivalTime, timeQuantum};
+            model.addRow(rowData);
+            inputCount++;
+
+            // Clear input fields
+            priorityField.setText("");
+            burstTimeField.setText("");
+            arrivalTimeField.setText("");
+            timeQuantumField.setText("");
+            priorityField1.setText("");
+
+            if (inputCount >= MAX_INPUTS) {
+                disableInputFields();
+            }
+        }
+    }
 
     private void disableInputFields() {
         priorityField.setEnabled(false);
@@ -440,10 +552,10 @@ public class InputProcess extends JFrame implements Sorter {
         timeQuantumField.setEnabled(false);
     }
     private void startProcessess(ArrayList<Process> process){
-        ArrayList<Process> array1 = new ArrayList<>();
-        ArrayList<Process> array2 = new ArrayList<>();
-        ArrayList<Process> array3 = new ArrayList<>();
-        ArrayList<Process> array4 = new ArrayList<>();
+        ArrayList<Process> array1;
+        ArrayList<Process> array2;
+        ArrayList<Process> array3;
+        ArrayList<Process> array4;
 
         array1 = Sorter.sortByPriority(processes, 1);
         array2 = Sorter.sortByPriority(processes, 2);
@@ -476,7 +588,8 @@ public class InputProcess extends JFrame implements Sorter {
             e.printStackTrace();
         }
 
-
+    }
+    void continueButton(){
 
     }
 

@@ -11,6 +11,7 @@ public class Process {
     private int timeEnd;
     private boolean hasExecuted;
     private boolean isFirstExecution;
+    private boolean isPreempted;
     private String idle;
     private ArrayList<Integer> timesStarted;
     private ArrayList<Integer> timesEnded;
@@ -55,7 +56,17 @@ public class Process {
         timesStarted = new ArrayList<>();
         timesEnded = new ArrayList<>();
         isFirstExecution = true;
+        this.isPreempted = false;
     }
+
+    public void setPreempted(boolean preempted) {
+        isPreempted = preempted;
+    }
+
+    public boolean isPreempted() {
+        return isPreempted;
+    }
+
     public Process(String idle, int arrivalTime, int burstTime, int schedulerPriority) {
         this.idle = idle;
         this.arrivalTime = arrivalTime;

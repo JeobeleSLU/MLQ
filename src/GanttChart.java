@@ -14,23 +14,24 @@ public class GanttChart {
 
     public void addProcess(Process process) {
 
-//        // Check if a process with the same PID exists in the chart
-//        boolean processExists = processes.stream()
-//                .anyMatch(existingProcess -> existingProcess.getPid() == process.getPid());
-//
-//        if (processExists) {
-//            // If PID matches, merge the start and end times
-//            processes.stream()
-//                    .filter(existingProcess -> existingProcess.getPid() == process.getPid())
-//                    .findFirst()
-//                    .ifPresent(existingProcess -> {
-//                        existingProcess.getTimesStarted().addAll(process.getTimesStarted());
-//                        existingProcess.getTimesEnded().addAll(process.getTimesEnded());
-//                    });
-//        } else {
+        // Check if a process with the same PID exists in the chart
+        boolean processExists = processes.stream()
+                .anyMatch(existingProcess -> existingProcess.getPid() == process.getPid());
+
+        if (processExists) {
+            // If PID matches, merge the start and end times
+            processes.stream()
+                    .filter(existingProcess -> existingProcess.getPid() == process.getPid())
+                    .findFirst()
+                    .ifPresent(existingProcess -> {
+                        existingProcess.getTimesStarted().addAll(process.getTimesStarted());
+                        existingProcess.getTimesEnded().addAll(process.getTimesEnded());
+                    });
+        } else {
             // If no matching PID found, add the process to the chart
             this.processes.add(process);
         }
+    }
 
     void addProcess(ArrayList<Process> gantt) {
         processes.addAll(gantt);

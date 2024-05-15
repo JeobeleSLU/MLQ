@@ -8,7 +8,7 @@ public class RoundRobinScheduler implements Scheduler {
     public RoundRobinScheduler(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
-        int quantumTime = 0;
+        this.quantumTime = 3;
     }
     public void addToQueue(Process process) {
         readyQueue.add(process);
@@ -91,6 +91,7 @@ public class RoundRobinScheduler implements Scheduler {
                 quantumTimer++;
                 if (quantumTime == quantumTimer){
                     currentProcess.addTimeStarted(timer);
+                    currentProcess.addTimeStarted(timer);
                 }
 
                 if (quantumTimer == quantumTime || currentProcess.getBurstTime() == 0) {
@@ -104,6 +105,7 @@ public class RoundRobinScheduler implements Scheduler {
                     if (currentProcess.getBurstTime() == 0) {
                         System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
                         currentProcess.setTimeEnd(timer);
+                        currentProcess.addTimeEnded(timer);
                         readyQueue.remove(currentProcess);
                     } else {
                         readyQueue.remove(currentProcess);

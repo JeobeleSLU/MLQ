@@ -14,7 +14,7 @@ public class MultiLevelQueueProcessor {
         ArrayList<Process> sortedProcessesByPriority3 = Sorter.sortByPriority(processes, 3);
         ArrayList<Process> sortedProcessesByPriority4 = Sorter.sortByPriority(processes, 4);
 
-        // Initialize queues with respective scheduling algorithms
+        // Initialize queues w  ith respective scheduling algorithms
         this.realTimeQueue = new RoundRobinScheduler(sortedProcessesByPriority1);
         this.systemQueue = new SRTF(sortedProcessesByPriority2);
         this.interactiveQueue = new SJF(sortedProcessesByPriority3);

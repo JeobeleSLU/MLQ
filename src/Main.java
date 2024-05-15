@@ -9,7 +9,8 @@ public class Main implements Sorter{
         processes.add(new Process(3, 1000, 33, 3));
         processes.add(new Process(4, 993, 99, 3));
         processes.add(new Process(15, 993, 99, 2));
-        processes.add(new Process(5, 998, 41, 2));
+        processes.add(new Process(5, 993, 41, 2));
+        processes.add(new Process(19, 998, 50, 2));
         processes.add(new Process(6, 999, 3, 2));
         processes.add(new Process(7, 1000, 20, 1));
         processes.add(new Process(8, 1000, 33, 1));
@@ -75,7 +76,12 @@ public class Main implements Sorter{
         System.out.println("SJF");
         shortest.getGanttChartArray().forEach(e-> System.out.println("PID:"+e.getPid()+"time Ended"+e.getTimesEnded()));
 
-        System.out.println("SJF");
+        System.out.println("RR");
+        rr.getGanttChartArray().forEach(e-> System.out.println("PID:"+e.getPid()+"time Ended"+e.getTimesEnded()));
+
+        System.out.println("SRTF");
+        shortesremain.getGanttChartArray().forEach(e->
+                System.out.println("PID:"+e.getPid()+"time Ended"+e.getTimesEnded()));
 
 
 //        SJF sjf = new SJF(processes);
