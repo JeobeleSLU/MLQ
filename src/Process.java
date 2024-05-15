@@ -40,6 +40,7 @@ public class Process {
         this.waitingTime =0;
         this.remainingBurstTime = burstTime;
         this.originalBurst = burstTime;
+        this.processPriority  = 3;
     }
 
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority, int processPriority) {
@@ -65,6 +66,12 @@ public class Process {
         hasExecuted = false;
         timesStarted = new ArrayList<>();
         timesEnded = new ArrayList<>();
+    }
+
+
+    public Process(int pid, ArrayList<Integer> timeStarted, int i) {
+        this.pid = pid;
+        this.timesStarted = getTimesStarted();
     }
 
     public void setRemainingBurstTime(int remainingBurstTime) {
@@ -224,7 +231,7 @@ public class Process {
 
     public void setTimeNow(int timeNow) {
         this.timeNow = timeNow;
-        this.responseTime =timeNow-this.arrivalTime;
+        this.responseTime = timeNow-this.arrivalTime;
         System.out.println(responseTime);
     }
 
@@ -252,7 +259,8 @@ public class Process {
         return responseTime;
     }
     public void calculateTurnAroundTime() {
-        this.turnAroundTime = this.timeEnd - this.timeStarted;
+//        this.turnAroundTime = this.timeEnd - this.timeStarted;
+        this.turnAroundTime = this.timeEnd - this.arrivalTime;
     }
     public void updateTimes() {
         calculateTurnAroundTime();
@@ -260,6 +268,7 @@ public class Process {
     }
 
     public void calculateWaitingTime() {
-        this.waitingTime = this.turnAroundTime - this.originalBurst;
+//        this.waitingTime = this.turnAroundTime - this.originalBurst;
+        this.waitingTime = this.timeStarted - this.arrivalTime;
     }
 }
