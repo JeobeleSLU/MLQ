@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class RoundRobinScheduler implements Scheduler {
     private  int quantumTime;
@@ -9,6 +10,13 @@ public class RoundRobinScheduler implements Scheduler {
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
         this.quantumTime = 3;
+
+        /*
+    Todo: Refactor this code so that you can call the run method to execute the
+    process and minus the remaining burst time based on this algorithm
+        */
+
+
     }
     public void addToQueue(Process process) {
         readyQueue.add(process);
@@ -118,6 +126,8 @@ public class RoundRobinScheduler implements Scheduler {
             timer++;
         }
     }
+
+    public void addToqueue(LinkedList<>)
     public ArrayList<Process> getGanttChartArray() {
        return ganttChart.getProcesses();
     }

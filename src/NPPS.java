@@ -5,12 +5,18 @@ public class NPPS implements Runnable, Sorter, Scheduler {
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private ArrayList<Process> processToQueue = new ArrayList<>();
     private GanttChart ganttChart;
-    private int timer = 0 ; // Timer initialization
+    private int timer = 0 ;
 
+
+    /*
+    Todo: Refactor this code so that you can call the run method to execute the
+    process and minus the remaining burst time based on this algorithm
+    */
     public NPPS(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
     }
+
 
     public void addToQueue(Process process) {
         readyQueue.add(process);

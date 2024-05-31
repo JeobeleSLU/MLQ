@@ -12,6 +12,12 @@ public class SJF implements  Sorter,Scheduler {
         ganttChart = new GanttChart();
 
     }
+    /*
+
+    Todo: Refactor this code so that you can call the run method to execute the
+    process and minus the remaining burst time based on this algorithm
+
+      */
 
     public int getCurrentTime() {
         return this.timer;

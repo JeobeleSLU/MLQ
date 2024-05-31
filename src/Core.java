@@ -1,2 +1,10 @@
-package PACKAGE_NAME;public class Core {
+public class Core {
+
+
+
+    public Core(){
+
+
+        
+    }
 }

@@ -17,6 +17,10 @@ public class SRTF implements Sorter, Scheduler, Runnable {
         endTime = new ArrayList<>();
 
     }
+        /*
+    Todo: Refactor this code so that you can call the run method to execute the
+    process and minus the remaining burst time based on this algorithm
+    */
 
 
 
@@ -123,73 +127,6 @@ public class SRTF implements Sorter, Scheduler, Runnable {
 
         }
     }
-
-//    @Override
-//    public void run() {
-//        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
-//            for (Process process : processToQueue) {
-//                if (process.getArrivalTime() == timer) {
-//                    readyQueue.add(process);
-//                    System.out.println(timer);
-//                }
-//            }
-//            processToQueue.removeAll(readyQueue);
-//
-//            if (!readyQueue.isEmpty()) {
-//                Process currentProcess = readyQueue.get(0);
-//
-//                if (currentProcess.isFirstExecution()) {
-//                    currentProcess.addTimeStarted(timer);
-//                    currentProcess.setFirstExecution(false);
-//                }
-//
-//                System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
-//                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-//
-//
-//                // Check for preemption
-//                    if (!processToQueue.isEmpty()) {
-//                        System.out.println("OUTER IF");
-//                        for (Process process : processToQueue) {
-//                        System.out.println("TIMER" + timer);
-//                        System.out.println("PROCESS ARRIVAL " + process.getArrivalTime());
-//                        if (process.getArrivalTime() == ++timer) {
-//                                System.out.println("INNER IF");
-//                                if (process.getBurstTime() < currentProcess.getRemainingBurstTime()) {
-//                                    // Preemption occurred
-//                                    System.out.println("INNER INNER IF");
-//
-//                                    currentProcess.setRemainingBurstTime(currentProcess.getBurstTime());
-//                                    currentProcess.setFirstExecution(true);
-//                                    readyQueue.set(0, currentProcess);
-//                                    ganttChart.addProcess(currentProcess);
-//                                    readyQueue.remove(currentProcess);
-//                                    readyQueue.add(process);
-//                                    break; // No need to continue checking
-//                                }
-//                        }
-//                    }
-//                }
-//                if (currentProcess.getBurstTime() == 0) {
-//                    currentProcess.addTimeEnded(timer);
-////                    endTime.add(timer);
-//                    System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-//                    ganttChart.addProcess(currentProcess);
-//                    readyQueue.remove(currentProcess);
-//                    System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
-//                }
-//
-//                System.out.println("SRTF Time Started" + currentProcess.getTimesStarted());
-//                System.out.println("SRTF time Ended" + currentProcess.getTimesEnded());
-//            } else {
-//                // ...
-//                System.out.println("SRTF Idling at time " + timer);
-//            }
-//            timer++;
-//        }
-//    }
-
-
 
 
     @Override

@@ -8,8 +8,8 @@ public interface Scheduler extends Runnable {
     void removeFromQueue(Process process);
     int getQueueSize();
     Process getNextProcess();
-     ArrayList<Process> getProcesses();
-     int getHighestPriority();
+    ArrayList<Process> getProcesses();
+    int getHighestPriority();
     public ArrayList<Process> processessToQueue();
 
 }
