@@ -30,9 +30,10 @@ public interface Sorter {
         return sortedProcesses;
     }
 
-    static  ArrayList<Process> getArrivingProcess(ArrayList<Process> processes, int timer){
+    static  ArrayList<Process> getArrivedProcess(ArrayList<Process> processes, int timer){
         return (ArrayList<Process>) processes.stream()
-                .filter(e-> e.getArrivalTime() == timer)
+                .filter(e-> e.getArrivalTime() == timer) // get the process that have already arrived
+                .sorted(Comparator.comparingInt(value -> value.getPrioritySchedule())) // if multiple process have arrived
                 .collect(Collectors.toList());
     }
 }

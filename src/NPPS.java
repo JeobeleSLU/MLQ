@@ -1,16 +1,14 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class NPPS implements Runnable, Sorter, Scheduler {
+public class NPPS implements Scheduler, Sorter {
     private ArrayList<Process> readyQueue = new ArrayList<>();
     private ArrayList<Process> processToQueue = new ArrayList<>();
     private GanttChart ganttChart;
-    private int timer = 0 ;
-
-
     /*
     Todo: Refactor this code so that you can call the run method to execute the
     process and minus the remaining burst time based on this algorithm
+    remove the loop
     */
     public NPPS(ArrayList<Process> processes) {
         this.processToQueue.addAll(processes);
@@ -58,9 +56,8 @@ public class NPPS implements Runnable, Sorter, Scheduler {
         return processToQueue;
     }
 
-    @Override
-    public void run() {
-        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
+    public void run(int timer) {
+
             // Add arriving processes to ready queue
             int finalTimer = timer;
             readyQueue.addAll(processToQueue.stream()
@@ -90,18 +87,18 @@ public class NPPS implements Runnable, Sorter, Scheduler {
                 currentProcess.addTimeEnded(timer);
                 currentProcess.setTimeEnd(timer);
                 readyQueue.remove(currentProcess);
-            } else {
+                //todo: Maybe remove this idling? since the core itself will handle the idle
+            } else {//
                 System.out.println("NPPS: Idling at time " + timer);
                 timer++;   // Increment timer even if idling
             }
         }
-    }
+
 
     public ArrayList<Process> getGanttChartArray() {
         return this.ganttChart.getProcesses();
     }
 
-    public int getCurrentTime() {
-        return this.timer;
-    }
+
+
 }

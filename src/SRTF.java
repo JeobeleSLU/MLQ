@@ -28,7 +28,7 @@ public class SRTF implements Sorter, Scheduler, Runnable {
     public void run() {
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
             // Add arriving processes to ready queue
-            readyQueue = Sorter.getArrivingProcess(processToQueue, timer );
+            readyQueue = Sorter.getArrivedProcess(processToQueue, timer );
 
 //            for (Process process : processToQueue) {
 //                if (process.getArrivalTime() == timer) {//checks if the process have arrived

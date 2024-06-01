@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public interface Scheduler extends Runnable {
+public interface Scheduler {
 
 
     void addToQueue(Process process);

@@ -36,18 +36,42 @@ public class SchedulingAlgo {
     */
 
     public SchedulingAlgo(ArrayList<Process> processes) {
-        processToQueueList = processes;
         processDoneList = new ArrayList<>();
-        processToQueueList = new ArrayList<>();
         processOnQueueList = new ArrayList<>();
+        processToQueueList = new ArrayList<>();
+        processToQueueList = processes;
         timer = 0;
 
 
         while (!processOnQueueList.isEmpty() || !processToQueueList.isEmpty()) {
+            /*
+            check if the core is empty
+            get the highest priority process running
+            get all the number of running highest priority
+            get which core has the less running highest priority
+            then add it to the core that has the less running process
 
+             */
+            timer++;
 
         }
 
 
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public ArrayList<Process> getProcessDoneList() {
+        return processDoneList;
+    }
+
+    public ArrayList<Process> getProcessOnQueueList() {
+        return processOnQueueList;
+    }
+
+    public ArrayList<Process> getProcessToQueueList() {
+        return processToQueueList;
     }
 }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class RoundRobinScheduler implements Scheduler {
     private  int quantumTime;
@@ -66,7 +65,6 @@ public class RoundRobinScheduler implements Scheduler {
     private GanttChart ganttChart;
 
 
-    @Override
     public void run() {
         int timer = 0;
         int quantumTimer = 0;
@@ -127,7 +125,9 @@ public class RoundRobinScheduler implements Scheduler {
         }
     }
 
-    public void addToqueue(LinkedList<>)
+    public void addToqueue(ArrayList <Process> processes){
+        this.readyQueue = processes;
+    }
     public ArrayList<Process> getGanttChartArray() {
        return ganttChart.getProcesses();
     }
