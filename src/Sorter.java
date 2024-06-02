@@ -22,7 +22,7 @@ public interface Sorter {
                 .collect(Collectors.toList());
     }
     // todo: get priority based on the needed priority
-    static  ArrayList<Process> sortByPriority(ArrayList<Process> processes, int priorityToGet){
+    static  ArrayList<Process> filterPriority(ArrayList<Process> processes, int priorityToGet){
         ArrayList<Process> sortedProcesses= (ArrayList<Process>) processes
                 .stream()
                 .filter(e -> e.getPrioritySchedule() == priorityToGet )

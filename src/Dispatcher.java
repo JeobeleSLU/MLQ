@@ -22,9 +22,9 @@ public class Dispatcher implements Sorter {
     }
 
     public Dispatcher(ArrayList<Process> processes) {
-        ArrayList<Process> rrArray = Sorter.sortByPriority(processes, 1);
-        ArrayList<Process> srtfArray =Sorter.sortByPriority(processes, 2);
-        ArrayList<Process> sjfArray = Sorter.sortByPriority(processes, 3);
+        ArrayList<Process> rrArray = Sorter.filterPriority(processes, 1);
+        ArrayList<Process> srtfArray =Sorter.filterPriority(processes, 2);
+        ArrayList<Process> sjfArray = Sorter.filterPriority(processes, 3);
         roundRobinScheduler = new RoundRobinScheduler(rrArray);
         srtfScheduler = new SRTF(srtfArray);
         sjfScheduler = new SJF(sjfArray);

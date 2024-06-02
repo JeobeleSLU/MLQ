@@ -90,14 +90,14 @@ public class GanttChartGUI {
         processes.add(new Process(12, 1000, 41, 4,2));
 
 
-        ArrayList<Process> rrArray = Sorter.sortByPriority(processes, 1);
+        ArrayList<Process> rrArray = Sorter.filterPriority(processes, 1);
         ArrayList<Process> srtfArray = processes.stream()
                 .filter(p -> p.getPrioritySchedule() == 2)
                 .collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Process> sjfArray = processes.stream()
                 .filter(p -> p.getPrioritySchedule() == 3)
                 .collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Process> nppsArray = Sorter.sortByPriority(processes, 4);
+        ArrayList<Process> nppsArray = Sorter.filterPriority(processes, 4);
         RoundRobinScheduler rr = new RoundRobinScheduler(rrArray);
         SJF shortest = new SJF(sjfArray);
         SRTF shortesremain = new SRTF(srtfArray);

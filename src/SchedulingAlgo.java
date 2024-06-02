@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class SchedulingAlgo implements Sorter {
@@ -9,10 +7,8 @@ public class SchedulingAlgo implements Sorter {
     private ArrayList<Process> processToQueueList;
     private ArrayList<Process> processOnQueueList;
     private ArrayList<Process> processDoneList;
-    private Core core1;
-    private Core core2;
-    private Core core3;
-    private Core core4;
+    private ArrayList<Core> arrayListOfCores;
+
     //Create an Arraylist of Cores
 
     /*===============================================================================
@@ -20,15 +16,19 @@ public class SchedulingAlgo implements Sorter {
                      where this constructor would take number of Cores?
     ==================================================================================
      */
-    SchedulingAlgo(){
-        processDoneList = new ArrayList<>();
-        processOnQueueList = new ArrayList<>();
-        processToQueueList = new ArrayList<>();
+    SchedulingAlgo(int numberOfCores){
+        this.processDoneList = new ArrayList<>();
+        this.processOnQueueList = new ArrayList<>();
+        this.processToQueueList = new ArrayList<>();
+        this.arrayListOfCores = new ArrayList<>();
+
+        //list this based on the number of cores
+        for (int i = 0 ; i < numberOfCores ; i++){
+            arrayListOfCores.add(new Core());
+        }
+
         timer = 0;
-        core1 = new Core();
-        core2 = new Core();
-        core3 = new Core();
-        core4 = new Core();
+
     }
     public SchedulingAlgo(ArrayList<Process> processes) {
         processDoneList = new ArrayList<>();
@@ -79,18 +79,29 @@ public class SchedulingAlgo implements Sorter {
                  *process to queue to the process on queue
             ================================================================================
              */
+
+    }
+    public void run(){
+
         while (!processOnQueueList.isEmpty() || !processToQueueList.isEmpty()) {
 
             //get the arriving p[rocess
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList,timer));
+            assignProcess();
             // removes the process that are already on the process on queue
             processToQueueList.removeAll(processOnQueueList);
+            /*
+            add process according to their priorirty
+            e.g prio 1 to roundrobin
+             */
+            arrayListOfCores.stream()
+                    .map(e )
+                    .collect(Collectors.toList());
 
-            //maybe add thread sleep for slower run time
-            timer++;
+                    //maybe add thread sleep for slower run time
+                    timer += 1;
 
         }
-
 
     }
 
@@ -109,18 +120,31 @@ public class SchedulingAlgo implements Sorter {
     public ArrayList<Process> getProcessToQueueList() {
         return processToQueueList;
     }
-    public Core getCoreWithLeastProcess(){
+    public void getCoreWithLeastProcess(){
         ArrayList<Core> cores = new ArrayList<>();
-        cores.add(core1);
-        cores.add(core2);
-        cores.add(core3);
-        cores.add(core4);
+
         cores.stream()
                 .sorted(Comparator.comparingInt(Core :: getNumberOfNPPSProcess)
                         .thenComparing(Core :: getNumberOfSJFProcess)
                         .thenComparing(Core :: getNumberOfSRTFProcess)
                         .thenComparing(Core :: getNumberOfRoundRobinProcess))
                 .collect(Collectors.toList());
-        return cores.get(0);
+    }
+    void assignProcess(){
+        //get the arrived process
+        ArrayList<Process> arrived = Sorter.getArrivedProcess(this.processToQueueList,this.timer);
+        //this will assign process according to its priority
+        ArrayList<Process> rr =Sorter.filterPriority(arrived, 1);
+        ArrayList<Process> srtf =Sorter.filterPriority(arrived, 2);
+        ArrayList<Process> sjf =Sorter.filterPriority(arrived, 3);
+        ArrayList<Process> npps =Sorter.filterPriority(arrived, 4);
+        /*
+        * TODO: add load balancer here,
+        *  Get the core with least process
+        *  add the process that core
+        * */
+
+
+
     }
 }

@@ -185,6 +185,11 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
             return this.readyQueue.size();
     }
 
+    @Override
+    public void addToqueue(ArrayList<Process> processes) {
+        this.readyQueue.addAll(processes);
+    }
+
     public ArrayList<Process> getGanttChartArray() {
         return ganttChart.getProcesses();
     }

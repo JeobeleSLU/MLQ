@@ -14,4 +14,5 @@ public interface ProcessInterface {
     boolean isEmpty();
     int getNumberOfProcesses();
 
+    void addToqueue(ArrayList<Process> processes);
 }

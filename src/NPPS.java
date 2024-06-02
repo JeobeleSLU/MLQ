@@ -75,6 +75,11 @@ public class NPPS implements ProcessInterface, Sorter {
         return this.readyQueue.size();
     }
 
+    @Override
+    public void addToqueue(ArrayList<Process> processes) {
+        this.readyQueue.addAll(processes);
+    }
+
     public void run(int timer) {
 
             // Add arriving processes to ready queue
