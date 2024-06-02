@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 
-public class RoundRobinScheduler implements Scheduler {
+public class RoundRobinScheduler implements ProcessInterface {
     private  int quantumTime;
-    ArrayList<Process> readyQueue = new ArrayList<>();
-    ArrayList<Process> processToQueue = new ArrayList<>();
+    ArrayList<Process> readyQueue ;
+    ArrayList<Process> processToQueue ;
 
     public RoundRobinScheduler(ArrayList<Process> processes) {
+        this.readyQueue = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
         this.quantumTime = 3;
@@ -17,6 +19,13 @@ public class RoundRobinScheduler implements Scheduler {
 
 
     }
+
+    public RoundRobinScheduler() {
+        this.readyQueue = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
+        this.quantumTime = 3;
+    }
+
     public void addToQueue(Process process) {
         readyQueue.add(process);
     }
@@ -50,6 +59,16 @@ public class RoundRobinScheduler implements Scheduler {
     }
     public ArrayList<Process> processessToQueue() {
         return processToQueue;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.readyQueue.isEmpty();
+    }
+
+    @Override
+    public int getNumberOfProcesses() {
+        return this.readyQueue.size();
     }
 
     @Override
@@ -124,7 +143,6 @@ public class RoundRobinScheduler implements Scheduler {
             timer++;
         }
     }
-
     public void addToqueue(ArrayList <Process> processes){
         this.readyQueue = processes;
     }

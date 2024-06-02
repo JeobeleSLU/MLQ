@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class NPPS implements Scheduler, Sorter {
-    private ArrayList<Process> readyQueue = new ArrayList<>();
-    private ArrayList<Process> processToQueue = new ArrayList<>();
+public class NPPS implements ProcessInterface, Sorter {
+    private ArrayList<Process> readyQueue;
+    private ArrayList<Process> processToQueue;
     private GanttChart ganttChart;
     /*
     Todo: Refactor this code so that you can call the run method to execute the
@@ -11,8 +11,17 @@ public class NPPS implements Scheduler, Sorter {
     remove the loop
     */
     public NPPS(ArrayList<Process> processes) {
+        this.readyQueue = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
+    }
+
+    public NPPS() {
+        this.readyQueue = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
+        ganttChart = new GanttChart();
+
     }
 
 
@@ -54,6 +63,16 @@ public class NPPS implements Scheduler, Sorter {
     @Override
     public ArrayList<Process> processessToQueue() {
         return processToQueue;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.readyQueue.isEmpty();
+    }
+
+    @Override
+    public int getNumberOfProcesses() {
+        return this.readyQueue.size();
     }
 
     public void run(int timer) {

@@ -1,16 +1,26 @@
+import com.sun.source.tree.BreakTree;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class SJF implements  Sorter,Scheduler {
-    private ArrayList<Process> readyQueue = new ArrayList<>();
-    private ArrayList<Process> processToQueue = new ArrayList<>();
+public class SJF implements  Sorter, ProcessInterface {
+    private ArrayList<Process> readyQueue;
+    private ArrayList<Process> processToQueue ;
     private GanttChart ganttChart;
     private int timer = 0;
 
     public SJF(ArrayList<Process> processes) {
+        this.readyQueue  = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
         this.processToQueue.addAll(processes);
         ganttChart = new GanttChart();
 
+    }
+
+    public SJF() {
+        this.readyQueue  = new ArrayList<>();
+        this.processToQueue = new ArrayList<>();
+        ganttChart = new GanttChart();
     }
     /*
 
@@ -60,7 +70,7 @@ public class SJF implements  Sorter,Scheduler {
 
 
 
-    @Override
+
     public void run() {
 
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
@@ -98,6 +108,16 @@ public class SJF implements  Sorter,Scheduler {
     }
     public ArrayList<Process> processessToQueue() {
         return processToQueue;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.readyQueue.isEmpty();
+    }
+
+    @Override
+    public int getNumberOfProcesses() {
+        return this.readyQueue.size();
     }
 
 

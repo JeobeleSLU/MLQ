@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public interface Scheduler {
+public interface ProcessInterface {
 
 
     void addToQueue(Process process);
@@ -11,5 +11,7 @@ public interface Scheduler {
     ArrayList<Process> getProcesses();
     int getHighestPriority();
     public ArrayList<Process> processessToQueue();
+    boolean isEmpty();
+    int getNumberOfProcesses();
 
 }

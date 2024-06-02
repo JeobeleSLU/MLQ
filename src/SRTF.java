@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SRTF implements Sorter, Scheduler, Runnable {
+public class SRTF implements Sorter, ProcessInterface, Runnable {
     private ArrayList<Process> readyQueue;
     private ArrayList<Process> processToQueue;
     private GanttChart ganttChart;
@@ -17,6 +17,14 @@ public class SRTF implements Sorter, Scheduler, Runnable {
         endTime = new ArrayList<>();
 
     }
+
+    public SRTF() {
+        this.readyQueue = new ArrayList<>();
+        this.ganttChart = new GanttChart();
+        startTime = new ArrayList<>();
+        endTime = new ArrayList<>();
+    }
+
         /*
     Todo: Refactor this code so that you can call the run method to execute the
     process and minus the remaining burst time based on this algorithm
@@ -165,6 +173,16 @@ public class SRTF implements Sorter, Scheduler, Runnable {
     @Override
     public ArrayList<Process> processessToQueue() {
         return processToQueue;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.readyQueue.isEmpty();
+    }
+
+    @Override
+    public int getNumberOfProcesses() {
+            return this.readyQueue.size();
     }
 
     public ArrayList<Process> getGanttChartArray() {
