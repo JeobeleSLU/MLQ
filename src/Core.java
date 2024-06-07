@@ -8,8 +8,9 @@
         static int numberOfCores;
         ArrayList<Process> processes;
         GanttChart ganttChart ;
-
-        public Core(){
+        String name;
+        public Core(String s){
+            this.name = s;
             this.roundRobinScheduler1 = new RoundRobinScheduler();
             this.shortestJobFirst3 = new SJF();
             this.shortestRemaininggTimeFirst2 = new SRTF();
@@ -32,6 +33,9 @@
 
         }
 
+        public String getName() {
+            return name;
+        }
 
         public void runProcesses(){
             /*
@@ -94,10 +98,10 @@
         void addToSRTFScheduler (Process process){
             this.shortestRemaininggTimeFirst2.addToqueue(processes);
         }
-        void addToSJFScheduler (ArrayList<Process> processes){
-            this.shortestJobFirst3.addToqueue(processes);
-        } void addToNPPSScheduler (Process process){
+        void addToSJFScheduler (Process process){
+            this.shortestJobFirst3.addToqueue(process);
+        }
+        void addToNPPSScheduler (Process process){
             this.nonPreemptivePriorityScheduling4.addToqueue(processes);
         }
-
     }

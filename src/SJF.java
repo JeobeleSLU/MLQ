@@ -120,5 +120,13 @@ public class SJF implements  Sorter, ProcessInterface {
         return this.readyQueue.size();
     }
 
+    @Override
+    public void addToqueue(ArrayList<Process> processes) {
+        this.readyQueue.addAll(processes);
+    }
 
+
+    public void addToqueue(Process process) {
+        this.readyQueue.add(process);
+    }
 }
