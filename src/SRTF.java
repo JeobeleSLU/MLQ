@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SRTF implements Sorter, ProcessInterface, Runnable {
+public class SRTF implements Sorter, ProcessInterface{
     private ArrayList<Process> readyQueue;
     private ArrayList<Process> processToQueue;
     private GanttChart ganttChart;
@@ -32,11 +32,10 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
 
 
 
-    @Override
-    public void run() {
+    public void run(int timer) {
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
             // Add arriving processes to ready queue
-            readyQueue = Sorter.getArrivedProcess(processToQueue, timer );
+            readyQueue = Sorter.getArrivedProcess(processToQueue, this.timer);
 
 //            for (Process process : processToQueue) {
 //                if (process.getArrivalTime() == timer) {//checks if the process have arrived
@@ -63,20 +62,20 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
                 if (currentProcess.isFirstExecution()) {
                     //checks if the process have already executed
 //                    startTime.add(timer);// add start time
-                    currentProcess.setTimeNow(timer);
-                    currentProcess.addTimeStarted(timer);
+                    currentProcess.setTimeNow(this.timer);
+                    currentProcess.addTimeStarted(this.timer);
                     currentProcess.setFirstExecution(false);
                     
                     ganttChart.addProcess(currentProcess);
                 }
                 if (currentProcess.isPreempted()){
-                    currentProcess.addTimeStarted(timer);
+                    currentProcess.addTimeStarted(this.timer);
                 }
 
                 // Execute the current process
-                System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + timer);
+                System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + this.timer);
                 currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-                startTime.add(timer);
+                startTime.add(this.timer);
                 System.out.println(startTime);
 
                 // Check for preemption
@@ -86,13 +85,13 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
                     for (Process process : processToQueue) {
                         System.out.println("Checking preemption");
                         System.out.println("Process "+process.getPid()+ "Arrival:" + process.getArrivalTime());
-                        System.out.println("Time"+ timer);
+                        System.out.println("Time"+ this.timer);
 
-                        if ( ( process.getArrivalTime() == timer + 1 ) ){
+                        if ( ( process.getArrivalTime() == this.timer + 1 ) ){
                             if (process.getBurstTime() < currentProcess.getBurstTime()){
                                 System.out.println("A process was Preempted");
 //                                startTime.add(timer);
-                                currentProcess.addTimeEnded(timer);
+                                currentProcess.addTimeEnded(this.timer);
                                 currentProcess.setFirstExecution(false);
                                 currentProcess.setPreempted(true);
                                 ganttChart.addProcess(currentProcess);
@@ -115,9 +114,9 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
                 // Check if the process has completed execution
                 if (currentProcess.getBurstTime() == 0) {
 //                    endTime.add(timer);
-                        System.out.println("SRTF Process " + currentProcess.getPid() + " completed at time " + timer);
+                        System.out.println("SRTF Process " + currentProcess.getPid() + " completed at time " + this.timer);
 //                    endTime.add(timer);
-                    currentProcess.addTimeEnded(timer);
+                    currentProcess.addTimeEnded(this.timer);
                     readyQueue.remove(currentProcess);
                     System.out.println(currentProcess.getTimesStarted() + " " +currentProcess.getTimesEnded());
                     ganttChart.addProcess(currentProcess);
@@ -129,10 +128,8 @@ public class SRTF implements Sorter, ProcessInterface, Runnable {
                 System.out.println("TEST END!!!" + currentProcess.getTimesEnded());
             } else {
                 // Idling if no processes are ready
-                System.out.println("Idling at time " + timer);
+                System.out.println("Idling at time " + this.timer);
             }
-            timer++;
-
         }
     }
 

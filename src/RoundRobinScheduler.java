@@ -14,9 +14,8 @@ public class RoundRobinScheduler implements ProcessInterface {
 
         /*
     Todo: Refactor this code so that you can call the run method to execute the
-    process and minus the remaining burst time based on this algorithm
+        process and minus the remaining burst time based on this algorithm
         */
-
 
     }
 
@@ -84,22 +83,19 @@ public class RoundRobinScheduler implements ProcessInterface {
     private GanttChart ganttChart;
 
 
-    public void run() {
-        int timer = 0;
+    public void run(int timer) {
         int quantumTimer = 0;
         int quantumCounter = 0;
+        System.out.println("Executed RR");
 
-        while (!readyQueue.isEmpty() || !processToQueue.isEmpty()) {
             // Add arriving processes to ready queue
             int finalTimer = timer;
             readyQueue.addAll(processToQueue.stream()
                     .filter(process -> process.getArrivalTime() == finalTimer)
                     .toList());
-            processToQueue.removeAll(readyQueue);
 
             if (!readyQueue.isEmpty()) {
-                Process currentProcess = readyQueue.get(0); // Start process
-
+                Process currentProcess = readyQueue.getFirst(); // Start process
                 // Add the time started the first time the process is executed
                 if (currentProcess.isFirstExecution()) {
                     currentProcess.setFirstExecution(false);
@@ -140,9 +136,8 @@ public class RoundRobinScheduler implements ProcessInterface {
             } else {
                 System.out.println("Idling at time " + timer);
             }
-            timer++;
         }
-    }
+
     public void addToqueue(ArrayList <Process> processes){
         this.readyQueue = processes;
     }

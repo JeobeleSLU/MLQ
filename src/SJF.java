@@ -1,5 +1,3 @@
-import com.sun.source.tree.BreakTree;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -71,11 +69,11 @@ public class SJF implements  Sorter, ProcessInterface {
 
 
 
-    public void run() {
+    public void run(int timer) {
 
         while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
             // Add arriving processes to ready queue
-            int finalTimer = timer;
+            int finalTimer = this.timer;
             readyQueue.addAll(processToQueue.stream()
                     .filter(process -> process.getArrivalTime() == finalTimer)
                     .toList());
@@ -85,21 +83,21 @@ public class SJF implements  Sorter, ProcessInterface {
                 readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
                 Process currentProcess = readyQueue.get(0);
 
-                System.out.println("SJF"+"Executing process " + currentProcess.getPid() + " at time " + timer);
-                currentProcess.setTimeStarted(timer);
-                currentProcess.setTimeNow(timer);
+                System.out.println("SJF"+"Executing process " + currentProcess.getPid() + " at time " + this.timer);
+                currentProcess.setTimeStarted(this.timer);
+                currentProcess.setTimeNow(this.timer);
 
                 while (currentProcess.getBurstTime() > 0) {
                     currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
                 }
-                System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                currentProcess.setTimeEnd(timer);
+                System.out.println("Process " + currentProcess.getPid() + " completed at time " + this.timer);
+                currentProcess.setTimeEnd(this.timer);
                 ganttChart.addProcess(currentProcess);
                 readyQueue.remove(currentProcess);
             } else {
-                System.out.println("Idling at time " + timer);
+                System.out.println("Idling at time " + this.timer);
             }
-            timer++; // Increment the timer outside the if-else block
+            this.timer++; // Increment the timer outside the if-else block
         }
     }
 

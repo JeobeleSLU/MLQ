@@ -8,6 +8,7 @@
         static int numberOfCores;
         ArrayList<Process> processes;
         GanttChart ganttChart ;
+        int timer;
         String name;
         public Core(String s){
             this.name = s;
@@ -17,6 +18,7 @@
             this.nonPreemptivePriorityScheduling4 = new NPPS();
             this.processes = new ArrayList<>();
             this.ganttChart = new GanttChart();
+            this.timer = 0;
 
             numberOfCores +=1;
             /*
@@ -37,7 +39,8 @@
             return name;
         }
 
-        public void runProcesses(){
+        public void runProcesses(int time){
+            this.timer = time;
             /*
            Executes the task based on the priority
            this will first execute if the roundRobin if the round robin is not empty
@@ -45,15 +48,20 @@
            then ....
             */
             if (!roundRobinScheduler1.isEmpty()){
-                roundRobinScheduler1.run();
+                roundRobinScheduler1.run(timer);
+                System.out.println("RR is executing");
             } else if (!shortestRemaininggTimeFirst2.isEmpty()) {
-                shortestRemaininggTimeFirst2.run();
+                shortestRemaininggTimeFirst2.run(timer);
+                System.out.println("SRTF is Executing");
             } else if (!shortestJobFirst3.isEmpty()) {
-                shortestJobFirst3.run();
+                shortestJobFirst3.run(timer);
+                System.out.println("SJF is executing");
             } else if (!nonPreemptivePriorityScheduling4.isEmpty()) {
-                nonPreemptivePriorityScheduling4.run(0);
+                nonPreemptivePriorityScheduling4.run(timer);
+                System.out.println("NPPS is executing");
             }else {
-                //create an idle timer here
+                //todo:create an idle timer logic here
+                System.out.println("No process");
             }
 
             /*

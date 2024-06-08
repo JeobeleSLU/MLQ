@@ -84,11 +84,6 @@ public class NPPS implements ProcessInterface, Sorter {
 
             // Add arriving processes to ready queue
             int finalTimer = timer;
-            readyQueue.addAll(processToQueue.stream()
-                    .filter(process -> process.getArrivalTime() == finalTimer)
-                    .toList());
-            processToQueue.removeAll(readyQueue);
-
             if (!readyQueue.isEmpty()) {
                 readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
                 Process currentProcess = readyQueue.get(0);
