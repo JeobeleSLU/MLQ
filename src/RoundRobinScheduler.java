@@ -101,7 +101,7 @@ public class RoundRobinScheduler implements ProcessInterface {
                     currentProcess.setFirstExecution(false);
                     currentProcess.setTimeNow(timer);
                     currentProcess.setTimeStarted(timer);
-                    ganttChart.addProcess(currentProcess);
+//                    ganttChart.addProcess(currentProcess);
 
                 }
 
@@ -130,7 +130,7 @@ public class RoundRobinScheduler implements ProcessInterface {
                         readyQueue.remove(currentProcess);
                     } else {
                         readyQueue.remove(currentProcess);
-                        readyQueue.add(currentProcess);
+                        readyQueue.addLast(currentProcess);
                     }
                 }
             } else {

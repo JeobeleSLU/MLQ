@@ -3,21 +3,23 @@ import java.util.Comparator;
 
 public class SJF implements  Sorter, ProcessInterface {
     private ArrayList<Process> readyQueue;
-    private ArrayList<Process> processToQueue ;
+    private ArrayList<Process> processOnQueue;
     private GanttChart ganttChart;
     private int timer = 0;
+    private ArrayList<Process> doneList;
 
     public SJF(ArrayList<Process> processes) {
         this.readyQueue  = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
-        this.processToQueue.addAll(processes);
+        this.processOnQueue = new ArrayList<>();
+        this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
 
     }
 
     public SJF() {
         this.readyQueue  = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
+        this.processOnQueue = new ArrayList<>();
+        this.doneList = new ArrayList<>();
         ganttChart = new GanttChart();
     }
     /*
@@ -69,43 +71,49 @@ public class SJF implements  Sorter, ProcessInterface {
 
 
 
-    public void run(int timer) {
 
-        while (!processToQueue.isEmpty() || !readyQueue.isEmpty()) {
+
+
             // Add arriving processes to ready queue
-            int finalTimer = this.timer;
-            readyQueue.addAll(processToQueue.stream()
-                    .filter(process -> process.getArrivalTime() == finalTimer)
-                    .toList());
-            processToQueue.removeAll(readyQueue);
+//            int finalTimer = this.timer;
+//            readyQueue.addAll(processToQueue.stream()
+//                    .filter(process -> process.getArrivalTime() == finalTimer)
+//                    .toList());
 
-            if (!readyQueue.isEmpty()) {
-                readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
-                Process currentProcess = readyQueue.get(0);
 
-                System.out.println("SJF"+"Executing process " + currentProcess.getPid() + " at time " + this.timer);
-                currentProcess.setTimeStarted(this.timer);
-                currentProcess.setTimeNow(this.timer);
+//            processToQueue.removeAll(readyQueue);
+            /*
+            Get the process with least burst time
+            execcute it
+             */
+    public void run(int timer) {
+        this.timer = timer;
+            readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
 
-                while (currentProcess.getBurstTime() > 0) {
-                    currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                if (processOnQueue.isEmpty()){
+                    processOnQueue.add(readyQueue.getFirst());
+                    readyQueue.removeFirst();
+                    processOnQueue.getFirst().setTimeStarted(this.timer);
                 }
-                System.out.println("Process " + currentProcess.getPid() + " completed at time " + this.timer);
-                currentProcess.setTimeEnd(this.timer);
-                ganttChart.addProcess(currentProcess);
-                readyQueue.remove(currentProcess);
-            } else {
-                System.out.println("Idling at time " + this.timer);
-            }
-            this.timer++; // Increment the timer outside the if-else block
-        }
-    }
+
+                if (processOnQueue.getFirst().getRemainingBurstTime() !=0 ){
+                    System.out.println("SJF"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
+                    processOnQueue.getFirst().decrementBurst();
+                    System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
+                }else {
+                    System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " + this.timer);
+                    processOnQueue.getFirst().setTimeEnd(this.timer);
+                    ganttChart.addProcess(processOnQueue.getFirst());
+                    System.out.println("Done, Removing...." + processOnQueue.getFirst().getPid());
+                    processOnQueue.removeFirst();
+                }
+     }
 
     public ArrayList<Process> getGanttChartArray() {
         return this.ganttChart.getProcesses();
     }
     public ArrayList<Process> processessToQueue() {
-        return processToQueue;
+        return processOnQueue;
     }
 
     @Override
@@ -115,7 +123,8 @@ public class SJF implements  Sorter, ProcessInterface {
 
     @Override
     public int getNumberOfProcesses() {
-        return this.readyQueue.size();
+        return
+                this.readyQueue.size()+this.processOnQueue.size();
     }
 
     @Override
@@ -126,5 +135,13 @@ public class SJF implements  Sorter, ProcessInterface {
 
     public void addToqueue(Process process) {
         this.readyQueue.add(process);
+    }
+
+    public ArrayList<Process> getProcessOnQueue() {
+        return processOnQueue;
+    }
+
+    public ArrayList<Process> getDoneList() {
+        return doneList;
     }
 }
