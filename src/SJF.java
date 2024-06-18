@@ -89,23 +89,24 @@ public class SJF implements  Sorter, ProcessInterface {
     public void run(int timer) {
         this.timer = timer;
             readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
-
                 if (processOnQueue.isEmpty()){
                     processOnQueue.add(readyQueue.getFirst());
                     readyQueue.removeFirst();
                     processOnQueue.getFirst().setTimeStarted(this.timer);
                 }
 
-                if (processOnQueue.getFirst().getRemainingBurstTime() !=0 ){
-                    System.out.println("SJF"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
+                if (processOnQueue.getFirst().getRemainingBurstTime() != 0 ){
+                    System.out.println("SJF99"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
                     processOnQueue.getFirst().decrementBurst();
                     System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
-                }else {
+                }
+                if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
                     System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " + this.timer);
                     processOnQueue.getFirst().setTimeEnd(this.timer);
                     ganttChart.addProcess(processOnQueue.getFirst());
                     System.out.println("Done, Removing...." + processOnQueue.getFirst().getPid());
-                    processOnQueue.removeFirst();
+                    System.out.println(processOnQueue.getFirst().getRemainingBurstTime());
+                    processOnQueue.clear();
                 }
      }
 
@@ -118,11 +119,19 @@ public class SJF implements  Sorter, ProcessInterface {
 
     @Override
     public boolean isEmpty() {
-        return this.readyQueue.isEmpty();
+        return this.readyQueue.isEmpty() && this.processOnQueue.isEmpty();
     }
 
     @Override
     public int getNumberOfProcesses() {
+        if (!this.readyQueue.isEmpty()){
+            System.out.println("Ready Queue Not empty");
+            this.readyQueue.forEach(e-> System.out.println("PID: " +e.getPid() ));
+        }
+        if (!this.processOnQueue.isEmpty()){
+            System.out.println("Process Queue Not empty");
+            this.processOnQueue.forEach(e-> System.out.println("PID: "+ e.getPid()+"Remaining BurstTime:"+e.getRemainingBurstTime()));
+        }
         return
                 this.readyQueue.size()+this.processOnQueue.size();
     }

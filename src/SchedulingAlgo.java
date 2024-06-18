@@ -58,17 +58,17 @@ public class SchedulingAlgo implements Sorter {
             for (Core core : arrayListOfCores) {
                 for (Object o : core.getSJFDoneList()) {
                     processDone.add((Process) o);
+                    System.out.println(((Process) o).getPid());
 
                 }
                 this.processOnQueueList.removeAll(core.getSJFDoneList());
-                this.processToQueueList.removeAll(core.getSJFDoneList());
+            }
+            System.out.println("\nEnd of Cycle: "+timer);
+
+            if (timer == 40){
+                break;
             }
             this.timer++;
-            System.out.println(timer);
-
-            if (timer == 20){
-//                break;
-            }
 
 
         }

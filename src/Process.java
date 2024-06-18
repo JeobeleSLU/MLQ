@@ -283,8 +283,6 @@ public class Process {
         this.waitingTime = this.timeStarted - this.arrivalTime;
     }
     void decrementBurst(){
-
-        this.remainingBurstTime -=1;
-
+        this.remainingBurstTime --;
     }
 }
