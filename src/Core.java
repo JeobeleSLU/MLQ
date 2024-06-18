@@ -53,8 +53,8 @@
 
             } else if (!shortestJobFirst3.isEmpty()) {
                 shortestJobFirst3.run(timer);
-
                 System.out.println("SJF is executing");
+
             } else if (!nonPreemptivePriorityScheduling4.isEmpty()) {
                 nonPreemptivePriorityScheduling4.run(timer);
                 System.out.println("NPPS is executing");

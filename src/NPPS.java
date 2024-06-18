@@ -3,8 +3,9 @@ import java.util.Comparator;
 
 public class NPPS implements ProcessInterface, Sorter {
     private ArrayList<Process> readyQueue;
-    private ArrayList<Process> processToQueue;
+    private ArrayList<Process> processOnQueue;
     private GanttChart ganttChart;
+    private int timer;
     /*
     Todo: Refactor this code so that you can call the run method to execute the
     process and minus the remaining burst time based on this algorithm
@@ -12,20 +13,22 @@ public class NPPS implements ProcessInterface, Sorter {
     */
     public NPPS(ArrayList<Process> processes) {
         this.readyQueue = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
-        this.processToQueue.addAll(processes);
+        this.processOnQueue = new ArrayList<>();
+        this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
     }
 
     public NPPS() {
         this.readyQueue = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
+        this.processOnQueue = new ArrayList<>();
         ganttChart = new GanttChart();
+        this.timer = 0;
 
     }
 
 
     public void addToQueue(Process process) {
+        System.out.println("NPPS added");
         readyQueue.add(process);
     }
 
@@ -62,12 +65,14 @@ public class NPPS implements ProcessInterface, Sorter {
 
     @Override
     public ArrayList<Process> processessToQueue() {
-        return processToQueue;
+        return processOnQueue;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.readyQueue.isEmpty();
+        System.out.println("NPPS boolean:"+processOnQueue.isEmpty());
+        System.out.println(processOnQueue.size());
+        return this.readyQueue.isEmpty() && processOnQueue.isEmpty();
     }
 
     @Override
@@ -81,43 +86,57 @@ public class NPPS implements ProcessInterface, Sorter {
     }
 
     public void run(int timer) {
-
-            // Add arriving processes to ready queue
-            int finalTimer = timer;
-            if (!readyQueue.isEmpty()) {
+        this.timer = timer;
                 readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
-                Process currentProcess = readyQueue.get(0);
-                if (!currentProcess.getHasExecuted()) {
-                    currentProcess.setTimeStarted(timer);
-                    currentProcess.addTimeStarted(timer);
-                    currentProcess.setTimeNow(timer);
-                    ganttChart.addProcess(currentProcess);
+                if (processOnQueue.isEmpty()){
+                    System.out.println("NPPS added to On Queue");
+                    processOnQueue.add(readyQueue.getFirst());
+                    readyQueue.removeFirst();
+                    processOnQueue.getFirst().setTimeStarted(this.timer);
                 }
-                System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
-                currentProcess.addTimeStarted(timer);
-
-                // Simulate process execution by decrementing burst time
-                while (currentProcess.getBurstTime() > 0) {
-                    currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-                    timer++; // Increment the timer for each time unit processed
+                if (processOnQueue.getFirst().getRemainingBurstTime() != 0){
+                    System.out.println("yawa");
+                    System.out.println("NPPS # 4Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
+                    processOnQueue.getFirst().decrementBurst();
+                    System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
+                }
+                if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
+                    System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " +timer);
+                    System.out.println("Done, Removing , NPPS ...." + processOnQueue.getFirst().getPid());
+                    processOnQueue.getFirst().setTimeEnd(timer);
+                    processOnQueue.clear();
                 }
 
-                System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                currentProcess.addTimeEnded(timer);
-                currentProcess.setTimeEnd(timer);
-                readyQueue.remove(currentProcess);
                 //todo: Maybe remove this idling? since the core itself will handle the idle
-            } else {//
-                System.out.println("NPPS: Idling at time " + timer);
-                timer++;   // Increment timer even if idling
-            }
+
         }
 
 
     public ArrayList<Process> getGanttChartArray() {
         return this.ganttChart.getProcesses();
     }
-
-
-
 }
+
+//    Process currentProcess = readyQueue.get(0);
+//                if (!currentProcess.getHasExecuted()) {
+//        currentProcess.setTimeStarted(timer);
+//        currentProcess.addTimeStarted(timer);
+//        currentProcess.setTimeNow(timer);
+//        ganttChart.addProcess(currentProcess);
+//    }
+//                System.out.println("Non-Preemptive Priority: Executing process " + currentProcess.getPid() + " at time " + timer);
+//                currentProcess.addTimeStarted(timer);
+//
+//    // Simulate process execution by decrementing burst time
+//                while (currentProcess.getBurstTime() > 0) {
+//        currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+//        timer++; // Increment the timer for each time unit processed
+//    }
+//
+//                System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+//                currentProcess.addTimeEnded(timer);
+//                currentProcess.setTimeEnd(timer);
+//                readyQueue.remove(currentProcess);
+//
+
+

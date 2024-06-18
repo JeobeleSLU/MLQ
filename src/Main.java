@@ -20,6 +20,12 @@ public class Main {
 //        processes.add(new Process(12, 2, 4, 1));
 
 
+
+        processes.add(new Process(9, 0, 3, 4,3));
+        processes.add(new Process(10, 0, 3, 4,1));
+        processes.add(new Process(11, 0, 3, 4,1));
+        processes.add(new Process(12, 0, 3, 4,4));
+
         processes.add(new Process(13, 0, 3, 3));
         processes.add(new Process(14, 0, 3, 3));
         processes.add(new Process(15, 0, 3, 3));
