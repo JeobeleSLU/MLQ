@@ -1,3 +1,4 @@
+
     import java.util.ArrayList;
 
     public class Core implements Sorter {
@@ -43,7 +44,10 @@
 
         public void runProcesses(int time){
             this.timer = time;
-
+            System.out.println("RR boolean: "+ !roundRobinScheduler1.isEmpty());
+            System.out.println("SRTF boolean: "+ !shortestRemaininggTimeFirst2.isEmpty());
+            System.out.println("SJF boolean: "+ !shortestJobFirst3.isEmpty());
+            System.out.println("NPPS boolean: "+ !nonPreemptivePriorityScheduling4.isEmpty());
             if (!roundRobinScheduler1.isEmpty()){
                 roundRobinScheduler1.run(timer);
                 System.out.println("RR is executing");

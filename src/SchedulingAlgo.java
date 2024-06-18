@@ -42,7 +42,7 @@ public class SchedulingAlgo implements Sorter {
     public void run() {
         boolean areAllCoreEmpty = true;
 
-        while ( !processToQueueList.isEmpty() && areAllCoreEmpty){
+        while ( !processToQueueList.isEmpty() || areAllCoreEmpty){
             areAllCoreEmpty = checkCoresWithProcess();
             System.out.println(areAllCoreEmpty);
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -70,14 +70,13 @@ public class SchedulingAlgo implements Sorter {
 //            }
             this.timer++;
 
-
         }
     }
 
     private boolean checkCoresWithProcess() {
         arrayListOfCores.forEach(e-> System.out.println("Process at Core "+e.getCoreID() + "\nNumber of Process"+e.getNumberOfProcesses()));
         for (Core core : arrayListOfCores) {
-            if (core.isEmpty()){
+            if (!core.isEmpty()){
                 return true;
             }
         }
