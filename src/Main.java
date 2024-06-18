@@ -25,7 +25,7 @@ public class Main {
         processes.add(new Process(15, 0, 3, 3));
         processes.add(new Process(16, 0, 3, 3));
         processes.add(new Process(21, 0, 2, 3));
-        processes.add(new Process(17, 0, 2, 3));
+        processes.add(new Process(17, 0, 500, 3));
         processes.add(new Process(18, 0, 2, 3));
         processes.add(new Process(19, 0, 2, 3));
         processes.add(new Process(20, 0, 2, 3));

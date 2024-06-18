@@ -42,7 +42,7 @@ public class SchedulingAlgo implements Sorter {
     public void run() {
         boolean areAllCoreEmpty = false;
 
-        while (!processOnQueueList.isEmpty() || !processToQueueList.isEmpty()) {
+        while ( !processToQueueList.isEmpty() || areAllCoreEmpty){
             areAllCoreEmpty = checkCoresWithProcess();
             System.out.println(areAllCoreEmpty);
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -65,9 +65,7 @@ public class SchedulingAlgo implements Sorter {
             }
             System.out.println("\nEnd of Cycle: "+timer);
 
-            if (timer == 40){
-                break;
-            }
+
             this.timer++;
 
 
@@ -76,7 +74,11 @@ public class SchedulingAlgo implements Sorter {
 
     private boolean checkCoresWithProcess() {
         arrayListOfCores.forEach(e-> System.out.println("Process at Core "+e.getCoreID() + "\nNumber of Process"+e.getNumberOfProcesses()));
-        return arrayListOfCores.stream().anyMatch(core -> core.getNumberOfProcesses() >= 0);
+        for (Core core : arrayListOfCores) {
+            if (!core.isEmpty()){
+                return true;
+            }
+        }return false;
     }
 
     public int getTimer() {
@@ -124,9 +126,10 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCores.get(0).addToSRTFScheduler(process);
         }
         for (Process process : sjf) {
-            System.out.println("Assigning SJF");
 
             sortCoreToLeastProcess();
+            System.out.println("Assigning SJF\n"+"Process ID: "+process.getPid()+
+                    "\nAssigning  to core: " +arrayListOfCores.getFirst().getCoreID());
             arrayListOfCores.get(0).addToSJFScheduler(process);
         }
         for (Process process : npps) {

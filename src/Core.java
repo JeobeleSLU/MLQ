@@ -132,4 +132,13 @@
         public ArrayList getSJFDoneList(){
             return this.shortestJobFirst3.getDoneList();
         }
+        public boolean isEmpty(){
+            return
+                    this.roundRobinScheduler1.isEmpty() &&
+                            this.shortestRemaininggTimeFirst2.isEmpty() &&
+                            this.shortestJobFirst3.isEmpty() &&
+                            this.nonPreemptivePriorityScheduling4.isEmpty();
+
+
+        }
     }
