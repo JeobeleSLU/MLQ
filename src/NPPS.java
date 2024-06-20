@@ -5,7 +5,7 @@ public class NPPS implements ProcessInterface, Sorter {
     private ArrayList<Process> readyQueue;
     private ArrayList<Process> processOnQueue;
     private GanttChart ganttChart;
-    private int timer;
+    private int timer = 0;
     /*
     Todo: Refactor this code so that you can call the run method to execute the
     process and minus the remaining burst time based on this algorithm
@@ -86,15 +86,16 @@ public class NPPS implements ProcessInterface, Sorter {
     }
 
     public void run(int timer) {
+
         this.timer = timer;
                 readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
                 if (processOnQueue.isEmpty()){
-                    System.out.println("NPPS added to On Queue");
                     processOnQueue.add(readyQueue.getFirst());
+                    System.out.println("NPPS added to On Queue");
                     readyQueue.removeFirst();
                     processOnQueue.getFirst().setTimeStarted(this.timer);
                 }
-                if (processOnQueue.getFirst().getRemainingBurstTime() != 0){
+                if (processOnQueue.getFirst().getBurstTime() !=0){
                     System.out.println("yawa");
                     System.out.println("NPPS # 4Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
                     processOnQueue.getFirst().decrementBurst();

@@ -283,6 +283,13 @@ public class Process {
         this.waitingTime = this.timeStarted - this.arrivalTime;
     }
     void decrementBurst(){
-        this.remainingBurstTime --;
+        if (this.remainingBurstTime > 0){
+            this.remainingBurstTime --;
+        }else {
+            System.out.println("Is zero");
+        }
+    }
+    boolean isProcessDone(){
+        return this.remainingBurstTime <= 0;
     }
 }
