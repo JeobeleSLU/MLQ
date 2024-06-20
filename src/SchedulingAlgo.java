@@ -99,13 +99,30 @@ public class SchedulingAlgo implements Sorter {
         return processToQueueList;
     }
 
-    private void sortCoreToLeastProcess() {
-        arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
-                .sorted(Comparator.comparingInt(Core::getNumberOfNPPSProcess)
-                        .thenComparing(Core::getNumberOfSJFProcess)
-                        .thenComparing(Core::getNumberOfSRTFProcess)
-                        .thenComparing(Core::getNumberOfRoundRobinProcess))
-                .collect(Collectors.toList());
+    private void sortCoreToLeastProcess(int prio) {
+       if (prio == 1){//change since mali ata order ko
+           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+                   .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
+             .collect(Collectors.toList());
+       } else if (prio == 2 ) {
+           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+                   .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
+                   .collect(Collectors.toList());
+       } else if (prio == 3) {
+           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+                   .sorted(Comparator.comparingInt(Core::getNumberOfSJFProcess))
+                   .collect(Collectors.toList());
+       } else if (prio == 4) {
+           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+                   .sorted(Comparator.comparing(Core::getNumberOfNPPSProcess))
+                   .collect(Collectors.toList());
+       }
+//        arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+//                .sorted(Comparator.comparingInt(Core::getNumberOfNPPSProcess)
+//                        .thenComparing(Core::getNumberOfSJFProcess)
+//                        .thenComparing(Core::getNumberOfSRTFProcess)
+//                        .thenComparing(Core::getNumberOfRoundRobinProcess))
+//                .collect(Collectors.toList());
     }
 
     void assignProcess() {
@@ -117,26 +134,26 @@ public class SchedulingAlgo implements Sorter {
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 4);
 
         for (Process process : rr) {
-            sortCoreToLeastProcess();
-            System.out.println("Assigning RR");
+            sortCoreToLeastProcess(1);
+            System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
             arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
         }
         for (Process process : srtf) {
-            System.out.println("Assigning SRTF");
 
-            sortCoreToLeastProcess();
+            sortCoreToLeastProcess(2);
+            System.out.println("Assigning SRTF: "+ arrayListOfCores.getFirst().getCoreID());
+
             arrayListOfCores.get(0).addToSRTFScheduler(process);
         }
         for (Process process : sjf) {
-
-            sortCoreToLeastProcess();
+            sortCoreToLeastProcess(3);
             System.out.println("Assigning SJF\n"+"Process ID: "+process.getPid()+
                     "\nAssigning  to core: " +arrayListOfCores.getFirst().getCoreID());
             arrayListOfCores.get(0).addToSJFScheduler(process);
         }
         for (Process process : npps) {
             System.out.println("Assigning NPPS");
-            sortCoreToLeastProcess();
+            sortCoreToLeastProcess(4);
             arrayListOfCores.get(0).addToNPPSScheduler(process);
         }
         arrived.forEach(e-> this.processToQueueList.remove(e));

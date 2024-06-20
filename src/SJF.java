@@ -96,7 +96,7 @@ public class SJF implements  Sorter, ProcessInterface {
                 }
 
                 if (processOnQueue.getFirst().getRemainingBurstTime() != 0 ){
-                    System.out.println("SJF99"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
+                    System.out.println("#3 SJF"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
                     processOnQueue.getFirst().decrementBurst();
                     System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
                 }

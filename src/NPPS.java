@@ -97,7 +97,7 @@ public class NPPS implements ProcessInterface, Sorter {
                 }
                 if (processOnQueue.getFirst().getBurstTime() !=0){
                     System.out.println("yawa");
-                    System.out.println("NPPS # 4Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
+                    System.out.println("#4 NPPS Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
                     processOnQueue.getFirst().decrementBurst();
                     System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
                 }

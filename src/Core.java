@@ -4,7 +4,7 @@
     public class Core implements Sorter {
         RoundRobinScheduler roundRobinScheduler1;
         NPPS nonPreemptivePriorityScheduling4;
-        SRTF shortestRemaininggTimeFirst2;
+        SRTF shortestRemainingTimeFrist2;
         SJF shortestJobFirst3;
         static int numberOfCores;
         ArrayList<Process> processes;
@@ -15,7 +15,7 @@
             this.coreID = i;
             this.roundRobinScheduler1 = new RoundRobinScheduler();
             this.shortestJobFirst3 = new SJF();
-            this.shortestRemaininggTimeFirst2 = new SRTF();
+            this.shortestRemainingTimeFrist2 = new SRTF();
             this.nonPreemptivePriorityScheduling4 = new NPPS();
             this.processes = new ArrayList<>();
             this.ganttChart = new GanttChart();
@@ -45,14 +45,15 @@
         public void runProcesses(int time){
             this.timer = time;
             System.out.println("RR boolean: "+ !roundRobinScheduler1.isEmpty());
-            System.out.println("SRTF boolean: "+ !shortestRemaininggTimeFirst2.isEmpty());
+            System.out.println("SRTF boolean: "+ !shortestRemainingTimeFrist2.isEmpty());
             System.out.println("SJF boolean: "+ !shortestJobFirst3.isEmpty());
             System.out.println("NPPS boolean: "+ !nonPreemptivePriorityScheduling4.isEmpty());
             if (!roundRobinScheduler1.isEmpty()){
                 roundRobinScheduler1.run(timer);
                 System.out.println("RR is executing");
-            } else if (!shortestRemaininggTimeFirst2.isEmpty()) {
-                shortestRemaininggTimeFirst2.run(timer);
+            } else if (!shortestRemainingTimeFrist2.isEmpty()) {
+                System.out.println("SRTF process to Run: "+ shortestRemainingTimeFrist2.getNumberOfProcesses());
+                shortestRemainingTimeFrist2.run(timer);
                 System.out.println("SRTF is Executing");
 
             } else if (!shortestJobFirst3.isEmpty()) {
@@ -88,7 +89,7 @@
 
         }
         int getNumberOfSRTFProcess(){
-            return this.shortestRemaininggTimeFirst2.getNumberOfProcesses();
+            return this.shortestRemainingTimeFrist2.getNumberOfProcesses();
 
         }
         int getNumberOfSJFProcess(){
@@ -102,7 +103,7 @@
             System.out.println("\nRoundRobin Process:"+ getNumberOfRoundRobinProcess());
             System.out.println("SRTF Process:" + getNumberOfSRTFProcess());
             System.out.println("SJF Process:"+ getNumberOfSJFProcess());
-            System.out.println("NPPS Process:"+ getNumberOfNPPSProcess()+"\n");
+            System.out.println("NPPS Process:"+ getNumberOfNPPSProcess()+"\n"+"at Core: "+this.coreID);
             return getNumberOfRoundRobinProcess()+
                     getNumberOfSRTFProcess()+
                     getNumberOfSJFProcess()+
@@ -112,7 +113,7 @@
            this.roundRobinScheduler1.addToQueue(processToAdd);
         }
         void addToSRTFScheduler (Process processToAdd){
-            this.shortestRemaininggTimeFirst2.addToQueue(processToAdd);
+            this.shortestRemainingTimeFrist2.addToQueue(processToAdd);
         }
         void addToSJFScheduler (Process processToAdd){
             this.shortestJobFirst3.addToQueue(processToAdd);
@@ -139,7 +140,7 @@
         public boolean isEmpty(){
             return
                     this.roundRobinScheduler1.isEmpty() &&
-                            this.shortestRemaininggTimeFirst2.isEmpty() &&
+                            this.shortestRemainingTimeFrist2.isEmpty() &&
                             this.shortestJobFirst3.isEmpty() &&
                             this.nonPreemptivePriorityScheduling4.isEmpty();
 
