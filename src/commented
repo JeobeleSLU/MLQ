@@ -177,3 +177,59 @@ SRTF
 //            System.out.println("Idling at time " + this.timer);
 //        }
 //    }
+
+
+
+rr
+
+
+     System.out.println("Executed RR");
+
+            // Add arriving processes to ready queue
+            int finalTimer = timer;
+            readyQueue.addAll(proceessOnQueue.stream()
+                    .filter(process -> process.getArrivalTime() == finalTimer)
+                    .toList());
+
+            if (!readyQueue.isEmpty()) {
+                Process currentProcess = readyQueue.getFirst(); // Start process
+                // Add the time started the first time the process is executed
+                if (currentProcess.isFirstExecution()) {
+                    currentProcess.setFirstExecution(false);
+                    currentProcess.setTimeNow(timer);
+                    currentProcess.setTimeStarted(timer);
+//                    ganttChart.addProcess(currentProcess);
+
+                }
+
+
+                System.out.println("Executing process " + currentProcess.getPid() + " at time " + timer);
+                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                System.out.println(currentProcess.getBurstTime());
+                quantumTimer++;
+                if (quantumTime == quantumTimer){
+                    currentProcess.addTimeStarted(timer);
+                    currentProcess.addTimeStarted(timer);
+                }
+
+                if (quantumTimer == quantumTime || currentProcess.getBurstTime() == 0) {
+                    quantumTimer = 0;
+                    quantumCounter++;
+                    currentProcess.addTimeEnded(timer);
+                    if (quantumCounter == 5) {
+                        quantumCounter = 0;
+                    }
+
+                    if (currentProcess.getBurstTime() == 0) {
+                        System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+                        currentProcess.setTimeEnd(timer);
+                        currentProcess.addTimeEnded(timer);
+                        readyQueue.remove(currentProcess);
+                    } else {
+                        readyQueue.remove(currentProcess);
+                        readyQueue.addLast(currentProcess);
+                    }
+                }
+            } else {
+                System.out.println("Idling at time " + timer);
+            }

@@ -39,7 +39,7 @@ public class Process {
         this.timeNow = 0;
         this.turnAroundTime = 0;
         this.waitingTime =0;
-        this.remainingBurstTime = burstTime;
+        this.remainingBurstTime = this.burstTime;
         this.originalBurst = burstTime;
         this.processPriority  = 3;
     }
@@ -51,6 +51,7 @@ public class Process {
         this.schedulerPriority = schedulerPriority;
         this.processPriority = processPriority;
         timesExecuted = 0;
+        this.remainingBurstTime = this.burstTime;
         isRunning = false;
         hasExecuted = false;
         timesStarted = new ArrayList<>();

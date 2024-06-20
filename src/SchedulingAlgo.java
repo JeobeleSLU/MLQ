@@ -42,7 +42,7 @@ public class SchedulingAlgo implements Sorter {
     public void run() {
         boolean areAllCoreEmpty = true;
 
-        while ( !processToQueueList.isEmpty() || areAllCoreEmpty){
+        while ( !processToQueueList.isEmpty() || checkCoresWithProcess()){
             areAllCoreEmpty = checkCoresWithProcess();
             System.out.println(areAllCoreEmpty);
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -64,6 +64,7 @@ public class SchedulingAlgo implements Sorter {
                 this.processOnQueueList.removeAll(core.getSJFDoneList());
             }
             System.out.println("\nEnd of Cycle: "+timer);
+            System.out.println("");
 
 //            if (timer == 40){
 //                break;
@@ -104,17 +105,17 @@ public class SchedulingAlgo implements Sorter {
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
              .collect(Collectors.toList());
-       } else if (prio == 2 ) {
-           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
-                   .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
-                   .collect(Collectors.toList());
-       } else if (prio == 3) {
+       }else if (prio == 2) {
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfSJFProcess))
                    .collect(Collectors.toList());
-       } else if (prio == 4) {
+       } else if (prio == 3) {
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparing(Core::getNumberOfNPPSProcess))
+                   .collect(Collectors.toList());
+       } else if (prio == 4 ) {
+           arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
+                   .sorted(Comparator.comparingInt(Core::getNumberOfSRTFProcess))
                    .collect(Collectors.toList());
        }
 //        arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
@@ -129,6 +130,7 @@ public class SchedulingAlgo implements Sorter {
         ArrayList<Process> arrived = Sorter.getArrivedProcess(processToQueueList, timer);
 
         ArrayList<Process> rr = Sorter.filterPriority(arrived, 1);
+        rr.forEach(e-> System.out.println("Burst time before assigning: "+ e.getBurstTime()));
         ArrayList<Process> srtf = Sorter.filterPriority(arrived, 2);
         ArrayList<Process> sjf = Sorter.filterPriority(arrived, 3);
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 4);
@@ -136,6 +138,7 @@ public class SchedulingAlgo implements Sorter {
         for (Process process : rr) {
             sortCoreToLeastProcess(1);
             System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
+            System.out.println("Remaining Burst Time: "+ process.getBurstTime());
             arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
         }
         for (Process process : srtf) {

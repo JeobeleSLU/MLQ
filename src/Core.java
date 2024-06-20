@@ -51,11 +51,7 @@
             if (!roundRobinScheduler1.isEmpty()){
                 roundRobinScheduler1.run(timer);
                 System.out.println("RR is executing");
-            } else if (!shortestRemainingTimeFrist2.isEmpty()) {
-                System.out.println("SRTF process to Run: "+ shortestRemainingTimeFrist2.getNumberOfProcesses());
-                shortestRemainingTimeFrist2.run(timer);
-                System.out.println("SRTF is Executing");
-
+                
             } else if (!shortestJobFirst3.isEmpty()) {
                 shortestJobFirst3.run(timer);
                 System.out.println("SJF is executing");
@@ -63,6 +59,11 @@
             } else if (!nonPreemptivePriorityScheduling4.isEmpty()) {
                 nonPreemptivePriorityScheduling4.run(timer);
                 System.out.println("NPPS is executing");
+
+            } else if (!shortestRemainingTimeFrist2.isEmpty()) {
+                System.out.println("SRTF process to Run: "+ shortestRemainingTimeFrist2.getNumberOfProcesses());
+                shortestRemainingTimeFrist2.run(timer);
+                System.out.println("SRTF is Executing");
             }else {
                 //todo:create an idle timer logic here
                 System.out.println("Core:"+this.coreID+" is idling");

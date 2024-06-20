@@ -106,6 +106,7 @@ public class SJF implements  Sorter, ProcessInterface {
                     ganttChart.addProcess(processOnQueue.getFirst());
                     System.out.println("Done, Removing , SJF Process ...." + processOnQueue.getFirst().getPid());
                     System.out.println(processOnQueue.getFirst().getRemainingBurstTime());
+                    processOnQueue.getFirst().setTimeEnd(timer);
                     processOnQueue.clear();
                 }
      }

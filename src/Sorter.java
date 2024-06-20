@@ -35,6 +35,7 @@ public interface Sorter {
         ArrayList<Process> sortedProcesses = (ArrayList<Process>) processes
                 .stream()
                 .filter(e -> e.getPrioritySchedule() == priorityToGet)
+
                 .collect(Collectors.toList());
         return sortedProcesses;
     }
@@ -45,6 +46,12 @@ public interface Sorter {
                 .sorted(Comparator.comparingInt(value -> value.getArrivalTime())) // if multiple process have arrived
                 .collect(Collectors.toList());
     }
+    static ArrayList<Process> sortByPID (ArrayList<Process> processes){
+        return (ArrayList<Process>) processes.stream()
+                .sorted(Comparator.comparingInt(Process::getPid))
+                .collect(Collectors.toList());
+    }
+
 
 
 //        return (ArrayList<Process>) processes.stream()
@@ -52,6 +59,7 @@ public interface Sorter {
 //
 //    }
 }
+
 
 
 

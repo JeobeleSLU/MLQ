@@ -50,19 +50,20 @@ public class Main {
 //
 //        processes.add(new Process(33, 3, 2, 2));
 //        processes.add(new Process(34, 50, 2, 2));
+//
+//        processes.add(new Process(1,2,10,4,1));
+//        processes.add(new Process(2,2,10,4,1));
+//        processes.add(new Process(3,2,10,4,1));
+//        processes.add(new Process(4,1,10,2));
+//        processes.add(new Process(5,3,3,2));
+//        processes.add(new Process(6,2,7,2));
+//        processes.add(new Process(7,2,10,3));
+        processes.add(new Process(8,1,10,3));
 
-        processes.add(new Process(1,2,10,4,1));
-        processes.add(new Process(2,2,10,4,1));
-        processes.add(new Process(3,2,10,4,1));
-        processes.add(new Process(4,1,10,2));
-        processes.add(new Process(5,3,3,2));
-        processes.add(new Process(6,2,7,2));
-        processes.add(new Process(7,2,10,3));
-        processes.add(new Process(8,2,10,3));
+        processes.add(new Process(9,2,10,1,3));
 
 
         processes.sort(Comparator.comparingInt(Process::getPid));
-
 
         SchedulingAlgo schedulingAlgo = new SchedulingAlgo(processes,1);
         schedulingAlgo.run();

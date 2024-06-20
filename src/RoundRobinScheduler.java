@@ -3,12 +3,14 @@ import java.util.ArrayList;
 public class RoundRobinScheduler implements ProcessInterface {
     private  int quantumTime;
     ArrayList<Process> readyQueue ;
-    ArrayList<Process> processToQueue ;
+    ArrayList<Process> processOnQueue;
+    private int quantumTimer;
+    public int time = 0;
 
     public RoundRobinScheduler(ArrayList<Process> processes) {
         this.readyQueue = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
-        this.processToQueue.addAll(processes);
+        this.processOnQueue = new ArrayList<>();
+        this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
         this.quantumTime = 3;
 
@@ -20,17 +22,26 @@ public class RoundRobinScheduler implements ProcessInterface {
     }
 
     public RoundRobinScheduler() {
-        this.readyQueue = new ArrayList<>();
-        this.processToQueue = new ArrayList<>();
+        this.readyQueue = new ArrayList<Process>();
+        this.processOnQueue = new ArrayList<Process>();
         this.quantumTime = 3;
+        this.quantumTimer = this .quantumTime;
+
+    }
+    public RoundRobinScheduler(int time) {
+        this.readyQueue = new ArrayList<>();
+        this.processOnQueue = new ArrayList<>();
+        this.quantumTime = time;
+        this.quantumTimer = this.quantumTime;
     }
 
     public void addToQueue(Process process) {
-        readyQueue.add(process);
+        this.readyQueue.add(process);
     }
 
     public void setQuantumTime(int quantumTime) {
         this.quantumTime = quantumTime;
+        this.quantumTimer = quantumTime;
     }
 
     public void removeFromQueue(Process process) {
@@ -57,12 +68,12 @@ public class RoundRobinScheduler implements ProcessInterface {
         return readyQueue;
     }
     public ArrayList<Process> processessToQueue() {
-        return processToQueue;
+        return processOnQueue;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.readyQueue.isEmpty();
+        return this.readyQueue.isEmpty() && this.processOnQueue.isEmpty();
     }
 
     @Override
@@ -84,58 +95,48 @@ public class RoundRobinScheduler implements ProcessInterface {
 
 
     public void run(int timer) {
-        int quantumTimer = 0;
+        this.time = timer;
         int quantumCounter = 0;
-        System.out.println("Executed RR");
+        //loop through the arrival then add it to the process on queue
+        System.out.println("\n#1 ready Queue: "+ readyQueue.size());
+        if (processOnQueue.isEmpty()){
+            processOnQueue.add(readyQueue.getFirst());
+            readyQueue.remove(processOnQueue.get(0));
+        }
 
-            // Add arriving processes to ready queue
-            int finalTimer = timer;
-            readyQueue.addAll(processToQueue.stream()
-                    .filter(process -> process.getArrivalTime() == finalTimer)
-                    .toList());
-
-            if (!readyQueue.isEmpty()) {
-                Process currentProcess = readyQueue.getFirst(); // Start process
-                // Add the time started the first time the process is executed
-                if (currentProcess.isFirstExecution()) {
-                    currentProcess.setFirstExecution(false);
-                    currentProcess.setTimeNow(timer);
-                    currentProcess.setTimeStarted(timer);
-//                    ganttChart.addProcess(currentProcess);
-
-                }
-
-
-                System.out.println("Executing process " + currentProcess.getPid() + " at time " + timer);
-                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
-                System.out.println(currentProcess.getBurstTime());
-                quantumTimer++;
-                if (quantumTime == quantumTimer){
-                    currentProcess.addTimeStarted(timer);
-                    currentProcess.addTimeStarted(timer);
-                }
-
-                if (quantumTimer == quantumTime || currentProcess.getBurstTime() == 0) {
-                    quantumTimer = 0;
-                    quantumCounter++;
-                    currentProcess.addTimeEnded(timer);
-                    if (quantumCounter == 5) {
-                        quantumCounter = 0;
-                    }
-
-                    if (currentProcess.getBurstTime() == 0) {
-                        System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
-                        currentProcess.setTimeEnd(timer);
-                        currentProcess.addTimeEnded(timer);
-                        readyQueue.remove(currentProcess);
-                    } else {
-                        readyQueue.remove(currentProcess);
-                        readyQueue.addLast(currentProcess);
-                    }
-                }
-            } else {
-                System.out.println("Idling at time " + timer);
+        //if quantum counter is still on going then execute task
+        if(quantumTimer > 0 ){
+            //check for burst Time
+            if (processOnQueue.getFirst().getBurstTime() == processOnQueue.getFirst().getRemainingBurstTime()){
+                processOnQueue.getFirst().setTimeStarted(timer);
             }
+            if (processOnQueue.getFirst().getBurstTime() != 0){
+                processOnQueue.getFirst().decrementBurst();
+                System.out.println("\n#1 RR Decremented Process:  "+ this.processOnQueue.getFirst().getPid());
+                System.out.println("#1 Remaining burst time: "+ this.processOnQueue.get(0).getRemainingBurstTime());
+
+                quantumTimer --;
+                System.out.println("Quantum Time: "+quantumTimer);
+            }
+            if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
+                System.out.println("#1 Process: "+ processOnQueue.getFirst().getPid() +" is Done" );
+                processOnQueue.getFirst().setTimeEnd(timer);
+                processOnQueue.remove(processOnQueue.getFirst());
+                quantumTimer = quantumTime;
+            }
+
+        }else {
+            System.out.println("Q time stopped");
+            readyQueue.addLast(processOnQueue.getFirst());// add it to the tail of the ready Queue
+            processOnQueue.getFirst().addTimeEnded(timer);
+            processOnQueue.clear();
+            quantumTimer = quantumTime;
+            run(timer); // call the method again since the run, ran because it checks if the qT is > 0 and will skip process if not done?
+        }
+
+        //if quatum time runs out add it to the last
+
+
         }
 
     public void addToqueue(ArrayList <Process> processes){
