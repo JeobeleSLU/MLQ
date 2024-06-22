@@ -1,0 +1,306 @@
+//import java.util.ArrayList;
+//import java.util.Comparator;
+//import java.util.LinkedList;
+//
+//public class SRTF {
+//    GanttChart gant;
+//    private GanttChart gChart;
+//    private ArrayList <Process> processToQueue;
+//
+//
+//
+//    public  ArrayList<Process> SRTF(ArrayList<Process> processes) {
+//        int currentTime = 0;
+//        int totalWaitingTime = 0;
+//        this.processToQueue = processes;
+//        this.gant = new GanttChart();
+//
+//
+//        // Sort processes by arrival time
+//        processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
+//
+//        LinkedList<Process> queue = new LinkedList<>();
+//        int completedProcesses = 0;
+//        int[] remainingTime = new int[processes.size()];
+////        ganttChart = new ArrayList<>();
+//
+//        while (completedProcesses < processes.size()) {
+//            // Add arrived processes to the queue
+//            for (int i = 0; i < processes.size(); i++) {
+//                if (processes.get(i).getArrivalTime() <= currentTime && remainingTime[i] == 0) {
+//                    processes.get(i).getPrioritySchedule();
+//                    queue.add(processes.get(i));
+//                    remainingTime[i] = processes.get(i).getBurstTime();
+//                }
+//            }
+//            // If the queue is empty, move to the next arrival time
+//            if (queue.isEmpty()) {
+//                currentTime = processes.get(completedProcesses).getArrivalTime();
+//                continue;
+//            }
+//
+//            // Find process with shortest remaining time
+//            Process shortestProcess = queue.stream().min(Comparator.comparingInt(p -> p.getRemainingBurstTime())).get();
+//
+//            // Execute the shortest process for one unit
+//            shortestProcess.setRemainingBurstTime(shortestProcess.getRemainingBurstTime()-1);
+//            currentTime++;
+//
+//            // Update waiting time for other processes in the queue
+////            for (Process process : queue) {
+////                if (process != shortestProcess) {
+////                    process.setwaitingTime++;
+////                }
+////            }
+//
+//            // Process completed
+////            if (shortestProcess.getRemainingBurstTime() == 0) {
+////                totalWaitingTime += shortestProcess.getWaitingTime();
+//////                shortestProcess.setTurnAroundTime(currentTime - shortestProcess.getArrivalTime((((); // Calculate turnaround time after completion
+////                queue.remove(shortestProcess);
+////                completedProcesses++;
+////                ganttChart.add("P"+shortestProcess.getPid()+" ["+(currentTime-shortestProcess.getBurstTime())+"]");
+////                ganttChart.add(shortestProcess);
+////            }
+////
+////        }
+////        System.out.println("Shortest Remaining Time Results:");
+//////        printProcessDetails(processes); // Use the modified printProcessDetails method
+////        System.out.println("Total Waiting Time: " + totalWaitingTime);
+////        return processes;
+////    }
+////
+////    private static int getCpuBurst(LinkedList<Process> queue) {
+////        int minRemainingTime = Integer.MAX_VALUE;
+////        for (Process process : queue) {
+////            minRemainingTime = Math.min(minRemainingTime, process.getRemainingBurstTime());
+////        }
+////        return minRemainingTime;
+////    }
+//
+//    // Modified printProcessDetails method to include classification
+////    public static void printProcessDetails(ArrayList<Process> processes) {
+////        System.out.println("| PID | Arrival Time | Burst Time | Waiting Time | Turnaround Time | Classification |");
+////        System.out.println("|---|---|---|---|---|---|");
+////        for (Process process : processes) {
+////            System.out.println(String.format("| %d | %d | %d | %d | %d | %s |",
+////                    process.pid, process.arrivalTime, process.burstTime, process.waitingTime, process.turnAroundTime, process.classification));
+////        }
+////        System.out.println(ganttChart);
+////    }
+//}
+//
+
+
+'
+
+SRTF
+
+//
+//
+//
+//
+//        if (!readyQueue.isEmpty()) {
+//            // if ready queue have an element inside it
+//            Process currentProcess = readyQueue.get(0);
+//            //gets the first element of the ready queue
+//            // Log start time if it's the first execution
+//            if (currentProcess.isFirstExecution()) {
+//                //checks if the process have already executed
+////                    startTime.add(timer);// add start time
+//                currentProcess.setTimeNow(this.timer);
+//                currentProcess.addTimeStarted(this.timer);
+//                currentProcess.setFirstExecution(false);
+//
+//                ganttChart.addProcess(currentProcess);
+//            }
+//            if (currentProcess.isPreempted()) {
+//                currentProcess.addTimeStarted(this.timer);
+//            }
+//
+//            // Execute the current process
+//            System.out.println("SRTF: Executing process " + currentProcess.getPid() + " at time " + this.timer);
+//            currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+//            startTime.add(this.timer);
+//            System.out.println(startTime);
+//
+//            // Check for preemption
+//            System.out.println("ReadyQ" + readyQueue.size());
+//            System.out.println("Process to Queue" + processOnQueue.size());
+////                if (!processToQueue.isEmpty()) {
+//            for (Process process : processOnQueue) {
+//                System.out.println("Checking preemption");
+//                System.out.println("Process " + process.getPid() + "Arrival:" + process.getArrivalTime());
+//                System.out.println("Time" + this.timer);
+//
+//                if ((process.getArrivalTime() == this.timer + 1)) {
+//                    if (process.getBurstTime() < currentProcess.getBurstTime()) {
+//                        System.out.println("A process was Preempted");
+////                                startTime.add(timer);
+//                        currentProcess.addTimeEnded(this.timer);
+//                        currentProcess.setFirstExecution(false);
+//                        currentProcess.setPreempted(true);
+//                        ganttChart.addProcess(currentProcess);
+////                                readyQueue.add(0, process);
+////                                readyQueue.remove(currentProcess);
+//                        break;
+//                    }
+//                }
+//                // Preemption occurred
+////                            startTime.add(timer - currentProcess.getArrivalTime());
+////                            endTime.add(timer);
+//
+////                            readyQueue.add(process);
+////                            readyQueue.add(currentProcess);
+////                            ganttChart.addProcess(currentProcess);
+//                // No need to continue checking
+//            }
+////                }
+//
+//            // Check if the process has completed execution
+//            if (currentProcess.getBurstTime() == 0) {
+////                    endTime.add(timer);
+//                System.out.println("SRTF Process " + currentProcess.getPid() + " completed at time " + this.timer);
+////                    endTime.add(timer);
+//                currentProcess.addTimeEnded(this.timer);
+//                readyQueue.remove(currentProcess);
+//                System.out.println(currentProcess.getTimesStarted() + " " + currentProcess.getTimesEnded());
+//                ganttChart.addProcess(currentProcess);
+//
+//            }
+////                currentProcess.setTimeStarted(startTime);
+////                currentProcess.setTimesEnded(endTime);
+//            System.out.println("TESTTTT" + currentProcess.getTimesStarted());
+//            System.out.println("TEST END!!!" + currentProcess.getTimesEnded());
+//        } else {
+//            // Idling if no processes are ready
+//            System.out.println("Idling at time " + this.timer);
+//        }
+//    }
+
+
+
+rr
+
+
+     System.out.println("Executed RR");
+
+            // Add arriving processes to ready queue
+            int finalTimer = timer;
+            readyQueue.addAll(proceessOnQueue.stream()
+                    .filter(process -> process.getArrivalTime() == finalTimer)
+                    .toList());
+
+            if (!readyQueue.isEmpty()) {
+                Process currentProcess = readyQueue.getFirst(); // Start process
+                // Add the time started the first time the process is executed
+                if (currentProcess.isFirstExecution()) {
+                    currentProcess.setFirstExecution(false);
+                    currentProcess.setTimeNow(timer);
+                    currentProcess.setTimeStarted(timer);
+//                    ganttChart.addProcess(currentProcess);
+
+                }
+
+
+                System.out.println("Executing process " + currentProcess.getPid() + " at time " + timer);
+                currentProcess.setBurstTime(currentProcess.getBurstTime() - 1);
+                System.out.println(currentProcess.getBurstTime());
+                quantumTimer++;
+                if (quantumTime == quantumTimer){
+                    currentProcess.addTimeStarted(timer);
+                    currentProcess.addTimeStarted(timer);
+                }
+
+                if (quantumTimer == quantumTime || currentProcess.getBurstTime() == 0) {
+                    quantumTimer = 0;
+                    quantumCounter++;
+                    currentProcess.addTimeEnded(timer);
+                    if (quantumCounter == 5) {
+                        quantumCounter = 0;
+                    }
+
+                    if (currentProcess.getBurstTime() == 0) {
+                        System.out.println("Process " + currentProcess.getPid() + " completed at time " + timer);
+                        currentProcess.setTimeEnd(timer);
+                        currentProcess.addTimeEnded(timer);
+                        readyQueue.remove(currentProcess);
+                    } else {
+                        readyQueue.remove(currentProcess);
+                        readyQueue.addLast(currentProcess);
+                    }
+                }
+            } else {
+                System.out.println("Idling at time " + timer);
+            }
+
+
+
+
+                       /*
+
+                        get the processes
+                        run the highest priority process
+                        based on the algorithm
+                        example if a process have arrive
+                        it should run the highest one first
+                        rounrobin.run something
+                        then check the lower priority
+
+                         */
+
+                    }
+              /*
+                       Executes the task based on the priority
+                       this will first execute if the roundRobin if the round robin is not empty
+                       then it will only execute the srtf the round robin its done
+                       then ....
+                        */
+
+
+  /*
+    This class should do all the running of the algorithms based on the mlq process
+     Processes to queue
+        -All process are added on to this list
+      ReadyQueue
+        -If timer == arrivalTime add it to the ready Queue
+        -Move the process form processes to queue to the ready queue
+      ProcesDoneQueue
+        -If remaining BurstTime == 0 add it to this queue
+        -Move From readyQueue to ProcessDoneQueue
+
+    For 2 cores:
+        -If no process is running it should add idle to the current TimeLine
+        -For real time process it should go to core 2
+        - For the rest it should go to core 1
+        -If a higher priority process  arrives it should preeempt the running lower priority process
+            *Use the addFirst() Function of the list
+     For 4 Cores:
+             -If no process is running it should add idle to the current TimeLine
+        -For real time process it should go to core 2
+        -Check all the ready queue of all the cores
+        - For the rest it should go to core 2,3,4
+        -If a higher priority process  arrives it should preeempt the running lower priority process
+
+
+    */
+            /*
+            check if the core is empty
+            get the highest priority process running
+            get all the number of running highest priority
+            get which core has the less running highest priority
+            then add it to the core that has the less running process
+            add
+
+             */
+  /*
+            ================================================================================
+            TODO: Add a load balancer that checks which cpu has the less number of process
+             *Checks the core which one has the lowest number of high priority
+                * add it to the core with the least number of higher priority
+                *remove the process that have been queue from the
+                 *process to queue to the process on queue
+                 //quite done
+            ================================================================================
+             */
+
