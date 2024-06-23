@@ -18,7 +18,7 @@ public class SchedulingAlgo implements Sorter {
     public ArrayList<Process> srtf;
     public ArrayList<Process> sjf;
     public ArrayList<Process> npps;
-    ArrayList<GanttChart> gantts;
+    public static ArrayList<GanttChart> gantts;
 
     private Process processToDraw;
 

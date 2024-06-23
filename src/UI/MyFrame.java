@@ -1,6 +1,7 @@
 package UI;
 
 import BackEndStuff.Process;
+import BackEndStuff.SchedulingAlgo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +38,7 @@ public class MyFrame extends JFrame {
     static public ArrayList<String> timeQuantumArray = new ArrayList<>();
      static public ArrayList<Process> processes;
     public int firstQuantum;
+    public static SchedulingAlgo sched;
     //--------------------------------------------------------------------------------------------------------------
     public MyFrame() {
         setTitle("Process Scheduler");
@@ -298,6 +300,9 @@ public class MyFrame extends JFrame {
 
     //--------------------------------------------------------------------------------------------------------------
     private void continueProcess() {
+        sched = new SchedulingAlgo(processes,4);
+        sched.run();
+
         System.out.println("Frame :");
         processes.forEach(e-> {
             System.out.println("Process ID:" + e.getPid());

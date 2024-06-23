@@ -142,6 +142,7 @@ public class Process {
         this.arrivalTime = 0;
         this.burstTime = 0;
         this.schedulerPriority = 0;
+        timesEnded = new ArrayList<>();
     }
 
     public int getPid() {
@@ -307,6 +308,10 @@ public class Process {
         }else {
             System.out.println("Is zero");
         }
+    }
+
+    public ArrayList<Integer> getTimeOnCore() {
+        return timeOnCore;
     }
 
     public void setCoreIDAffinity(int coreIDAffinity) {

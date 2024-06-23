@@ -156,6 +156,7 @@ public class SRTF implements Sorter, ProcessInterface {
         }
         if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
             processOnQueue.getFirst().setTimeEnd(time);
+            processOnQueue.getFirst().addTimeEnded(time);
             processDone.add(processOnQueue.getFirst());
             System.out.println("#2 Process Finished: " + processOnQueue.getFirst().getPid());
             processOnQueue.removeFirst(); //since it is finished, remove it on the queue
@@ -171,7 +172,7 @@ public class SRTF implements Sorter, ProcessInterface {
             if (process.getPid() == lastProcessID) {
                 System.out.println("SRTF Process :"+ process.getPid()+ "Is preempted");
                 System.out.println("Process on Queue SRTF PID: "+ processOnQueue.getFirst());
-                process.addTimeStarted(timer);
+                process.addTimeEnded(timer);
                 processDone.add(process);
                 break; // break since nahanap na
             }

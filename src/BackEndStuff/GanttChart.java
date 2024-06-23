@@ -1,6 +1,7 @@
 package BackEndStuff;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class GanttChart {
@@ -40,17 +41,38 @@ public class GanttChart {
         System.out.println("Gantt Chart:");
 
         // Print header
-        System.out.printf("%-5s %-20s %-20s\n", "PID", "Start Times", "End Times");
+        System.out.printf("%-5s %-20s %-20s %-20s\n", "PID", "Start Times", "End Times", "Times on CPU");
 
         // Iterate through each process and print their details
         for (Process process : processes) {
             String startTimes = process.getTimesStarted().toString();
             String endTimes = process.getTimesEnded().toString();
-            System.out.printf("%-5d %-20s %-20s\n", process.getPid(), startTimes,endTimes);
+            String timesOnCPU = process.timeOnCore.toString();
+            System.out.printf("%-5d %-20s %-20s %-20s \n", process.getPid(), startTimes,endTimes, timesOnCPU);
         }
     }
 
     public void getSize() {
         System.out.println("Gantt Chart size is: "+ processes.size());
+    }
+    public Process getProcessOnCore(int timer){
+        for (Process process : processes) {
+            for (Integer i : process.getTimeOnCore()) {
+                if (timer == i){
+                    return process;
+                }
+            }
+        }
+        System.out.println("No process found");
+        return new Process();
+    }
+
+    public boolean isRunning(int timeElapsed) {
+        for (Process process : processes) {
+            for (Integer i : process.getTimeOnCore()) {
+                return timeElapsed == i;
+                }
+            }
+        return false;
     }
 }
