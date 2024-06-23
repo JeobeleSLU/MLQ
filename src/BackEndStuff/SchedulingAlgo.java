@@ -49,9 +49,9 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCores.get(i).setPanel(panel);
         }
         this.timer = 0;
-        for (GanttChart gantt : gantts) {
-            gantt = new GanttChart();
-        }
+       for (int i = 0; i < numberOfCores; i++){
+           gantts.add(new GanttChart());
+       }
     }
 
     public SchedulingAlgo(ArrayList<Process> processes, int numberOfCores) {
@@ -63,6 +63,10 @@ public class SchedulingAlgo implements Sorter {
 
         for (int i = 0; i < numberOfCores; i++){
             arrayListOfCores.add(new Core(i));
+        }
+        gantts = new ArrayList<>();
+        for (int i = 0; i < numberOfCores; i++){
+            gantts.add(new GanttChart());
         }
 
         this.timer = -1;
@@ -89,20 +93,16 @@ public class SchedulingAlgo implements Sorter {
                 core.setTimer(this.timer);
                 core.runProcesses(timer);
             }
-            for (Core core : arrayListOfCores) {
-                for (Object o : core.getSJFDoneList()) {
-                    processDone.add((Process) o);
-                    System.out.println(((Process) o).getPid());
 
-                }
-                this.processOnQueueList.removeAll(core.getSJFDoneList());
-            }
             System.out.println("\nEnd of Cycle: "+timer);
+
         }
         for (Core arrayListOfCore : arrayListOfCores) {
-            arrayListOfCore.getGanttChart();
-
+            System.out.println("adding Ganttchart of: "+ arrayListOfCore.getCoreID());
+            gantts.add(arrayListOfCore.getGantt());
+            arrayListOfCore.getGantt().displayChart();
         }
+
     }
 
     private boolean checkCoresWithProcess() {

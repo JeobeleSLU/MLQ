@@ -17,22 +17,7 @@ public class GanttChart {
     public void addProcess(Process process) {
 
         // Check if a process with the same PID exists in the chart
-        boolean processExists = processes.stream()
-                .anyMatch(existingProcess -> existingProcess.getPid() == process.getPid());
-
-        if (processExists) {
-            // If PID matches, merge the start and end times
-            processes.stream()
-                    .filter(existingProcess -> existingProcess.getPid() == process.getPid())
-                    .findFirst()
-                    .ifPresent(existingProcess -> {
-                        existingProcess.getTimesStarted().addAll(process.getTimesStarted());
-                        existingProcess.getTimesEnded().addAll(process.getTimesEnded());
-                    });
-        } else {
-            // If no matching PID found, add the process to the chart
-            this.processes.add(process);
-        }
+        this.processes.add(process);
     }
 
     void addProcess(ArrayList<Process> gantt) {
@@ -61,7 +46,11 @@ public class GanttChart {
         for (Process process : processes) {
             String startTimes = process.getTimesStarted().toString();
             String endTimes = process.getTimesEnded().toString();
-            System.out.printf("%-5d %-20s\n", process.getPid(), startTimes);
+            System.out.printf("%-5d %-20s\n", process.getPid(), startTimes,endTimes);
         }
+    }
+
+    public void getSize() {
+        System.out.println("Gantt Chart size is: "+ processes.size());
     }
 }

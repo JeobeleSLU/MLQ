@@ -8,7 +8,7 @@ public class SJF implements  Sorter, ProcessInterface {
     private ArrayList<Process> processOnQueue;
     private GanttChart ganttChart;
     private int timer = 0;
-    private ArrayList<Process> doneList;
+    private ArrayList<Process> processDone;
 
     public SJF(ArrayList<Process> processes) {
         this.readyQueue  = new ArrayList<>();
@@ -21,7 +21,7 @@ public class SJF implements  Sorter, ProcessInterface {
     public SJF() {
         this.readyQueue  = new ArrayList<>();
         this.processOnQueue = new ArrayList<>();
-        this.doneList = new ArrayList<>();
+        this.processDone = new ArrayList<>();
         ganttChart = new GanttChart();
     }
     /*
@@ -89,6 +89,7 @@ public class SJF implements  Sorter, ProcessInterface {
             execcute it
              */
     public void run(int timer) {
+
         this.timer = timer;
             readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
                 if (processOnQueue.isEmpty()){
@@ -106,8 +107,11 @@ public class SJF implements  Sorter, ProcessInterface {
                     System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " + this.timer);
                     processOnQueue.getFirst().setTimeEnd(this.timer);
                     ganttChart.addProcess(processOnQueue.getFirst());
+                    processDone.add(processOnQueue.getFirst());
                     System.out.println("Done, Removing , SJF Process ...." + processOnQueue.getFirst().getPid());
                     System.out.println(processOnQueue.getFirst().getRemainingBurstTime());
+
+                    processDone.add(processOnQueue.getFirst());
                     processOnQueue.getFirst().setTimeEnd(timer);
                     processOnQueue.clear();
                 }
@@ -144,6 +148,10 @@ public class SJF implements  Sorter, ProcessInterface {
         this.readyQueue.addAll(processes);
     }
 
+    boolean processDoneIsEmpty(){
+        return processDone.isEmpty();
+    }
+
 
     public void addToqueue(Process process) {
         this.readyQueue.add(process);
@@ -153,7 +161,11 @@ public class SJF implements  Sorter, ProcessInterface {
         return processOnQueue;
     }
 
-    public ArrayList<Process> getDoneList() {
-        return doneList;
+    public ArrayList<Process> getProcessDone() {
+        return processDone;
+    }
+
+    public void clearProcessDone() {
+        processDone.clear();
     }
 }

@@ -12,6 +12,7 @@ public class SRTF implements Sorter, ProcessInterface {
     private ArrayList<Integer> endTime;
     private int lastProcessID;
     private int runCounter = 0;
+    private ArrayList<Process> processDone;
 
 
     public SRTF(ArrayList<Process> processes) {
@@ -20,6 +21,7 @@ public class SRTF implements Sorter, ProcessInterface {
         this.ganttChart = new GanttChart();
         startTime = new ArrayList<>();
         endTime = new ArrayList<>();
+        this.processDone = new ArrayList<>();
     }
 
     @Override
@@ -97,6 +99,7 @@ public class SRTF implements Sorter, ProcessInterface {
         this.readyQueue = new ArrayList<Process>();
         this.ganttChart = new GanttChart();
         this.processOnQueue = new ArrayList<Process>();
+        this.processDone = new ArrayList<>();
         startTime = new ArrayList<>();
         endTime = new ArrayList<>();
     }
@@ -127,6 +130,7 @@ public class SRTF implements Sorter, ProcessInterface {
 
      */
     public void run(int time) {
+
         this.timer = time;
         System.out.println("SRTF running");
         // sort all the burst time of the processes in the ready queue
@@ -158,16 +162,28 @@ public class SRTF implements Sorter, ProcessInterface {
         runCounter ++;
 
     }
-        private void setTimePreempted ( int timer){
-            for (Process process : processOnQueue) {
-                if (process.getPid() == lastProcessID) {
-                    process.addTimeStarted(timer);
-                    break;
-                }
-
+    private void setTimePreempted ( int timer){
+        for (Process process : processOnQueue) { //search process on queue based on the last process id
+            if (process.getPid() == lastProcessID) {
+                process.addTimeStarted(timer);
+                processDone.add(process);
+                break; // break since nahanap na
             }
         }
     }
+
+    public boolean processDoneIsEmpty() {
+        return processDone.isEmpty();
+    }
+
+    public ArrayList<Process> getProcessDone() {
+        return processDone;
+    }
+
+    public void clearProcessDone() {
+        processDone.clear();
+    }
+}
 
 
 

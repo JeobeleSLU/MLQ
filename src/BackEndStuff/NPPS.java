@@ -8,6 +8,7 @@ public class NPPS implements ProcessInterface, Sorter {
     private ArrayList<Process> processOnQueue;
     private GanttChart ganttChart;
     private int timer = 0;
+    private ArrayList<Process> processDone ;
     /*
     Todo: Refactor this code so that you can call the run method to execute the
     process and minus the remaining burst time based on this algorithm
@@ -18,12 +19,14 @@ public class NPPS implements ProcessInterface, Sorter {
         this.processOnQueue = new ArrayList<>();
         this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
+        processDone = new ArrayList<>();
     }
 
     public NPPS() {
         this.readyQueue = new ArrayList<>();
         this.processOnQueue = new ArrayList<>();
         ganttChart = new GanttChart();
+        processDone = new ArrayList<>();
         this.timer = 0;
 
     }
@@ -72,7 +75,6 @@ public class NPPS implements ProcessInterface, Sorter {
 
     @Override
     public boolean isEmpty() {
-        System.out.println("NPPS boolean:"+processOnQueue.isEmpty());
         System.out.println(processOnQueue.size());
         return this.readyQueue.isEmpty() && processOnQueue.isEmpty();
     }
@@ -90,33 +92,48 @@ public class NPPS implements ProcessInterface, Sorter {
     public void run(int timer) {
 
         this.timer = timer;
-                readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
-                if (processOnQueue.isEmpty()){
-                    processOnQueue.add(readyQueue.getFirst());
-                    System.out.println("NPPS added to On Queue");
-                    readyQueue.removeFirst();
-                    processOnQueue.getFirst().setTimeStarted(this.timer);
-                }
-                if (processOnQueue.getFirst().getBurstTime() !=0){
-                    System.out.println("yawa");
-                    System.out.println("#4 NPPS Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
-                    processOnQueue.getFirst().decrementBurst();
-                    System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
-                }
-                if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
-                    System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " +timer);
-                    System.out.println("Done, Removing , NPPS ...." + processOnQueue.getFirst().getPid());
-                    processOnQueue.getFirst().setTimeEnd(timer);
-                    processOnQueue.clear();
-                }
 
-                //todo: Maybe remove this idling? since the core itself will handle the idle
+        readyQueue.sort(Comparator.comparingInt(Process::getProcessPriority)); // Sort by priority
+            if (processOnQueue.isEmpty()){
+                processOnQueue.add(readyQueue.getFirst());
+                System.out.println("NPPS added to On Queue");
+                readyQueue.removeFirst();
+                processOnQueue.getFirst().setTimeStarted(this.timer);
+        }
+        if (processOnQueue.getFirst().getBurstTime() !=0){
+            System.out.println("yawa");
+            System.out.println("#4 NPPS Executing process " + processOnQueue.getFirst().getPid() + " at time " + timer);
+            processOnQueue.getFirst().decrementBurst();
+            System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
+        }
+        if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
+            System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " +timer);
+            System.out.println("Done, Removing , NPPS ...." + processOnQueue.getFirst().getPid());
+            processOnQueue.getFirst().setTimeEnd(timer);
+            addToProcessDone(processOnQueue.getFirst()); // pass the process if it is done on the process done list
+            processOnQueue.clear();
+        }
+
+        //todo: Maybe remove this idling? since the core itself will handle the idle
 
         }
 
+    void addToProcessDone(Process process){
+        this.processDone.add(process);
+    }
+    boolean processDoneIsEmpty(){
+        return processDone.isEmpty();
+    }
 
+    public ArrayList<Process> getProcessDone() {
+        return processDone;
+    }
     public ArrayList<Process> getGanttChartArray() {
         return this.ganttChart.getProcesses();
+    }
+
+    public void clearProcessDone() {
+        processDone.clear();
     }
 }
 

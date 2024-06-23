@@ -2,111 +2,128 @@ package BackEndStuff;
 
 import javax.swing.*;
     import java.util.ArrayList;
-    import java.util.Collection;
 
     import UI.MyPanel;
 
     public class Core implements Sorter {
 
+     RoundRobinScheduler roundRobinScheduler1;
+    NPPS nonPreemptivePriorityScheduling4;
+    SRTF shortestRemainingTimeFrist2;
+    SJF shortestJobFirst3;
+    static int numberOfCores;
+    ArrayList<Process> processes;
+    int timer;
+    int coreID;
+    int targetX;
+    int targetY;
+    MyPanel mp;
+    GanttChart gantt;
 
-        RoundRobinScheduler roundRobinScheduler1;
-        NPPS nonPreemptivePriorityScheduling4;
-        SRTF shortestRemainingTimeFrist2;
-        SJF shortestJobFirst3;
-        static int numberOfCores;
-        ArrayList<Process> processes;
-        GanttChart ganttChart ;
-        int timer;
-        int coreID;
-        int targetX;
-        int targetY;
-        MyPanel mp;
-        GanttChart gantt;
-
-        public Core(int i) {
-            this.coreID = i;
-            this.roundRobinScheduler1 = new RoundRobinScheduler();
-            this.shortestJobFirst3 = new SJF();
-            this.shortestRemainingTimeFrist2 = new SRTF();
-            this.nonPreemptivePriorityScheduling4 = new NPPS();
-            this.processes = new ArrayList<>();
-            this.ganttChart = new GanttChart();
-            this.timer = 0;
-            numberOfCores += 1;
-            if (coreID == 0) {
-                this.targetX = 739;
-                this.targetY = 123;// set
-            } else if (coreID == 1) {
-                this.targetX = 740;
-                this.targetY = 311;
-            } else if (coreID == 2) {
-                this.targetX = 740;
-                this.targetY = 475;
-            } else if (coreID == 3) {
-                this.targetX = 740;
-                this.targetY = 621;
-            }
-            gantt = new GanttChart();
+    public Core(int i) {
+        this.coreID = i;
+        this.roundRobinScheduler1 = new RoundRobinScheduler();
+        this.shortestJobFirst3 = new SJF();
+        this.shortestRemainingTimeFrist2 = new SRTF();
+        this.nonPreemptivePriorityScheduling4 = new NPPS();
+        this.processes = new ArrayList<>();
+        this.timer = 0;
+        numberOfCores += 1;
+        if (coreID == 0) {
+            this.targetX = 739;
+            this.targetY = 123;// set
+        } else if (coreID == 1) {
+            this.targetX = 740;
+            this.targetY = 311;
+        } else if (coreID == 2) {
+            this.targetX = 740;
+            this.targetY = 475;
+        } else if (coreID == 3) {
+            this.targetX = 740;
+            this.targetY = 621;
         }
-             public Core(int i, MyPanel panel) {
-                 this.coreID = i;
-                 this.roundRobinScheduler1 = new RoundRobinScheduler();
-                 this.shortestJobFirst3 = new SJF();
-                 this.shortestRemainingTimeFrist2 = new SRTF();
-                 this.nonPreemptivePriorityScheduling4 = new NPPS();
-                 this.processes = new ArrayList<>();
-                 this.ganttChart = new GanttChart();
-                 this.timer = 0;
-                 numberOfCores += 1;
-                 if (coreID == 0) {
-                     this.targetX = 739;
-                     this.targetY = 123;// set
-                 } else if (coreID == 1) {
-                     this.targetX = 740;
-                     this.targetY = 311;
-                 } else if (coreID == 2) {
-                     this.targetX = 740;
-                     this.targetY = 475;
-                 } else if (coreID == 3) {
-                     this.targetX = 740;
-                     this.targetY = 621;
-                 }
-             }
+        gantt = new GanttChart();
+    }
+    public Core(int i, MyPanel panel) {
+     this.coreID = i;
+     this.roundRobinScheduler1 = new RoundRobinScheduler();
+     this.shortestJobFirst3 = new SJF();
+     this.shortestRemainingTimeFrist2 = new SRTF();
+     this.nonPreemptivePriorityScheduling4 = new NPPS();
+     this.processes = new ArrayList<>();
+     this.timer = 0;
+     numberOfCores += 1;
+     if (coreID == 0) {
+         this.targetX = 739;
+         this.targetY = 123;// set
+     } else if (coreID == 1) {
+         this.targetX = 740;
+         this.targetY = 311;
+     } else if (coreID == 2) {
+         this.targetX = 740;
+         this.targetY = 475;
+     } else if (coreID == 3) {
+         this.targetX = 740;
+         this.targetY = 621;
+     }
 
+ }
+public void runProcesses(int time){
+    this.timer = time;
+    System.out.println("RR boolean: "+ !roundRobinScheduler1.isEmpty());
+    System.out.println("SRTF boolean: "+ !shortestRemainingTimeFrist2.isEmpty());
+    System.out.println("SJF boolean: "+ !shortestJobFirst3.isEmpty());
+    if (!roundRobinScheduler1.processDoneIsEmpty()){
+        System.out.println("Adding proess to gantt RR PID:"+ roundRobinScheduler1.getProcessDone().getFirst().getPid());
+        gantt.addProcess(roundRobinScheduler1.getProcessDone().getFirst());
+        roundRobinScheduler1.clearProcessDone();
+    }
 
-        public void runProcesses(int time){
-            this.timer = time;
-            System.out.println("RR boolean: "+ !roundRobinScheduler1.isEmpty());
-            System.out.println("SRTF boolean: "+ !shortestRemainingTimeFrist2.isEmpty());
-            System.out.println("SJF boolean: "+ !shortestJobFirst3.isEmpty());
-            System.out.println("NPPS boolean: "+ !nonPreemptivePriorityScheduling4.isEmpty());
-            if (!roundRobinScheduler1.isEmpty()){
-                roundRobinScheduler1.run(timer);
-                System.out.println("RR is executing");
-                
-            } else if (!shortestJobFirst3.isEmpty()) {
-                shortestJobFirst3.run(timer);
-                System.out.println("SJF is executing");
+    if (!nonPreemptivePriorityScheduling4.processDoneIsEmpty()){
+        System.out.println("Adding proess to gantt NPPS PID: "+ nonPreemptivePriorityScheduling4.getProcessDone().getFirst().getPid());
+        gantt.addProcess(nonPreemptivePriorityScheduling4.getProcessDone()); // get the process done when
+        nonPreemptivePriorityScheduling4.clearProcessDone();
+    }
+    if (!shortestJobFirst3.processDoneIsEmpty()){
+        System.out.println("Adding proess to gantt SJF PID:"+ shortestJobFirst3.getProcessDone().getFirst().getPid());
+        gantt.addProcess(shortestJobFirst3.getProcessDone());
+        shortestJobFirst3.clearProcessDone();
+    }
+    if (!shortestRemainingTimeFrist2.processDoneIsEmpty()){
+        System.out.println("Adding proess to gantt SRTF PID:"+ shortestRemainingTimeFrist2.getProcessDone().getFirst().getPid());
+        gantt.addProcess(shortestRemainingTimeFrist2.getProcessDone());// get the process done when
+        shortestRemainingTimeFrist2.clearProcessDone();
+    }
+    if (!roundRobinScheduler1.isEmpty()){
+        roundRobinScheduler1.run(timer);
+        System.out.println("RR is executing");
+    }
+    else if (!shortestJobFirst3.isEmpty()) {
+        shortestJobFirst3.run(timer);
+        System.out.println("SJF is executing");
 
-            } else if (!nonPreemptivePriorityScheduling4.isEmpty()) {
-                nonPreemptivePriorityScheduling4.run(timer);
-                System.out.println("NPPS is executing");
+    }
+    else if (!nonPreemptivePriorityScheduling4.isEmpty()) {
+        nonPreemptivePriorityScheduling4.run(timer);
+        System.out.println("NPPS is executing");
 
-            } else if (!shortestRemainingTimeFrist2.isEmpty()) {
-                System.out.println("SRTF process to Run: "+ shortestRemainingTimeFrist2.getNumberOfProcesses());
-                shortestRemainingTimeFrist2.run(timer);
-                System.out.println("SRTF is Executing");
-            }else {
-                //todo:create an idle timer logic here
-                System.out.println("Core:"+this.coreID+" is idling");
-                System.out.println("No process");
-            }
+    }
+    else if (!shortestRemainingTimeFrist2.isEmpty()) {
+        System.out.println("SRTF process to Run: "+ shortestRemainingTimeFrist2.getNumberOfProcesses());
+        shortestRemainingTimeFrist2.run(timer);
+        System.out.println("SRTF is Executing");
+    }
+    else {
+        //todo:create an idle timer logic here
+        System.out.println("Core:"+this.coreID+" is idling");
+        System.out.println("No process");
+    }
 
-            /*
-            Todo: Add Gantt Chart Logic to add process here
-             may be it can use the ganttChart from each algorithm?
-             */
-        }
+        /*
+        Todo: Add Gantt Chart Logic to add process here
+         may be it can use the ganttChart from each algorithm?
+         */
+    }
         void addProcess (ArrayList<Process> process){
             process.addAll(this.processes);
         }
@@ -169,7 +186,7 @@ import javax.swing.*;
         }
 
         public ArrayList getSJFDoneList(){
-            return this.shortestJobFirst3.getDoneList();
+            return this.shortestJobFirst3.getProcessDone();
         }
         public boolean isEmpty(){
             return
@@ -198,14 +215,7 @@ import javax.swing.*;
             return this.nonPreemptivePriorityScheduling4.getProcesses();
         }
 
-        public void getGanttChart() {
-            for (Process process : roundRobinScheduler1.getGanttChartArray()) {
-                ganttChart.addProcess(process); // sort the ganttChart based on the end time
-            }for (Process process : roundRobinScheduler1.getGanttChartArray()) {
-                ganttChart.addProcess(process); // sort the ganttChart based on the end time
-            }for (Process process : roundRobinScheduler1.getGanttChartArray()) {
-                ganttChart.addProcess(process); // sort the ganttChart based on the end time
-            }
-
+        public GanttChart getGantt() {
+        return gantt;
         }
     }
