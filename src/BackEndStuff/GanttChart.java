@@ -55,24 +55,15 @@ public class GanttChart {
     public void getSize() {
         System.out.println("Gantt Chart size is: "+ processes.size());
     }
-    public Process getProcessOnCore(int timer){
-        for (Process process : processes) {
-            for (Integer i : process.getTimeOnCore()) {
-                if (timer == i){
-                    return process;
-                }
-            }
-        }
-        System.out.println("No process found");
-        return new Process();
+    public Process getProcessOnCore(int timer) {
+        return processes.stream()
+                .filter(process -> process.getTimeOnCore().contains(timer))
+                .findFirst()
+                .orElse(new Process());
     }
 
     public boolean isRunning(int timeElapsed) {
-        for (Process process : processes) {
-            for (Integer i : process.getTimeOnCore()) {
-                return timeElapsed == i;
-                }
-            }
-        return false;
+        return processes.stream()
+                .anyMatch(process -> process.getTimeOnCore().contains(timeElapsed));
     }
 }
