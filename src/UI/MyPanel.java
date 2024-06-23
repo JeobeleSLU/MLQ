@@ -21,7 +21,6 @@ import static javax.imageio.ImageIO.read;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class MyPanel extends JPanel implements ActionListener, Runnable {
-    ArrayList<Process> processes ;
 
     final int fps = 60;
     Thread animationThread;
@@ -74,10 +73,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable {
         this.setDoubleBuffered(true);
         keyH = new KeyHandler(this);
         this.addMouseListener(keyH);
-        processes = new ArrayList<>();
-        processes.add( new Process(1, 0, 10, 1));
-        processes.add( new Process(3, 0, 10, 1));
-        processes.add( new Process(4, 0, 10, 1));
+
 
         getResources();
         //----------------------------------------------------------------------------------------------------------------------
@@ -216,7 +212,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable {
 
         initializeTable();
         schedulingAlgo = new SchedulingAlgo(processes,4 );// dummy try
-        schedulingAlgo.setPanel(this);
         schedulingAlgo.run();
 
     }
@@ -427,8 +422,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable {
         long currentTime;
         long timer = 0;
         while (animationThread!= null){
-
-                System.out.println("Thread is Running");
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime)/ drawInterval;
             timer += (currentTime - lastTime);

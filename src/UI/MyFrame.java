@@ -1,5 +1,7 @@
 package UI;
 
+import BackEndStuff.Process;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -33,7 +35,8 @@ public class MyFrame extends JFrame {
     static public ArrayList<String> burstTimeArray = new ArrayList<>();
     static public ArrayList<String> arrivalTimeArray = new ArrayList<>();
     static public ArrayList<String> timeQuantumArray = new ArrayList<>();
-
+     static public ArrayList<Process> processes;
+    public int firstQuantum;
     //--------------------------------------------------------------------------------------------------------------
     public MyFrame() {
         setTitle("Process Scheduler");
@@ -54,6 +57,7 @@ public class MyFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
+        this.processes  = new ArrayList<>();
     }
 
     //--------------------------------------------------------------------------------------------------------------
@@ -149,6 +153,7 @@ public class MyFrame extends JFrame {
         }
 
         for (int i = 0; i < maxInputs; i++) {
+
             int randomPriority = (int) (Math.random() * 4) + 1;
             levelProcess.setText(String.valueOf(randomPriority));
 
@@ -162,6 +167,7 @@ public class MyFrame extends JFrame {
                     int randomTimeQuantum = (int) (Math.random() * 10) + 1;
                     timeQuantumField.setText(String.valueOf(randomTimeQuantum));
                     firstTimeQuantum = timeQuantumField.getText();
+                    firstQuantum = Integer.parseInt(timeQuantumField.getText());
                     isFirstTimeQuantumSet = true;
                 } else {
                     timeQuantumField.setText(firstTimeQuantum);
@@ -174,7 +180,8 @@ public class MyFrame extends JFrame {
                 int randomProcessPriority = (int) (Math.random() * 10) + 1;
                 priorityField.setText(String.valueOf(randomProcessPriority)); ///////
             }
-
+            System.out.println(priorityField.getText());
+//
             addToTable();
         }
 
@@ -218,12 +225,15 @@ public class MyFrame extends JFrame {
         }
 
         if (inputCount < maxInputs) {
+
             this.priority = (String.valueOf(priorityField.getText()));
             priorityArray.add(this.priority);
+            System.out.println("Priority: "+ priorityField.getText());
 
             this.processPriority = String.valueOf(levelProcess.getText());
             processPriorityArray.add(this.processPriority);
 
+            System.out.println("BT: "+ this.burstTime);
             this.burstTime = String.valueOf(burstTimeField.getText());
             burstTimeArray.add(this.burstTime);
 
@@ -232,6 +242,19 @@ public class MyFrame extends JFrame {
 
             this.timeQuantum = String.valueOf(timeQuantumField.getText());
             timeQuantumArray.add(this.timeQuantum);
+
+
+            int burst = Integer.parseInt(String.valueOf(burstTimeField.getText()));
+            int arrival = Integer.parseInt(String.valueOf(arrivalTimeField.getText()));
+            int levelPrio = Integer.parseInt(String.valueOf(processPriority));
+            if (levelPrio == 3){
+                int priority =  Integer.parseInt(String.valueOf(priorityField.getText()));
+                Process process = new Process(inputCount+1,arrival,burst,levelPrio,priority);
+                processes.add(process);
+            }else {
+                Process process = new Process(inputCount+1,arrival,burst,levelPrio);
+                processes.add(process);
+            }
 
             this.processId = "P" + (inputCount + 1);
             processIDArray.add(this.processId);
@@ -258,6 +281,8 @@ public class MyFrame extends JFrame {
             setProcessPriority(processPriority);
             setProcessId(processId);
 
+
+
             priorityField.setText("");
             burstTimeField.setText("");
             arrivalTimeField.setText("");
@@ -273,6 +298,13 @@ public class MyFrame extends JFrame {
 
     //--------------------------------------------------------------------------------------------------------------
     private void continueProcess() {
+        System.out.println("Frame :");
+        processes.forEach(e-> {
+            System.out.println("Process ID:" + e.getPid());
+            System.out.println("BT:" + e.getBurstTime());
+            System.out.println("level: :" + e.getPrioritySchedule());
+            System.out.println("Arrival:" + e.getArrivalTime());
+        });
         SwingUtilities.invokeLater(() -> {
             MyPanel panel = new MyPanel();
             JFrame newFrame = new JFrame("Process Scheduler - Visualization");

@@ -203,7 +203,6 @@ public class SchedulingAlgo implements Sorter {
     }
 
     public void draw(Graphics2D g2D) {
-        System.out.println("drawing");
         for (Core arrayListOfCore : arrayListOfCores) {
             rr.addAll(arrayListOfCore.getRoundRobinQueue());
             srtf.addAll(arrayListOfCore.getSRTFQueue());
