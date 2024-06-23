@@ -46,7 +46,7 @@ public class GanttChart {
         for (Process process : processes) {
             String startTimes = process.getTimesStarted().toString();
             String endTimes = process.getTimesEnded().toString();
-            System.out.printf("%-5d %-20s\n", process.getPid(), startTimes,endTimes);
+            System.out.printf("%-5d %-20s %-20s\n", process.getPid(), startTimes,endTimes);
         }
     }
 

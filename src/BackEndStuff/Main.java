@@ -56,7 +56,8 @@ public class Main {
 //        processes.add(new Process(1,2,10,4,1));
 //        processes.add(new Process(2,2,10,4,1));
 //        processes.add(new Process(3,2,10,4,1));
-        processes.add(new Process(4,1,10,4));
+        processes.add(new Process(4,1,3,4));
+        processes.add(new Process(10,1,5,4));
         processes.add(new Process(5,2,3,2));
         processes.add(new Process(6,32,10,1));
         processes.add(new Process(7,15,10,1));
@@ -67,7 +68,7 @@ public class Main {
 
         processes.sort(Comparator.comparingInt(Process::getPid));
 
-        SchedulingAlgo schedulingAlgo = new SchedulingAlgo(processes,4);
+        SchedulingAlgo schedulingAlgo = new SchedulingAlgo(processes,1);
         schedulingAlgo.run();
     }
 }

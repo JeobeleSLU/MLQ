@@ -114,6 +114,7 @@ public class RoundRobinScheduler implements ProcessInterface {
 //            }
             if (processOnQueue.getFirst().getBurstTime() != 0) {
                 processOnQueue.getFirst().decrementBurst();
+                processOnQueue.getFirst().addTimeOnCore(timer);
                 System.out.println("\n#1 RR Decremented Process:  " + this.processOnQueue.getFirst().getPid());
                 System.out.println("#1 Remaining burst time: " + this.processOnQueue.get(0).getRemainingBurstTime());
 

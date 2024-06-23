@@ -312,6 +312,9 @@ public class Process {
     public void setCoreIDAffinity(int coreIDAffinity) {
         this.coreIDAffinity = coreIDAffinity;
     }
+    void addTimeOnCore(int time){
+        timeOnCore.add(time);
+    }
 
     boolean isProcessDone(){
         return this.remainingBurstTime <= 0;

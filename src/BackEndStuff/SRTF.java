@@ -141,22 +141,26 @@ public class SRTF implements Sorter, ProcessInterface {
         System.out.println("acckk");
         processOnQueue = Sorter.sortByRemainingBurstTime(processOnQueue);
         if (runCounter == 0) {// if its the first run set the last process id based on the first process on the process on queue
+            System.out.println("First PID is :"+ processOnQueue.getFirst().getPid());
             this.lastProcessID = processOnQueue.getFirst().getPid();
         }
         //check if the pid is same as the previous
         if (this.lastProcessID != processOnQueue.getFirst().getPid()) {
-            setTimePreempted(timer); // add time ended to the last process since it
+            setTimePreempted(timer); // add time ended to the last process since it was preempted
         }
         if (processOnQueue.getFirst().getBurstTime() != 0) {//ang gagi ayun nanaman problem
             processOnQueue.getFirst().decrementBurst();
+            processOnQueue.getFirst().addTimeOnCore(timer);
             System.out.println("#2 Decremented Process: " + processOnQueue.getFirst().getPid() + "at time: " + time);
             System.out.println("Remaining time: " + processOnQueue.getFirst().getRemainingBurstTime());
         }
         if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
             processOnQueue.getFirst().setTimeEnd(time);
+            processDone.add(processOnQueue.getFirst());
             System.out.println("#2 Process Finished: " + processOnQueue.getFirst().getPid());
             processOnQueue.removeFirst(); //since it is finished, remove it on the queue
-        }else {
+        }
+        else {
             this.lastProcessID = processOnQueue.getFirst().getPid();
         }
         runCounter ++;
@@ -165,6 +169,8 @@ public class SRTF implements Sorter, ProcessInterface {
     private void setTimePreempted ( int timer){
         for (Process process : processOnQueue) { //search process on queue based on the last process id
             if (process.getPid() == lastProcessID) {
+                System.out.println("SRTF Process :"+ process.getPid()+ "Is preempted");
+                System.out.println("Process on Queue SRTF PID: "+ processOnQueue.getFirst());
                 process.addTimeStarted(timer);
                 processDone.add(process);
                 break; // break since nahanap na

@@ -101,16 +101,15 @@ public class SJF implements  Sorter, ProcessInterface {
                 if (processOnQueue.getFirst().getRemainingBurstTime() != 0 ){
                     System.out.println("#3 SJF"+"Executing process " + processOnQueue.getFirst().getPid() + " at time " + this.timer);
                     processOnQueue.getFirst().decrementBurst();
+                    processOnQueue.getFirst().addTimeOnCore(timer);
                     System.out.println("Remaining BurstTime: "+ processOnQueue.getFirst().getRemainingBurstTime());
                 }
                 if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
                     System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " + this.timer);
                     processOnQueue.getFirst().setTimeEnd(this.timer);
                     ganttChart.addProcess(processOnQueue.getFirst());
-                    processDone.add(processOnQueue.getFirst());
                     System.out.println("Done, Removing , SJF Process ...." + processOnQueue.getFirst().getPid());
                     System.out.println(processOnQueue.getFirst().getRemainingBurstTime());
-
                     processDone.add(processOnQueue.getFirst());
                     processOnQueue.getFirst().setTimeEnd(timer);
                     processOnQueue.clear();
