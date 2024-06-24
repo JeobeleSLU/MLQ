@@ -304,3 +304,88 @@ rr
             ================================================================================
              */
 
+ private void drawBallOnCore1(Graphics2D g2D) {
+        Process curr =SchedulingAlgo.gantts.get(4).getProcessOnCore(elapsedTime);
+        String id = "P" + curr.getPid();
+        // Draw the ball with the gradient
+        g2D.fillOval(coreX, coresY[0], BALL_SIZE, BALL_SIZE);
+
+        // Set the font and color for the text
+        g2D.setFont(new Font("Arial", Font.BOLD, 12));
+        g2D.setColor(Color.white);
+
+        // Center the text within the ball
+        FontMetrics fm = g2D.getFontMetrics();
+        int textWidth = fm.stringWidth(id);
+        int textX = coreX + (BALL_SIZE - textWidth) / 2;
+        int textY = coresY[0] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
+
+        // Draw the process ID inside the ball
+        g2D.drawString(id, textX, textY);
+    }
+
+
+    private void drawBallOnCore2(Graphics2D g2D) {
+        Process curr =SchedulingAlgo.gantts.get(5).getProcessOnCore(elapsedTime);
+        String id = "P" + curr.getPid();
+
+        // Draw the ball with the gradient
+        g2D.fillOval(coreX, coresY[1], BALL_SIZE, BALL_SIZE);
+
+        // Set the font and color for the text
+        g2D.setFont(new Font("Arial", Font.BOLD, 12));
+        g2D.setColor(Color.white);
+
+        // Center the text within the ball
+        FontMetrics fm = g2D.getFontMetrics();
+        int textWidth = fm.stringWidth(id);
+        int textX = coreX + (BALL_SIZE - textWidth) / 2;
+        int textY = coresY[1] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
+
+        // Draw the process ID inside the ball
+        g2D.drawString(id, textX, textY);
+
+    }
+
+
+    private void drawBallOnCore3(Graphics2D g2D) {
+        Process curr =SchedulingAlgo.gantts.get(6).getProcessOnCore(elapsedTime);
+        String id = "P" + curr.getPid();
+        // Draw the ball with the gradient
+        g2D.fillOval(coreX, coresY[2], BALL_SIZE, BALL_SIZE);
+
+        // Set the font and color for the text
+        g2D.setFont(new Font("Arial", Font.BOLD, 12));
+        g2D.setColor(Color.white);
+
+        // Center the text within the ball
+        FontMetrics fm = g2D.getFontMetrics();
+        int textWidth = fm.stringWidth(id);
+        int textX = coreX + (BALL_SIZE - textWidth) / 2;
+        int textY = coresY[2] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
+
+        // Draw the process ID inside the ball
+        g2D.drawString(id, textX, textY);
+    }
+
+    private void drawBallOnCore4(Graphics2D g2D) {
+        Process curr =SchedulingAlgo.gantts.get(7).getProcessOnCore(elapsedTime);
+        String id = "P" + curr.getPid();
+        // Draw the ball with the gradient
+        g2D.fillOval(coreX, coresY[3], BALL_SIZE, BALL_SIZE);
+
+        // Set the font and color for the text
+        g2D.setFont(new Font("Arial", Font.BOLD, 12));
+        g2D.setColor(Color.white);
+
+        // Center the text within the ball
+        FontMetrics fm = g2D.getFontMetrics();
+        int textWidth = fm.stringWidth(id);
+        int textX = coreX + (BALL_SIZE - textWidth) / 2;
+        int textY = coresY[2] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
+
+        // Draw the process ID inside the ball
+        g2D.drawString(id, textX, textY);
+
+
+    }

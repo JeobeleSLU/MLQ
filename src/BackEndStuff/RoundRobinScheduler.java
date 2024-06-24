@@ -124,7 +124,7 @@ public class RoundRobinScheduler implements ProcessInterface {
             if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
                 System.out.println("#1 Process: " + processOnQueue.getFirst().getPid() + " is Done");
                 processDone.add(processOnQueue.getFirst());
-                processOnQueue.getFirst().setTimeEnd(timer);
+                processOnQueue.getFirst().setTimeEnd(timer + 1);
                 processOnQueue.remove(processOnQueue.getFirst());
                 quantumTimer = quantumTime;
             }

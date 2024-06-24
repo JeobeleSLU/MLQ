@@ -56,14 +56,19 @@ public class GanttChart {
         System.out.println("Gantt Chart size is: "+ processes.size());
     }
     public Process getProcessOnCore(int timer) {
-        return processes.stream()
-                .filter(process -> process.getTimeOnCore().contains(timer))
-                .findFirst()
-                .orElse(new Process());
+        for (Process process : processes) {
+            if (process.isExecuting(timer)){
+                return process;
+            }
+        }
+        return null;
     }
 
     public boolean isRunning(int timeElapsed) {
-        return processes.stream()
-                .anyMatch(process -> process.getTimeOnCore().contains(timeElapsed));
+        for (Process process : processes) {
+            if (process.isExecuting(timeElapsed)) {
+                return true;
+            }
+        }return false;
     }
 }

@@ -2,8 +2,9 @@ package BackEndStuff;
 
 import javax.swing.*;
     import java.util.ArrayList;
+import java.util.Formatter;
 
-    import UI.MyPanel;
+import UI.MyPanel;
 
     public class Core implements Sorter {
 
@@ -19,8 +20,9 @@ import javax.swing.*;
     int targetY;
     MyPanel mp;
     GanttChart gantt;
+    Process idle ;
 
-    public Core(int i) {
+        public Core(int i) {
         this.coreID = i;
         this.roundRobinScheduler1 = new RoundRobinScheduler();
         this.shortestJobFirst3 = new SJF();
@@ -43,6 +45,8 @@ import javax.swing.*;
             this.targetY = 621;
         }
         gantt = new GanttChart();
+       idle = new Process();
+       idle.setPid(-1);
     }
     public Core(int i, MyPanel panel) {
      this.coreID = i;
@@ -94,6 +98,9 @@ public void runProcesses(int time){
         gantt.addProcess(shortestRemainingTimeFrist2.getProcessDone());// get the process done when
         shortestRemainingTimeFrist2.clearProcessDone();
     }
+    if (!isEmpty()){
+        idle.addTimeEnded(time);
+    }
     if (!roundRobinScheduler1.isEmpty()){
         roundRobinScheduler1.run(timer);
         System.out.println("RR is executing");
@@ -115,6 +122,7 @@ public void runProcesses(int time){
     }
     else {
         //todo:create an idle timer logic here
+        idle.addTimeStarted(timer);
         System.out.println("Core:"+this.coreID+" is idling");
         System.out.println("No process");
     }

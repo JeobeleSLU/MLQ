@@ -33,9 +33,6 @@ public class Process {
     ArrayList <Integer> timeOnCore;
 
 
-
-
-
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority) {
         this.pid = pid;
         this.arrivalTime = arrivalTime;
@@ -56,8 +53,18 @@ public class Process {
         readyQueueX = 0;
         readyQueueY = 0;
         timeOnCore = new ArrayList<>();
+    }
+    public Process() {
+        this.pid = 0;
+        this.arrivalTime = 0;
+        this.burstTime = 0;
+        this.schedulerPriority = 0;
+        timesEnded = new ArrayList<>();
+        timeOnCore = new ArrayList<>();
+        timesStarted = new ArrayList<>();
 
     }
+
 
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority, int processPriority) {
         this.pid = pid;
@@ -126,6 +133,7 @@ public class Process {
 
     public void setTimeStarted(int timeStarted) {
         this.timeStarted = timeStarted;
+        timesStarted.add(this.timeStarted);
     }
 
     public int getTimesExecuted() {
@@ -137,13 +145,7 @@ public class Process {
     }
 
 
-    public Process() {
-        this.pid = 0;
-        this.arrivalTime = 0;
-        this.burstTime = 0;
-        this.schedulerPriority = 0;
-        timesEnded = new ArrayList<>();
-    }
+
 
     public int getPid() {
         return pid;
@@ -306,6 +308,7 @@ public class Process {
         if (this.remainingBurstTime > 0){
             this.remainingBurstTime --;
         }else {
+            updateTimes();
             System.out.println("Is zero");
         }
     }
@@ -323,6 +326,15 @@ public class Process {
 
     boolean isProcessDone(){
         return this.remainingBurstTime <= 0;
+    }
+
+    boolean isExecuting(int time) {
+        for (Integer i : timesStarted) {
+            if (time == i) {
+                return true; // Return true if a match is found
+            }
+        }
+        return false; // Return false if no match is found
     }
     //add Draw readyQueue here
 }
