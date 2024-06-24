@@ -70,7 +70,6 @@ import UI.MyPanel;
          this.targetX = 740;
          this.targetY = 621;
      }
-
  }
 public void runProcesses(int time){
     this.timer = time;

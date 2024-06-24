@@ -45,7 +45,7 @@ public class Main {
 //        processes.add(new Process(26, 2, 2, 3));
 //        processes.add(new Process(27, 2, 2, 3));
 //        processes.add(new Process(28, 2, 2, 3));
-//        processes.add(new Process(29, 3, 2, 3));
+//        processes1.add(new Process(29, 3, 2, 3));
 //        processes.add(new Process(30, 3, 2, 3));
 //        processes.add(new Process(31, 3, 2, 3));
 //        processes.add(new Process(32, 3, 2, 3));
