@@ -47,12 +47,11 @@ public class SchedulingAlgo implements Sorter {
 
         for (int i = 0; i < numberOfCores; i++){
             arrayListOfCores.add(new Core(i));
-            arrayListOfCores.get(i).setPanel(panel);
         }
         this.timer = 0;
-       for (int i = 0; i < numberOfCores; i++){
-           gantts.add(new GanttChart());
-       }
+//       for (int i = 0; i < numberOfCores; i++){
+//           gantts.add(new GanttChart());
+//       }
     }
 
     public SchedulingAlgo(ArrayList<Process> processes, int numberOfCores) {
@@ -100,6 +99,7 @@ public class SchedulingAlgo implements Sorter {
         }
         for (Core arrayListOfCore : arrayListOfCores) {
             System.out.println("adding Ganttchart of: "+ arrayListOfCore.getCoreID());
+            arrayListOfCore.getIdle();
             gantts.add(arrayListOfCore.getGantt());
             arrayListOfCore.getGantt().displayChart();
         }

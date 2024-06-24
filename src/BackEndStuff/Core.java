@@ -229,4 +229,8 @@ public void runProcesses(int time){
         public GanttChart getGantt() {
         return gantt;
         }
+
+        public void getIdle() {
+            this.gantt.addProcess(idle);
+        }
     }

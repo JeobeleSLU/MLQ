@@ -61,7 +61,7 @@ public class GanttChart {
         System.out.println("Gantt Chart size is: "+ processes.size());
     }
     public Process getProcessOnCore(int timer) {
-        for (Process process : processes) {
+        for (Process process : uniqueProccess) {
             if (process.isExecuting(timer)){
                 return process;
             }

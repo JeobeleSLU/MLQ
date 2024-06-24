@@ -331,7 +331,6 @@ public class Process {
     boolean isExecuting(int time) {
         for (Integer i : timesStarted) {
             if (time == i) {
-                System.out.println("PID: "+ this.pid+ "is Running");
                 return true; // Return true if a match is found
             }
         }
