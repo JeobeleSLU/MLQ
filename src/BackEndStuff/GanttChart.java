@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 public class GanttChart {
     private ArrayList<Process> processes;
     private HashSet<Process> uniqueProccess;
+    private HashSet<Process> arrived;
 
     public GanttChart() {
         this.processes = new ArrayList<>();
+        this.arrived = new HashSet<>();
         this.uniqueProccess = new HashSet<>();
     }
 
@@ -77,4 +79,8 @@ public class GanttChart {
         }return false;
     }
 
+    public HashSet<Process> getArrived(int timer) {
+        //get all the process that have arrived
+        return (HashSet<Process>) processes.stream().filter(e-> e.getArrivalTime() == timer);
+    }
 }

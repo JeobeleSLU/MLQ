@@ -329,6 +329,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
 
     }
     private void drawBallsOnCores(Graphics2D g2D) {
+        //FIXME: process not drawing on core
+        //todo: create ganttCahrt drawing
         for (int i = 4; i<= 7;i++){
             System.out.println("The i is: " + i);
         // Check each core's Gantt chart and draw ball if process is running

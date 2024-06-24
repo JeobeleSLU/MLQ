@@ -306,7 +306,7 @@ public class Process {
 
     public void calculateWaitingTime() {
 //        this.waitingTime = this.turnAroundTime - this.originalBurst;
-        if (this.schedulerPriority != 1){
+        if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.waitingTime = this.timeStarted - this.arrivalTime;
         }else
             for (int i = 0; i < timesStarted.size(); i++) {

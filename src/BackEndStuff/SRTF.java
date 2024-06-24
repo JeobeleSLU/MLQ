@@ -10,7 +10,7 @@ public class SRTF implements Sorter, ProcessInterface {
     private int timer = 0;
     private ArrayList<Integer> startTime;
     private ArrayList<Integer> endTime;
-    private int lastProcessID;
+    private Process lastProcess;
     private int runCounter = 0;
     private ArrayList<Process> processDone;
 
@@ -142,10 +142,11 @@ public class SRTF implements Sorter, ProcessInterface {
         processOnQueue = Sorter.sortByRemainingBurstTime(processOnQueue);
         if (runCounter == 0) {// if its the first run set the last process id based on the first process on the process on queue
             System.out.println("First PID is :"+ processOnQueue.getFirst().getPid());
-            this.lastProcessID = processOnQueue.getFirst().getPid();
+            this.lastProcess = processOnQueue.getFirst();
         }
         //check if the pid is same as the previous
-        if (this.lastProcessID != processOnQueue.getFirst().getPid()) {
+        if (this.lastProcess != processOnQueue.getFirst()) {
+            System.out.println("hii");
             setTimePreempted(timer); // add time ended to the last process since it was preempted
         }
         if (processOnQueue.getFirst().getBurstTime() != 0) {//ang gagi ayun nanaman problem
@@ -157,22 +158,25 @@ public class SRTF implements Sorter, ProcessInterface {
         if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
             processOnQueue.getFirst().setTimeEnd(time);
             processOnQueue.getFirst().addTimeEnded(time);
+            processOnQueue.getFirst().updateTimes();
+            System.out.println("Adding process on ");
             processDone.add(processOnQueue.getFirst());
             System.out.println("#2 Process Finished: " + processOnQueue.getFirst().getPid());
             processOnQueue.removeFirst(); //since it is finished, remove it on the queue
         }
         else {
-            this.lastProcessID = processOnQueue.getFirst().getPid();
+            this.lastProcess = processOnQueue.getFirst();
         }
         runCounter ++;
 
     }
     private void setTimePreempted ( int timer){
         for (Process process : processOnQueue) { //search process on queue based on the last process id
-            if (process.getPid() == lastProcessID) {
+            if (process == lastProcess) {
                 System.out.println("SRTF Process :"+ process.getPid()+ "Is preempted");
                 System.out.println("Process on Queue SRTF PID: "+ processOnQueue.getFirst());
                 process.addTimeEnded(timer);
+
                 processDone.add(process);
                 break; // break since nahanap na
             }
