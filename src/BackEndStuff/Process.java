@@ -208,7 +208,7 @@ public class Process {
         timesExecuted++;
         if (timesExecuted == 5){
             schedulerPriority--;
-            timesExecuted = 0;
+             timesExecuted = 0;
         }
         if (schedulerPriority < 0 ){
             this.schedulerPriority = 1;
@@ -296,7 +296,8 @@ public class Process {
         if (this.schedulerPriority != 1){
             this.turnAroundTime = this.timeEnd - this.arrivalTime;
         }else
-            this.turnAroundTime = this.timesEnded.getLast() - this.timesStarted.getFirst();
+            this.turnAroundTime = timesEnded.getLast() - this.arrivalTime;
+            System.out.println("Turn around time: "+this.turnAroundTime);
     }
     public void updateTimes() {
         calculateTurnAroundTime();
@@ -307,7 +308,15 @@ public class Process {
 //        this.waitingTime = this.turnAroundTime - this.originalBurst;
         if (this.schedulerPriority != 1){
             this.waitingTime = this.timeStarted - this.arrivalTime;
-        }else this.waitingTime = this.turnAroundTime - this.burstTime;
+        }else
+            for (int i = 0; i < timesStarted.size(); i++) {
+                if (i == 0) {
+                    waitingTime += (timesStarted.get(i) - arrivalTime);
+                } else {
+                    waitingTime += (timesStarted.get(i) - timesEnded.get(i - 1));
+                }
+            }
+        System.out.println("Waiting time: "+ this.waitingTime);;
     }
     void decrementBurst(){
         if (this.remainingBurstTime > 0){

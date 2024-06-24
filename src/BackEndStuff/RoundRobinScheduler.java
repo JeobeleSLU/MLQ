@@ -125,6 +125,7 @@ public class RoundRobinScheduler implements ProcessInterface {
                 System.out.println("#1 Process: " + processOnQueue.getFirst().getPid() + " is Done");
                 processDone.add(processOnQueue.getFirst());
                 processOnQueue.getFirst().setTimeEnd(timer + 1);
+                processOnQueue.getFirst().addTimeEnded(timer + 1);
                 processOnQueue.getFirst().updateTimes();
                 System.out.println("TT: "+ processOnQueue.getFirst().getTurnAroundTime());
                 processOnQueue.remove(processOnQueue.getFirst());
