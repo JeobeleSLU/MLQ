@@ -94,6 +94,8 @@ public class SJF implements  Sorter, ProcessInterface {
             readyQueue.sort(Comparator.comparingInt(Process::getBurstTime)); // Sort by burst time
                 if (processOnQueue.isEmpty()){
                     processOnQueue.add(readyQueue.getFirst());
+
+                    processOnQueue.getFirst().addTimeStarted(timer);
                     readyQueue.removeFirst();
                     processOnQueue.getFirst().setTimeStarted(this.timer); //this is a bug? because it would differ
                 }
@@ -107,6 +109,7 @@ public class SJF implements  Sorter, ProcessInterface {
                 if (processOnQueue.getFirst().getRemainingBurstTime() == 0){
                     System.out.println("Process " + processOnQueue.getFirst().getPid() + " completed at time " + this.timer);
                     processOnQueue.getFirst().setTimeEnd(this.timer);
+                    processOnQueue.getFirst().addTimeEnded(timer);
                     ganttChart.addProcess(processOnQueue.getFirst());
                     System.out.println("Done, Removing , SJF Process ...." + processOnQueue.getFirst().getPid());
                     System.out.println(processOnQueue.getFirst().getRemainingBurstTime());

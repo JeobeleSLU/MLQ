@@ -1,5 +1,6 @@
 package BackEndStuff;
 
+import UI.GanttTable;
 import UI.MyPanel;
 
 import java.awt.*;

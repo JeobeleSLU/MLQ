@@ -17,15 +17,17 @@ import java.util.*;
 import java.util.List;
 import java.util.Random;
 
+
 import static UI.MyFrame.*;
 import static javax.imageio.ImageIO.read;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-public class MyPanel extends JPanel implements ActionListener,Runnable {
+public class MyPanel extends JPanel implements ActionListener {
 
     final int fps = 60;
     Thread animationThread;
     int drawCount = 0;
+    ArrayList<Process> processOnQueue;
 
 
     final int WIDTH = 2500;
@@ -48,8 +50,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     int ballX = 50; // Ball's initial x position
     int ballY = 50; // Ball's initial y position
     String procId;
-    private final int coreX = 740;
-    private final int[] coresY = {139,308,464,624};
+    private final int coreX = 735;
+    private final int[] coresY = {128,298,458,618};
 
     // Keep track of arrived processes
     private final Map<String, Image> ballImages = new HashMap<>();
@@ -74,7 +76,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         keyH = new KeyHandler(this);
-        this.addMouseListener(keyH);
+//        this.addMouseListener(keyH);
         getResources();
         System.out.println("gant sa panel");
         System.out.println("Size: " + SchedulingAlgo.gantts.size());
@@ -84,9 +86,10 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
             gantt.displayChart();
             i++;
         }
+        processOnQueue = new ArrayList<>();
         //----------------------------------------------------------------------------------------------------------------------
-        ballTimer = new Timer(10, this);
-        labelTimer = new Timer(1000, e-> updateTimer());
+        ballTimer = new Timer(100, this);
+        labelTimer = new Timer(1200, e-> updateTimer());
         timerLabel = new JLabel("Time: 0 seconds");
         timerLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
         timerLabel.setBounds(470, 5, 200, 30);
@@ -268,8 +271,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         elapsedTime++;
         timerLabel.setText("Time: " + elapsedTime + " seconds");
         System.out.println(elapsedTime);
-        animationThread = new Thread(this);
-        animationThread.start();
+//        animationThread = new Thread(this);
+//        animationThread.start();
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -314,45 +317,15 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
             addLabels();
             labelsAdded = true;
         }
-        drawBallsOnCores(g2D);
+        for (int i = 4; i<= 7;i++){
+            drawBallsOnCores(g2D,i);
+        }
         drawBall1(g2D);
         ganttChart(g2D);
+
     }
 
 
-    private void drawBallsOnCores(Graphics2D g2D) {
-        // Check each core's Gantt chart and draw ball if process is running
-        for (int i = 4; i <= 7; i++) {
-            GanttChart gantt = SchedulingAlgo.gantts.get(i);
-            if (gantt.isRunning(elapsedTime)) {
-                Process curr = gantt.getProcessOnCore(elapsedTime);
-                int coreIndex = i - 4; // Calculate core index based on loop index
-                drawBallOnCore(g2D, curr, coreIndex);
-            }
-        }
-    }
-    private void drawBallOnCore(Graphics2D g2D, Process curr, int coreIndex) {
-        if (curr != null) {
-            String id = "P" + curr.getPid();
-            g2D.setColor(Color.BLACK); // Set color for core balls
-
-            // Draw the ball on the specified core
-            g2D.fillOval(coreX, coresY[coreIndex], BALL_SIZE, BALL_SIZE);
-
-            // Set font and color for text
-            g2D.setFont(new Font("Arial", Font.BOLD, 12));
-            g2D.setColor(Color.WHITE);
-
-            // Center the text within the ball
-            FontMetrics fm = g2D.getFontMetrics();
-            int textWidth = fm.stringWidth(id);
-            int textX = coreX + (BALL_SIZE - textWidth) / 2;
-            int textY = coresY[coreIndex] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
-
-            // Draw process ID inside the ball
-            g2D.drawString(id, textX, textY);
-        }
-    }
     //---------------------------------------------------------------------------------------------------------------------
 
     public void drawBall1(Graphics2D g2D) {
@@ -453,35 +426,35 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         g2D.drawString(id, textX, textY);
     }
     //---------------------------------------------------------------------------------------------------------------------
-    @Override
-    public void run() {
-        double drawInterval = 1000000000 / fps;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-        long timer = 0;
-        while (animationThread!= null){
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime)/ drawInterval;
-            timer += (currentTime - lastTime);
-            lastTime = currentTime;
-
-            if (delta >= 1){
-                //
-                update();
-                repaint();
-                delta --;
-                drawCount++;
-                //increment
-            }
-            if (timer >= 1000000000){
-                drawCount = 0;
-                timer = 0;
-                timer ++;
-            }
-        }
-
-    }
+//    @Override
+//    public void run() {
+//        double drawInterval = 1000000000 / fps;
+//        double delta = 0;
+//        long lastTime = System.nanoTime();
+//        long currentTime;
+//        long timer = 0;
+//        while (animationThread!= null){
+//            currentTime = System.nanoTime();
+//            delta += (currentTime - lastTime)/ drawInterval;
+//            timer += (currentTime - lastTime);
+//            lastTime = currentTime;
+//
+//            if (delta >= 1){
+//                //
+//                update();
+//                repaint();
+//                delta --;
+//                drawCount++;
+//                //increment
+//            }
+//            if (timer >= 1000000000){
+//                drawCount = 0;
+//                timer = 0;
+//                timer ++;
+//            }
+//        }
+//
+//    }
 //    public boolean isDoneAnimating = false;
     //---------------------------------------------------------------------------------------------------------------------
     @Override
@@ -489,6 +462,38 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         // Update ball positions and repaint
     //    updateBallPositions();
         repaint();
+    }
+
+    private void drawBallsOnCores(Graphics2D g2D,int i) {
+        // Check each core's Gantt chart and draw ball if process is running
+        GanttChart gantt = SchedulingAlgo.gantts.get(i);
+        if (gantt.isRunning(elapsedTime)) {
+            Process curr = gantt.getProcessOnCore(elapsedTime);
+            int coreIndex = i - 4; // Calculate core index based on loop index
+            drawBallOnCore(g2D, curr, coreIndex);
+        }
+    }
+    private void drawBallOnCore(Graphics2D g2D, Process curr, int coreIndex) {
+        if (curr != null) {
+            String id = "P" + curr.getPid();
+            g2D.setColor(Color.BLACK); // Set color for core balls
+
+            // Draw the ball on the specified core
+            g2D.fillOval(coreX, coresY[coreIndex], BALL_SIZE, BALL_SIZE);
+
+            // Set font and color for text
+            g2D.setFont(new Font("Arial", Font.BOLD, 12));
+            g2D.setColor(Color.WHITE);
+
+            // Center the text within the ball
+            FontMetrics fm = g2D.getFontMetrics();
+            int textWidth = fm.stringWidth(id);
+            int textX = coreX + (BALL_SIZE - textWidth) / 2;
+            int textY = coresY[coreIndex] + (BALL_SIZE + fm.getAscent()) / 2 - fm.getDescent();
+
+            // Draw process ID inside the ball
+            g2D.drawString(id, textX, textY);
+        }
     }
 
 

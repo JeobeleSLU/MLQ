@@ -1,14 +1,17 @@
 package BackEndStuff;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class GanttChart {
     private ArrayList<Process> processes;
+    private HashSet<Process> uniqueProccess;
 
     public GanttChart() {
         this.processes = new ArrayList<>();
+        this.uniqueProccess = new HashSet<>();
     }
 
     void updateAllValues(){
@@ -19,10 +22,12 @@ public class GanttChart {
 
         // Check if a process with the same PID exists in the chart
         this.processes.add(process);
+        this.uniqueProccess.add(process);
     }
 
     void addProcess(ArrayList<Process> gantt) {
         processes.addAll(gantt);
+        this.uniqueProccess.addAll(processes);
     }
 
     public ArrayList<Process> getProcesses() {
@@ -65,10 +70,11 @@ public class GanttChart {
     }
 
     public boolean isRunning(int timeElapsed) {
-        for (Process process : processes) {
+        for (Process process : uniqueProccess) {
             if (process.isExecuting(timeElapsed)) {
                 return true;
             }
         }return false;
     }
+
 }

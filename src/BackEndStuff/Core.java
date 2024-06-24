@@ -180,6 +180,9 @@ public void runProcesses(int time){
         void addToNPPSScheduler (Process processToAdd){
             this.nonPreemptivePriorityScheduling4.addToQueue(processToAdd);
         }
+        void addIdleToGantt(){
+            processes.add(idle);
+        }
 
         public int getCoreID() {
             return coreID;
