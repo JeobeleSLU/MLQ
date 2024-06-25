@@ -1,6 +1,7 @@
 package BackEndStuff;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -18,6 +19,9 @@ public class GanttChart {
 
     void updateAllValues(){
         processes.forEach(Process::updateTimes);
+    }
+    public void getAllProcessess(ArrayList<Process> processes){
+        this.processes.addAll(processes);
     }
 
     public void addProcess(Process process) {
@@ -84,4 +88,26 @@ public class GanttChart {
         return (HashSet<Process>) processes.stream().filter(e-> e.getArrivalTime() == timer);
     }
 
+   public HashSet<Process> getUniqueProccess(){
+        return (HashSet<Process>)
+                this.uniqueProccess.stream()
+                        .filter(e-> e.getPid() >=1 ).
+                        collect(Collectors.toSet());
+    }
+    public void addAllUniqueProcess(HashSet<Process> process){
+        this.uniqueProccess.addAll(process);
+    }
+    public int getUniqueProcessSize(){
+        return this.uniqueProccess.size();
+    }
+    public void sortByProcessID (){
+        this.processes = (ArrayList<Process>) uniqueProccess.stream().collect(Collectors.toList());
+        processes.sort(Comparator.comparingInt(Process::getPid));
+        for (Process process : processes) {
+            System.out.println("Sorted: "+ process.getPid());
+        }
+    }
+    public int getProcessessSize(){
+        return processes.size();
+    }
 }

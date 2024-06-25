@@ -29,6 +29,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     Thread animationThread;
     int drawCount = 0;
     ArrayList<Process> processOnQueue;
+    private JTable[] ganttChartTables = new JTable[4];
 
 
     final int WIDTH = 2500;
@@ -41,6 +42,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     JButton startButton;
     JButton stopButton;
     JButton aboutButton;
+    DefaultTableModel ganttModel;
 
     public static final int BALL_SIZE = 25;
     JLabel timerLabel;
@@ -52,7 +54,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     int ballY = 50; // Ball's initial y position
     String procId;
     private final int coreX = 735;
-    private final int[] coresY = {128,298,458,618};
+    private final int[] coresY = {128, 298, 458, 618};
 
     // Keep track of arrived processes
     private final Map<String, Image> ballImages = new HashMap<>();
@@ -93,7 +95,10 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(1200, e-> updateTimer());
+        labelTimer = new Timer(1200, e -> {
+            updateTimer();
+            updateGanttChart(elapsedTime);
+        });
         timerLabel = new JLabel("Time: 0 seconds");
         timerLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
         timerLabel.setBounds(470, 5, 200, 30);
@@ -230,7 +235,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
 
     private void getResources() {
         try {
-            bg= read((getClass().getResourceAsStream("/resources/Frame 1.png")));
+            bg = read((getClass().getResourceAsStream("/resources/Frame 1.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -239,8 +244,15 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
 
     //----------------------------------------------------------------------------------------------------------------------
     private void initializeTable() {
+        GanttChart allGantts = new GanttChart();
+        for (int i = 4; i < 8; i++){
+            allGantts.addAllUniqueProcess(SchedulingAlgo.gantts.get(i).getUniqueProccess());
+            System.out.println("Unique Process:" + allGantts.getUniqueProcessSize());
+            allGantts.getUniqueProccess().forEach(e-> System.out.println("UNIQUE PID: "+ e.getPid()));
+        }
+        allGantts.sortByProcessID();
         JTable computationTable = new JTable();
-        Object[] columns = {"PID", "Level P", "Priority", "Burst ", "Arrival ", "Time Quantum", "Waiting", "Turn", "Res", "Stat"};
+        Object[] columns = {"PID", "Level P", "Priority", "Burst", "Arrival", "Time Quantum", "Waiting", "Turn", "Res", "Stat"};
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         computationTable.setModel(model);
@@ -250,25 +262,57 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         computationTable.setForeground(Color.black);
         computationTable.setSelectionBackground(Color.black);
         computationTable.setGridColor(Color.black);
-        computationTable.setRowHeight(30);
+        computationTable.setRowHeight(30); // Adjust this value to change the row height
         computationTable.setAutoCreateRowSorter(true);
 
-        for (int i = 0; i < processIDArray.size(); i++) {
-            Object[] row = {
-                    processIDArray.get(i),
-                    processPriorityArray.get(i),
-                    priorityArray.get(i),
-                    burstTimeArray.get(i),
-                    arrivalTimeArray.get(i),
-                    timeQuantumArray.get(i),
+        // Set the intercell spacing to add space between rows
+        computationTable.setIntercellSpacing(new Dimension(0, 10)); // 10 pixels vertical spacing
 
+        for (int i = 0; i < allGantts.getProcessessSize(); i++) {
+            Object[] row = {
+                    allGantts.getProcesses().get(i).getPid(),
+                    allGantts.getProcesses().get(i).getPrioritySchedule(),
+                    allGantts.getProcesses().get(i).getProcessPriority(),
+                    allGantts.getProcesses().get(i).getBurstTime(),
+                    allGantts.getProcesses().get(i).getArrivalTime(),
+                    timeQuantumArray.get(i),
+                    allGantts.getProcesses().get(i).getWaitingTime(),
+                    allGantts.getProcesses().get(i).getTurnAroundTime(),
             };
             model.addRow(row);
         }
         JScrollPane scrollPane = new JScrollPane(computationTable);
         scrollPane.setBounds(955, 68, 570, 200);
         this.add(scrollPane);
+
+        // Gantt Chart Tables
+        int yPosition = 290;
+        for (int core = 0; core < 4; core++) {
+            DefaultTableModel ganttModel = new DefaultTableModel();
+            ganttModel.addRow(new Object[]{});
+
+            JTable ganttChartTable = new JTable(ganttModel);
+            ganttChartTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            ganttChartTable.setFillsViewportHeight(true);
+            ganttChartTable.setFont(new Font("Arial", Font.BOLD, 12));
+            ganttChartTable.setRowHeight(40);
+
+            JScrollPane ganttScrollPane = new JScrollPane(ganttChartTable);
+            ganttScrollPane.setBounds(955, yPosition, 570, 70);
+            this.add(ganttScrollPane);
+
+            JLabel coreLabel = new JLabel("Core " + (core + 1));
+            coreLabel.setFont(new Font("Arial", Font.BOLD, 12));
+            coreLabel.setBounds(955, yPosition - 30, 570, 30);
+            this.add(coreLabel);
+
+            yPosition += 100; // dito adjust spacing
+
+            ganttChartTables[core] = ganttChartTable;
+        }
+
     }
+
 
     //----------------------------------------------------------------------------------------------------------------------
     public void updateTimer() {
@@ -314,7 +358,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2D = (Graphics2D)g;
+        Graphics2D g2D = (Graphics2D) g;
 
         g2D.drawImage(bg, 0, 0, null);
 
@@ -328,23 +372,25 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         ganttChart(g2D);
 
     }
+
     private void drawBallsOnCores(Graphics2D g2D) {
         //FIXME: process not drawing on core
         //todo: create ganttCahrt drawing
-        for (int i = 4; i<= 7;i++){
+        for (int i = 4; i <= 7; i++) {
             System.out.println("The i is: " + i);
-        // Check each core's Gantt chart and draw ball if process is running
-        GanttChart gantt = SchedulingAlgo.gantts.get(i);
-        if (gantt.isRunning(elapsedTime)) {
-            System.out.println(i);
-            Process curr = gantt.getProcessOnCore(elapsedTime);
-            System.out.println("Core: "+ (i-4) + "\nCurrent process: "+ curr.getPid());
-            int coreIndex = i - 4; // Calculate core index based on loop index
-            drawBallOnCore(g2D, curr, coreIndex);
+            // Check each core's Gantt chart and draw ball if process is running
+            GanttChart gantt = SchedulingAlgo.gantts.get(i);
+            if (gantt.isRunning(elapsedTime)) {
+                System.out.println(i);
+                Process curr = gantt.getProcessOnCore(elapsedTime);
+                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid());
+                int coreIndex = i - 4; // Calculate core index based on loop index
+                drawBallOnCore(g2D, curr, coreIndex);
+            }
         }
-    }
 
     }
+
     private void drawBallOnCore(Graphics2D g2D, Process curr, int coreIndex) {
         if (curr != null) {
             String id = "P" + curr.getPid();
@@ -431,7 +477,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
 
     //---------------------------------------------------------------------------------------------------------------------
 
-// Add this field to the MyPanel class to store the colors
+    // Add this field to the MyPanel class to store the colors
     private final Map<String, Color[]> ballColors = new HashMap<>();
 
     private void drawBall(Graphics2D g2D, String id, int x, int y) {
@@ -468,6 +514,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         // Draw the process ID inside the ball
         g2D.drawString(id, textX, textY);
     }
+
     //---------------------------------------------------------------------------------------------------------------------
     @Override
     public void run() {
@@ -476,8 +523,9 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-        while (animationThread!= null){
+        while (animationThread != null) {
             repaint();
+
 //            currentTime = System.nanoTime();
 //            delta += (currentTime - lastTime)/ drawInterval;
 //            timer += (currentTime - lastTime);
@@ -499,18 +547,20 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         }
 
     }
+
     public boolean isDoneAnimating = false;
+
     //---------------------------------------------------------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {
         // Update ball positions and repaint
         //    updateBallPositions();
         repaint();
     }
+
     //---------------------------------------------------------------------------------------------------------------------
     private void ganttChart(Graphics2D g2D) {
         // Implement Gantt chart drawing
     }
-
 
 
     private void update() {
@@ -528,6 +578,46 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
          */
     }
 
+    public void updateGanttChart(int currentTime) {
+        for (int core = 0; core < 4; core++) {
+            GanttChart gantt = SchedulingAlgo.gantts.get(core+4); // Adjust index as needed
+            Process currProcess = gantt.getProcessOnCore(currentTime);
+            if (currProcess != null) {
+                String columnName = "Time " + currentTime;
+
+                // Get the corresponding table model for this core
+                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
+
+                // Check if the column for this time already exists
+                int columnIndex = ganttModel.findColumn(columnName);
+                if (columnIndex == -1) {
+                    // Add a new column for the current time
+                    ganttModel.addColumn(columnName);
+                    columnIndex = ganttModel.getColumnCount() - 1;
+                }
+
+                // Set the process ID (PID) in the appropriate row and column
+                if (currProcess.getPid()!= -1){
+                    ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
+                }
+
+            }else {
+                String columnName = "Time " + currentTime;
+
+                // Get the corresponding table model for this core
+                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
+
+                // Check if the column for this time already exists
+                int columnIndex = ganttModel.findColumn(columnName);
+                if (columnIndex == -1) {
+                    // Add a new column for the current time
+                    ganttModel.addColumn(columnName);
+                    columnIndex = ganttModel.getColumnCount() - 1;
+                }
+                ganttModel.setValueAt("Idle",0,columnIndex);
+            }
+        }
+    }
 }
 
 
