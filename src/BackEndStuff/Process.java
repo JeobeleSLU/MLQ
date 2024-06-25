@@ -310,18 +310,19 @@ public class Process {
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.waitingTime = this.timeStarted - this.arrivalTime;
         }else
-            for (int i = 0; i < timesStarted.size(); i++) {
-                if (this.pid == -1 ){
-                    break;
-                }
-                if (i == 0) {
-                    System.out.println("Iteration: "+ i);
-                    waitingTime += (timesStarted.get(i) - arrivalTime);
-                } else {
-                    System.out.println("Iteration: "+ i);
-                    waitingTime += (timesStarted.get(i) - timesEnded.get(i - 1));
-                }
-            }
+            this.waitingTime = this.turnAroundTime-this.burstTime;
+//            for (int i = 0; i < timesStarted.size(); i++) {
+//                if (this.pid == -1 ){
+//                    break;
+//                }
+//                if (i == 0) {
+//                    System.out.println("Iteration: "+ i);
+//                    waitingTime += (timesStarted.get(i) - arrivalTime);
+//                } else {
+//                    System.out.println("Iteration: "+ i);
+//                    waitingTime += (timesStarted.get(i) - timesEnded.get(i - 1));
+//                }
+//            }
         System.out.println("Waiting time: "+ this.waitingTime);;
     }
     void decrementBurst(){
