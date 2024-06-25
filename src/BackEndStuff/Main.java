@@ -60,8 +60,14 @@ public class Main {
 //        processes.add(new Process(10,1,5,4));
 //        processes.add(new Process(5,2,3,2));
 //        processes.add(new Process(6,1,10,1));
-        processes.add(new Process(8,3,10,4));
-        processes.add(new Process(9,2,12,4));
+        processes.add(new Process(1,10,9,3,4));
+        processes.add(new Process(2,85,14,3,3));
+        processes.add(new Process(3,0,12,3,2));
+        processes.add(new Process(4,89,10,3,2));
+        processes.add(new Process(5,101,7,3,2));
+        processes.add(new Process(6,15,15,3,1));
+        processes.add(new Process(7,95,3,3,1));
+        processes.add(new Process(8,5,4,3,3));
 //        processes.add(new Process(8,1,10,2,3));
 //
 //        processes.add(new Process(9,10,10,1));

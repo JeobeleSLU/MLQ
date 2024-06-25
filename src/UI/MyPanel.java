@@ -336,7 +336,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         JLabel interactiveLabel = new JLabel("Interactive Queueing (NPPS)");
         interactiveLabel.setBounds(125, 384, 208, 12);
         this.add(interactiveLabel);
-        JLabel batchLabel = new JLabel("Batch Queueing (SJF)");
+        JLabel batchLabel = new JLabel("Batch Queueing (SRTF)");
         batchLabel.setBounds(125, 548, 208, 12);
         this.add(batchLabel);
         JLabel core1Label = new JLabel("Core 1");
@@ -580,12 +580,12 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     }
 
     public void updateGanttChart(int currentTime) {
-        for (int core = 0; core <= 4; core++) {
+        for (int core = 0; core < 4; core++) {
             GanttChart gantt = SchedulingAlgo.gantts.get(core + 4); // Adjust index as needed
             Process currProcess = gantt.getProcessOnCore(currentTime);
 
             if (currProcess != null) {
-                String columnName = "Time " + currentTime;
+                String columnName = "Time " + elapsedTime;
 
                 // Get the corresponding table model for this core
                 DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
@@ -604,7 +604,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
                 }
 
             }else {
-                String columnName = "Time " + currentTime;
+                String columnName = "Time " + elapsedTime;
 
                 // Get the corresponding table model for this core
                 DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
@@ -617,6 +617,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
                     columnIndex = ganttModel.getColumnCount() - 1;
                 }
                 ganttModel.setValueAt("Idle",0,columnIndex);
+
             }
         }
     }
