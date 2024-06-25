@@ -169,7 +169,7 @@ public class SchedulingAlgo implements Sorter {
             System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
             System.out.println("Remaining Burst Time: "+ process.getBurstTime());
             arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
-
+            process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
 //            drawRR(Graphics2D g2);
 
         }
@@ -177,20 +177,24 @@ public class SchedulingAlgo implements Sorter {
             setProcessToDraw(process);
             sortCoreToLeastProcess(4);
             System.out.println("Assigning SRTF: "+ arrayListOfCores.getFirst().getCoreID());
-
             arrayListOfCores.get(0).addToSRTFScheduler(process);
+            process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
         }
         for (Process process : sjf) {
             sortCoreToLeastProcess(2);
             System.out.println("Assigning SJF\n"+"Process ID: "+process.getPid()+
                     "\nAssigning  to core: " +arrayListOfCores.getFirst().getCoreID());
             arrayListOfCores.get(0).addToSJFScheduler(process);
+            process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
+
 //            drawSJF();
         }
         for (Process process : npps) {
-            System.out.println("Assigning NPPS");
             sortCoreToLeastProcess(3);
+            System.out.println("Assigning NPPS Core :"+ arrayListOfCores.getFirst().getCoreID());
             arrayListOfCores.get(0).addToNPPSScheduler(process);
+
+            process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
 //            drawNPPS();
         }
         arrived.forEach(e-> this.processToQueueList.remove(e));

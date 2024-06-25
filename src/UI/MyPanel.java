@@ -252,7 +252,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         }
         allGantts.sortByProcessID();
         JTable computationTable = new JTable();
-        Object[] columns = {"PID", "Level P", "Priority", "Burst", "Arrival", "Time Quantum", "Waiting", "Turn", "Res", "Stat"};
+        Object[] columns = {"PID", "Level P", "Priority", "Burst", "Arrival", "Time Quantum", "Waiting","Turn","Affinity",  "Res", "Stat"};
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         computationTable.setModel(model);
@@ -278,6 +278,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
                     timeQuantumArray.get(i),
                     allGantts.getProcesses().get(i).getWaitingTime(),
                     allGantts.getProcesses().get(i).getTurnAroundTime(),
+                    allGantts.getProcesses().get(i).getCoreIDAffinity(),
             };
             model.addRow(row);
         }
@@ -320,7 +321,6 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         elapsedTime++;
 //        repaint();
         timerLabel.setText("Time: " + elapsedTime + " seconds");
-        System.out.println(elapsedTime);
         animationThread = new Thread(this);
         animationThread.start();
     }
@@ -377,15 +377,16 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         //FIXME: process not drawing on core
         //todo: create ganttCahrt drawing
         for (int i = 4; i <= 7; i++) {
-            System.out.println("The i is: " + i);
             // Check each core's Gantt chart and draw ball if process is running
             GanttChart gantt = SchedulingAlgo.gantts.get(i);
+
             if (gantt.isRunning(elapsedTime)) {
                 System.out.println(i);
                 Process curr = gantt.getProcessOnCore(elapsedTime);
-                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid());
+
+                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid()+ "Affinity: "+ curr.getCoreIDAffinity());
                 int coreIndex = i - 4; // Calculate core index based on loop index
-                drawBallOnCore(g2D, curr, coreIndex);
+                drawBallOnCore(g2D, curr, curr.getCoreIDAffinity());
             }
         }
 
@@ -579,14 +580,15 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     }
 
     public void updateGanttChart(int currentTime) {
-        for (int core = 0; core < 4; core++) {
-            GanttChart gantt = SchedulingAlgo.gantts.get(core+4); // Adjust index as needed
+        for (int core = 0; core <= 4; core++) {
+            GanttChart gantt = SchedulingAlgo.gantts.get(core + 4); // Adjust index as needed
             Process currProcess = gantt.getProcessOnCore(currentTime);
+
             if (currProcess != null) {
                 String columnName = "Time " + currentTime;
 
                 // Get the corresponding table model for this core
-                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
+                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
 
                 // Check if the column for this time already exists
                 int columnIndex = ganttModel.findColumn(columnName);

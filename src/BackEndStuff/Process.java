@@ -354,5 +354,9 @@ public class Process {
         }
         return false; // Return false if no match is found
     }
+
+    public int getCoreIDAffinity() {
+        return coreIDAffinity;
+    }
     //add Draw readyQueue here
 }
