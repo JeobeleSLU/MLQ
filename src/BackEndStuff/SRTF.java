@@ -131,24 +131,33 @@ public class SRTF implements Sorter, ProcessInterface {
      */
     public void run(int time) {
 
+
         this.timer = time;
         System.out.println("SRTF running");
         // sort all the burst time of the processes in the ready queue
-        readyQueue = Sorter.sortByBurstTime(readyQueue); // i think this is not needed?
+//        readyQueue = Sorter.sortByBurstTime(readyQueue); // i think this is not needed?
         processOnQueue.addAll(readyQueue); // add all the process inside the POQ
         readyQueue.removeAll(processOnQueue); // remove the process from the ready queue since
         System.out.println("SRTF readqueue remove");
         System.out.println("acckk");
         processOnQueue = Sorter.sortByRemainingBurstTime(processOnQueue);
-        if (runCounter == 0) {// if its the first run set the last process id based on the first process on the process on queue
-            System.out.println("First PID is :"+ processOnQueue.getFirst().getPid());
-            this.lastProcess = processOnQueue.getFirst();
+        if (lastProcess == null){
+            lastProcess = processOnQueue.getFirst();
+            processOnQueue.getFirst().addTimeStarted(timer);
+        }else{
+            if (lastProcess != processOnQueue.getFirst()){
+                System.out.println("hii");
+                processOnQueue.getFirst().addTimeStarted(timer);
+                setTimePreempted(timer);
+            }
+
         }
+
         //check if the pid is same as the previous
-        if (this.lastProcess != processOnQueue.getFirst()) {
-            System.out.println("hii");
-            setTimePreempted(timer); // add time ended to the last process since it was preempted
-        }
+//        if (this.lastProcess != processOnQueue.getFirst()) {
+//            System.out.println("hii");
+//            setTimePreempted(timer); // add time ended to the last process since it was preempted
+//        }
         if (processOnQueue.getFirst().getBurstTime() != 0) {//ang gagi ayun nanaman problem
             processOnQueue.getFirst().decrementBurst();
             processOnQueue.getFirst().addTimeOnCore(timer);
@@ -156,8 +165,8 @@ public class SRTF implements Sorter, ProcessInterface {
             System.out.println("Remaining time: " + processOnQueue.getFirst().getRemainingBurstTime());
         }
         if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
-            processOnQueue.getFirst().setTimeEnd(time);
-            processOnQueue.getFirst().addTimeEnded(time);
+            processOnQueue.getFirst().setTimeEnd(time+ 1);
+            processOnQueue.getFirst().addTimeEnded(time+1);
             processOnQueue.getFirst().updateTimes();
             System.out.println("Adding process on ");
             processDone.add(processOnQueue.getFirst());
@@ -171,14 +180,20 @@ public class SRTF implements Sorter, ProcessInterface {
 
     }
     private void setTimePreempted ( int timer){
+        System.out.println("process On Queue: "+ processOnQueue.size());
         for (Process process : processOnQueue) { //search process on queue based on the last process id
-            if (process == lastProcess) {
+            System.out.println("Last Process id: "+ lastProcess.getPid());
+            System.out.println("Process: "+ process.getPid());
+            if (lastProcess == process ) {
+
+                System.out.println(process);
                 System.out.println("SRTF Process :"+ process.getPid()+ "Is preempted");
                 System.out.println("Process on Queue SRTF PID: "+ processOnQueue.getFirst());
-                process.addTimeEnded(timer);
-
+                process.addTimeEnded(timer  );
                 processDone.add(process);
                 break; // break since nahanap na
+            }else {
+                System.out.println("process not found");
             }
         }
     }

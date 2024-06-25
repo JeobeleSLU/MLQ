@@ -232,4 +232,9 @@ public void runProcesses(int time){
         public void getIdle() {
             this.gantt.addProcess(idle);
         }
+        void gatherProcessess(){
+            if (!shortestRemainingTimeFrist2.processDoneIsEmpty()){
+                gantt.addProcess(shortestRemainingTimeFrist2.getProcessDone());
+            }
+        }
     }

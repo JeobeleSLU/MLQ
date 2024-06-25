@@ -83,4 +83,5 @@ public class GanttChart {
         //get all the process that have arrived
         return (HashSet<Process>) processes.stream().filter(e-> e.getArrivalTime() == timer);
     }
+
 }

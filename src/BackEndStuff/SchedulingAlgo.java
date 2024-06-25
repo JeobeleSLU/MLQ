@@ -99,7 +99,9 @@ public class SchedulingAlgo implements Sorter {
         }
         for (Core arrayListOfCore : arrayListOfCores) {
             System.out.println("adding Ganttchart of: "+ arrayListOfCore.getCoreID());
+            arrayListOfCore.gatherProcessess();
             arrayListOfCore.getIdle();
+            arrayListOfCore.gantt.updateAllValues();
             gantts.add(arrayListOfCore.getGantt());
             arrayListOfCore.getGantt().displayChart();
         }

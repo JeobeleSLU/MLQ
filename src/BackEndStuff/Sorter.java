@@ -21,7 +21,7 @@ public interface Sorter {
     static ArrayList<Process> sortByBurstTime(ArrayList<Process> processes) {
         return (ArrayList<Process>) processes
                 .stream()
-                .sorted(Comparator.comparingInt(e -> e.getBurstTime()))
+                .sorted(Comparator.comparingInt(Process::getBurstTime))
                 .collect(Collectors.toList());
     }
 
