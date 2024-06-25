@@ -40,7 +40,7 @@ public class RoundRobinScheduler implements ProcessInterface {
     }
 
     public void addToQueue(Process process) {
-        this.readyQueue.add(process);
+        this.readyQueue.addLast(process);
     }
 
     public void setQuantumTime(int quantumTime) {
@@ -102,16 +102,12 @@ public class RoundRobinScheduler implements ProcessInterface {
         System.out.println("\n#1 ready Queue: " + readyQueue.size());
         if (processOnQueue.isEmpty()) {
             processOnQueue.add(readyQueue.getFirst());
-            readyQueue.remove(processOnQueue.get(0));
+            readyQueue.remove(processOnQueue.getFirst());
             processOnQueue.getFirst().addTimeStarted(timer);
         }
 
         //if quantum counter is still on going then execute task
         if (quantumTimer > 0) {
-            //check for burst Time
-//            if (processOnQueue.getFirst().getBurstTime() == processOnQueue.getFirst().getRemainingBurstTime()) {
-//                processOnQueue.getFirst().setTimeStarted(timer);
-//            }
             if (processOnQueue.getFirst().getBurstTime() != 0) {
                 processOnQueue.getFirst().decrementBurst();
                 processOnQueue.getFirst().addTimeOnCore(timer);
@@ -125,8 +121,7 @@ public class RoundRobinScheduler implements ProcessInterface {
                 System.out.println("#1 Process: " + processOnQueue.getFirst().getPid() + " is Done");
                 processDone.add(processOnQueue.getFirst());
                 processOnQueue.getFirst().setTimeEnd(timer + 1);
-                processOnQueue.getFirst().addTimeEnded(timer + 1);
-                System.out.println("TT: "+ processOnQueue.getFirst().getTurnAroundTime());
+                processOnQueue.getFirst().addTimeEnded(time+1);
                 processOnQueue.remove(processOnQueue.getFirst());
                 quantumTimer = quantumTime;
             }
@@ -134,7 +129,7 @@ public class RoundRobinScheduler implements ProcessInterface {
         } else {
             System.out.println("Q time stopped");
             readyQueue.addLast(processOnQueue.getFirst());// add it to the tail of the ready Queue
-            processOnQueue.getFirst().addTimeEnded(timer);
+            processOnQueue.getFirst().addTimeEnded(timer );
             processDone.add(processOnQueue.getFirst());
             processOnQueue.clear();
             quantumTimer = quantumTime;

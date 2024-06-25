@@ -296,7 +296,7 @@ public class Process {
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.turnAroundTime = this.timeEnd - this.arrivalTime;
         }else
-            this.turnAroundTime = timesEnded.getLast() - this.arrivalTime;
+            this.turnAroundTime = this.timesEnded.getLast() - this.arrivalTime;
             System.out.println("Turn around time: "+this.turnAroundTime);
     }
     public void updateTimes() {

@@ -18,6 +18,7 @@ public class GanttChart {
     }
 
     void updateAllValues(){
+        sortByProcessID();
         processes.forEach(Process::updateTimes);
     }
     public void getAllProcessess(ArrayList<Process> processes){
@@ -41,7 +42,7 @@ public class GanttChart {
     }
 
     public int getAverage(){
-        updateAllValues();//ensure that all values are up to date
+        //ensure that all values are up to date
         int totalResponse = processes.stream().mapToInt(Process::getResponseTime).sum();
         System.out.println(totalResponse/processes.size());
         return totalResponse / processes.size();

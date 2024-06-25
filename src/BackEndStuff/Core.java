@@ -188,7 +188,7 @@ public void runProcesses(int time){
         }
 
         public void addLastToRoundRobinScheduler(Process process) {
-            this.roundRobinScheduler1.readyQueue.addFirst(process);
+            this.roundRobinScheduler1.readyQueue.addLast(process);
         }
 
         public void setTimer(int timer) {
