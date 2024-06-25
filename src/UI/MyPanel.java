@@ -23,7 +23,7 @@ import static UI.MyFrame.*;
 import static javax.imageio.ImageIO.read;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-public class MyPanel extends JPanel implements ActionListener{
+public class MyPanel extends JPanel implements ActionListener, Runnable{
 
     final int fps = 60;
     Thread animationThread;
@@ -328,8 +328,8 @@ public class MyPanel extends JPanel implements ActionListener{
         elapsedTime++;
 //        repaint();
         timerLabel.setText("Time: " + elapsedTime + " seconds");
-//        animationThread = new Thread(this);
-//        animationThread.start();
+        animationThread = new Thread(this);
+        animationThread.start();
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -355,6 +355,7 @@ public class MyPanel extends JPanel implements ActionListener{
         JLabel averageWaitingTime = new JLabel("Average Waiting Time: "+ getAverageWait(1) );
         averageWaitingTime.setBounds(1074, 170, 150, 12);
         this.add(averageWaitingTime);
+        //tama naman na lahat diba? except itong mga waiting time di nag didisplay
 
         JLabel averageTurn = new JLabel("Average TurnAround: "+ getAverageTurn(1));
         averageTurn.setBounds(1380, 170, 150, 12);
@@ -579,36 +580,36 @@ public class MyPanel extends JPanel implements ActionListener{
     }
 
     //---------------------------------------------------------------------------------------------------------------------
-//    @Override
-//    public void run() {
-//        double drawInterval = 1000000000 / fps;
-//        double delta = 0;
-//        long lastTime = System.nanoTime();
-//        long currentTime;
-//        long timer = 0;
-//        while (animationThread != null) {
-//            repaint();
-//            currentTime = System.nanoTime();
-//            delta += (currentTime - lastTime)/ drawInterval;
-//            timer += (currentTime - lastTime);
-//            lastTime = currentTime;
-//
-//            if (delta >= 1){
-//                //
-//                update();
-//                repaint();
-//                delta --;
-//                drawCount++;
-//                //increment
-//            }
-//            if (timer >= 1000000000){
-//                drawCount = 0;
-//                timer = 0;
-//                timer ++;
-//            }
-//        }
-//
-//    }
+    @Override
+    public void run() {
+        double drawInterval = 1000000000 / fps;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        long timer = 0;
+        while (animationThread != null) {
+            repaint();
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime)/ drawInterval;
+            timer += (currentTime - lastTime);
+            lastTime = currentTime;
+
+            if (delta >= 1){
+                //
+                update();
+                repaint();
+                delta --;
+                drawCount++;
+                //increment
+            }
+            if (timer >= 1000000000){
+                drawCount = 0;
+                timer = 0;
+                timer ++;
+            }
+        }
+
+    }
 
     public boolean isDoneAnimating = false;
 

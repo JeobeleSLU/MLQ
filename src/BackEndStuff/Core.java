@@ -246,4 +246,8 @@ public void runProcesses(int time){
                 gantt.addProcess(nonPreemptivePriorityScheduling4.getProcessDone());
             }
         }
+
+        public void setQuantum(int firstQuantum) {
+            this.roundRobinScheduler1.setQuantumTime(firstQuantum);
+        }
     }

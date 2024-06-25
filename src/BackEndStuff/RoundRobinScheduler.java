@@ -15,20 +15,15 @@ public class RoundRobinScheduler implements ProcessInterface {
         this.processOnQueue = new ArrayList<>();
         this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
-        this.quantumTime = 6;
+        this.quantumTime = 3; //default quantum time if user didnt put in
         this.processDone = new ArrayList<>();
-
-        /*
-    Todo: Refactor this code so that you can call the run method to execute the
-        process and minus the remaining burst time based on this algorithm
-        */
 
     }
 
     public RoundRobinScheduler() {
         this.readyQueue = new ArrayList<Process>();
         this.processOnQueue = new ArrayList<Process>();
-        this.quantumTime = 6;
+        this.quantumTime = 3;//default quantum time if user didnt put in
         this.quantumTimer = this .quantumTime;
         this.processDone = new ArrayList<>();
     }

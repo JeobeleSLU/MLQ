@@ -238,6 +238,12 @@ public class SchedulingAlgo implements Sorter {
             g2D.drawString(pid, textX, textY);
         }
     }
+
+    public void setTimeQuantum(int firstQuantum) {
+        for (Core arrayListOfCore : arrayListOfCores) {
+            arrayListOfCore.setQuantum(firstQuantum);
+        }
+    }
 }
 
 
