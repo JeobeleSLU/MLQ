@@ -15,7 +15,7 @@ public class RoundRobinScheduler implements ProcessInterface {
         this.processOnQueue = new ArrayList<>();
         this.processOnQueue.addAll(processes);
         ganttChart = new GanttChart();
-        this.quantumTime = 3;
+        this.quantumTime = 6;
         this.processDone = new ArrayList<>();
 
         /*
@@ -28,7 +28,7 @@ public class RoundRobinScheduler implements ProcessInterface {
     public RoundRobinScheduler() {
         this.readyQueue = new ArrayList<Process>();
         this.processOnQueue = new ArrayList<Process>();
-        this.quantumTime = 3;
+        this.quantumTime = 6;
         this.quantumTimer = this .quantumTime;
         this.processDone = new ArrayList<>();
     }

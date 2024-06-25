@@ -236,5 +236,14 @@ public void runProcesses(int time){
             if (!shortestRemainingTimeFrist2.processDoneIsEmpty()){
                 gantt.addProcess(shortestRemainingTimeFrist2.getProcessDone());
             }
+            if (!shortestJobFirst3.processDoneIsEmpty()){
+                gantt.addProcess(shortestJobFirst3.getProcessDone());
+            }
+            if (!roundRobinScheduler1.processDoneIsEmpty()){
+                gantt.addProcess(roundRobinScheduler1.getProcessDone());
+            }
+            if (!nonPreemptivePriorityScheduling4.processDoneIsEmpty()){
+                gantt.addProcess(nonPreemptivePriorityScheduling4.getProcessDone());
+            }
         }
     }

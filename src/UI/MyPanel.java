@@ -23,7 +23,7 @@ import static UI.MyFrame.*;
 import static javax.imageio.ImageIO.read;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-public class MyPanel extends JPanel implements ActionListener,Runnable {
+public class MyPanel extends JPanel implements ActionListener{
 
     final int fps = 60;
     Thread animationThread;
@@ -45,13 +45,19 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     DefaultTableModel ganttModel;
 
     public static final int BALL_SIZE = 25;
+    public static final int velocityX = 20;
+    public static final int velocityY = 20;
     JLabel timerLabel;
     int elapsedTime = 0; // time in seconds
 
     int xVelocity = 2;
     int yVelocity = 2;
-    int ballX = 50; // Ball's initial x position
-    int ballY = 50; // Ball's initial y position
+    int ballX = 150; // Ball's initial x position
+    int[] ballY = {123,293,353,613}; // Ball's initial y position
+    int[] ballYOrig = {123,293,353,613}; // Ball's initial y position
+
+
+
     String procId;
     private final int coreX = 730;
     private final int[] coresY = {123, 293, 453, 613};
@@ -71,6 +77,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     Thread updater;
 
 
+
     Process process;
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -81,7 +88,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         keyH = new KeyHandler(this);
-//        this.addMouseListener(keyH);
+        this.addMouseListener(keyH);
         getResources();
         System.out.println("gant sa panel");
         System.out.println("Size: " + SchedulingAlgo.gantts.size());
@@ -92,7 +99,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
             i++;
         }
         processOnQueue = new ArrayList<>();
-        updater = new Thread();
+//        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
         labelTimer = new Timer(1200, e -> {
@@ -321,8 +328,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         elapsedTime++;
 //        repaint();
         timerLabel.setText("Time: " + elapsedTime + " seconds");
-        animationThread = new Thread(this);
-        animationThread.start();
+//        animationThread = new Thread(this);
+//        animationThread.start();
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -341,6 +348,47 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         this.add(batchLabel);
         JLabel core1Label = new JLabel("Core 1");
         core1Label.setBounds(700, 67, 66, 12);
+
+
+        //FixME! :: not displaying wtf?
+//-----------------------------//
+        JLabel averageWaitingTime = new JLabel("Average Waiting Time: "+ getAverageWait(1) );
+        averageWaitingTime.setBounds(1074, 170, 150, 12);
+        this.add(averageWaitingTime);
+
+        JLabel averageTurn = new JLabel("Average TurnAround: "+ getAverageTurn(1));
+        averageTurn.setBounds(1380, 170, 150, 12);
+        this.add(averageTurn);
+//-----------------------------//
+
+        JLabel averageWaitingTime2 = new JLabel("Average Waiting Time: "+ getAverageWait(2) );
+        averageWaitingTime2.setBounds(1074, 270, 150, 12);
+        this.add(averageWaitingTime2);
+
+        JLabel averageTurn2 = new JLabel("Average TurnAround: "+ getAverageTurn(2));
+        averageTurn2.setBounds(1380, 270, 150, 12);
+        this.add(averageTurn2);
+//-----------------------------//
+        JLabel averageWaitingTime3 = new JLabel("Average Waiting Time: "+ getAverageWait(3) );
+        averageWaitingTime.setBounds(1074, 370, 150, 12);
+        this.add(averageWaitingTime3);
+
+        JLabel averageTurn3 = new JLabel("Average TurnAround: "+ getAverageTurn(3));
+        averageTurn3.setBounds(1380, 370, 150, 12);
+        this.add(averageTurn3);
+//-----------------------------//
+        JLabel averageWaitingTime4 = new JLabel("Average Waiting Time: "+ getAverageWait(4) );
+        averageWaitingTime.setBounds(1074, 470, 150, 12);
+        this.add(averageWaitingTime4);
+
+        JLabel averageTurn4 = new JLabel("Average TurnAround: "+ getAverageTurn(4));
+        averageTurn4.setBounds(1380, 470, 150, 12);
+        this.add(averageTurn4);
+
+
+
+
+
         this.add(core1Label);
         JLabel core2Label = new JLabel("Core 2");
         core2Label.setBounds(700, 230, 66, 12);
@@ -351,6 +399,14 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         JLabel core4Label = new JLabel("Core 4");
         core4Label.setBounds(700, 548, 66, 12);
         this.add(core4Label);
+    }
+
+    private int getAverageTurn(int i) {
+        return SchedulingAlgo.gantts.get(i+3).getAverageTurn();
+    }
+
+    private int getAverageWait(int i) {
+        return SchedulingAlgo.gantts.get(i+3).getAverageWait();
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -381,10 +437,10 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
             GanttChart gantt = SchedulingAlgo.gantts.get(i);
 
             if (gantt.isRunning(elapsedTime)) {
-                System.out.println(i);
+//                System.out.println(i);
                 Process curr = gantt.getProcessOnCore(elapsedTime);
 
-                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid()+ "Affinity: "+ curr.getCoreIDAffinity());
+//                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid()+ "Affinity: "+ curr.getCoreIDAffinity());
                 int coreIndex = i - 4; // Calculate core index based on loop index
                 drawBallOnCore(g2D, curr, curr.getCoreIDAffinity());
             }
@@ -396,6 +452,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         if (curr != null) {
             String id = "P" + curr.getPid();
             g2D.setColor(Color.BLACK); // Set color for core balls
+
+            animateBall(g2D, curr,coreIndex);
 
             // Draw the ball on the specified core
             g2D.fillOval(coreX, coresY[coreIndex], BALL_SIZE, BALL_SIZE);
@@ -413,6 +471,10 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
             // Draw process ID inside the ball
             g2D.drawString(id, textX, textY);
         }
+    }
+
+    private void animateBall(Graphics2D g2D, Process curr, int coreIndex) {
+
     }
 
 
@@ -517,16 +579,15 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     }
 
     //---------------------------------------------------------------------------------------------------------------------
-    @Override
-    public void run() {
-        double drawInterval = 1000000000 / fps;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-        long timer = 0;
-        while (animationThread != null) {
-            repaint();
-
+//    @Override
+//    public void run() {
+//        double drawInterval = 1000000000 / fps;
+//        double delta = 0;
+//        long lastTime = System.nanoTime();
+//        long currentTime;
+//        long timer = 0;
+//        while (animationThread != null) {
+//            repaint();
 //            currentTime = System.nanoTime();
 //            delta += (currentTime - lastTime)/ drawInterval;
 //            timer += (currentTime - lastTime);
@@ -545,9 +606,9 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
 //                timer = 0;
 //                timer ++;
 //            }
-        }
-
-    }
+//        }
+//
+//    }
 
     public boolean isDoneAnimating = false;
 

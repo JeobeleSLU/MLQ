@@ -81,7 +81,6 @@ public class SchedulingAlgo implements Sorter {
     public void run() {
 
         while ( !processToQueueList.isEmpty() || checkCoresWithProcess()){
-            this.timer++;
             System.out.println(checkCoresWithProcess());
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
             assignProcess();
@@ -95,6 +94,8 @@ public class SchedulingAlgo implements Sorter {
             }
 
             System.out.println("\nEnd of Cycle: "+timer);
+            this.timer++;
+
 
         }
         for (Core arrayListOfCore : arrayListOfCores) {
