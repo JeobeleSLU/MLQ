@@ -527,6 +527,7 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
         once found get the coreID coords
          */
     }
+
 }
 
 

@@ -302,7 +302,6 @@ public class MyFrame extends JFrame {
     private void continueProcess() {
         sched = new SchedulingAlgo(processes,4);
         sched.run();
-
         System.out.println("Frame :");
         processes.forEach(e-> {
             System.out.println("Process ID:" + e.getPid());

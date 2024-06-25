@@ -300,6 +300,7 @@ public class Process {
             System.out.println("Turn around time: "+this.turnAroundTime);
     }
     public void updateTimes() {
+        System.out.println("PID: "+ this.pid+"Scheduler: "+ this.schedulerPriority);
         calculateTurnAroundTime();
         calculateWaitingTime();
     }
@@ -310,6 +311,9 @@ public class Process {
             this.waitingTime = this.timeStarted - this.arrivalTime;
         }else
             for (int i = 0; i < timesStarted.size(); i++) {
+                if (this.pid == -1 ){
+                    break;
+                }
                 if (i == 0) {
                     waitingTime += (timesStarted.get(i) - arrivalTime);
                 } else {
@@ -343,7 +347,7 @@ public class Process {
     }
 
     boolean isExecuting(int time) {
-        for (Integer i : timesStarted) {
+        for (Integer i : timeOnCore) {
             if (time == i) {
                 return true; // Return true if a match is found
             }
