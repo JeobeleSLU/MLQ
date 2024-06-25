@@ -53,8 +53,8 @@ public class MyPanel extends JPanel implements ActionListener,Runnable {
     int ballX = 50; // Ball's initial x position
     int ballY = 50; // Ball's initial y position
     String procId;
-    private final int coreX = 735;
-    private final int[] coresY = {128, 298, 458, 618};
+    private final int coreX = 730;
+    private final int[] coresY = {123, 293, 453, 613};
 
     // Keep track of arrived processes
     private final Map<String, Image> ballImages = new HashMap<>();

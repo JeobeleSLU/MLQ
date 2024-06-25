@@ -69,7 +69,7 @@ public class SchedulingAlgo implements Sorter {
             gantts.add(new GanttChart());
         }
 
-        this.timer = -1;
+        this.timer = 0;
         rr = new ArrayList<>();
         srtf = new ArrayList<>();
         npps = new ArrayList<>();

@@ -293,7 +293,7 @@ public class Process {
     }
     public void calculateTurnAroundTime() {
 //        this.turnAroundTime = this.timeEnd - this.timeStarted;
-        if (this.schedulerPriority != 1){
+        if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.turnAroundTime = this.timeEnd - this.arrivalTime;
         }else
             this.turnAroundTime = timesEnded.getLast() - this.arrivalTime;
@@ -315,8 +315,10 @@ public class Process {
                     break;
                 }
                 if (i == 0) {
+                    System.out.println("Iteration: "+ i);
                     waitingTime += (timesStarted.get(i) - arrivalTime);
                 } else {
+                    System.out.println("Iteration: "+ i);
                     waitingTime += (timesStarted.get(i) - timesEnded.get(i - 1));
                 }
             }
