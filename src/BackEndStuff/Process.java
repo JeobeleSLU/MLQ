@@ -328,7 +328,6 @@ public class Process {
         if (this.remainingBurstTime > 0){
             this.remainingBurstTime --;
         }else {
-            updateTimes();
             System.out.println("Is zero");
         }
     }

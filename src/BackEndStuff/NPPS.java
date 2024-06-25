@@ -113,7 +113,6 @@ public class NPPS implements ProcessInterface, Sorter {
             System.out.println("Done, Removing , NPPS ...." + processOnQueue.getFirst().getPid());
             processOnQueue.getFirst().setTimeEnd(timer+1);
             processOnQueue.getFirst().addTimeEnded(timer+1 );
-            processOnQueue.getFirst().updateTimes();
             addToProcessDone(processOnQueue.getFirst()); // pass the process if it is done on the process done list
             processDone.add(processOnQueue.getFirst());
 

@@ -126,7 +126,6 @@ public class RoundRobinScheduler implements ProcessInterface {
                 processDone.add(processOnQueue.getFirst());
                 processOnQueue.getFirst().setTimeEnd(timer + 1);
                 processOnQueue.getFirst().addTimeEnded(timer + 1);
-                processOnQueue.getFirst().updateTimes();
                 System.out.println("TT: "+ processOnQueue.getFirst().getTurnAroundTime());
                 processOnQueue.remove(processOnQueue.getFirst());
                 quantumTimer = quantumTime;
