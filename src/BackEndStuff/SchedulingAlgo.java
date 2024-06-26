@@ -25,7 +25,7 @@ public class SchedulingAlgo implements Sorter {
 
     public MyPanel panel;
 
-    //input the coordinates of eahc process
+    //input the coordinates of each process
     public int rrQueueX = 161;
     public int rrQueueEndX = 387;
     public int rrQueueY = 88;

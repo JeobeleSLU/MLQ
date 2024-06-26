@@ -79,6 +79,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     Thread updater;
 
 
+    GanttChart allGantts = new GanttChart();
 
     Process process;
 
@@ -104,8 +105,10 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(1200, e -> {
+        labelTimer = new Timer(1000, e -> {
             updateTimer();
+            removeTableContents();
+            allGantts.updateStatus(elapsedTime);
             updateGanttChart(elapsedTime);
         });
         timerLabel = new JLabel("Time: 0 seconds");
@@ -253,7 +256,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 
     //----------------------------------------------------------------------------------------------------------------------
     private void initializeTable() {
-        GanttChart allGantts = new GanttChart();
+
         for (int i = 4; i < 8; i++){
             allGantts.addAllUniqueProcess(SchedulingAlgo.gantts.get(i).getUniqueProccess());
             System.out.println("Unique Process:" + allGantts.getUniqueProcessSize());
@@ -277,21 +280,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         // Set the intercell spacing to add space between rows
         computationTable.setIntercellSpacing(new Dimension(0, 10)); // 10 pixels vertical spacing
 
-        for (int i = 0; i < allGantts.getProcessessSize(); i++) {
-            Object[] row = {
-                    allGantts.getProcesses().get(i).getPid(),
-                    allGantts.getProcesses().get(i).getPrioritySchedule(),
-                    allGantts.getProcesses().get(i).getProcessPriority(),
-                    allGantts.getProcesses().get(i).getBurstTime(),
-                    allGantts.getProcesses().get(i).getArrivalTime(),
-                    timeQuantumArray.get(i),
-                    allGantts.getProcesses().get(i).getWaitingTime(),
-                    allGantts.getProcesses().get(i).getTurnAroundTime(),
-                    allGantts.getProcesses().get(i).getCoreIDAffinity(),
-                    allGantts.getProcesses().get(i).getResponseTime(),
-            };
-            model.addRow(row);
-        }
+
         JScrollPane scrollPane = new JScrollPane(computationTable);
         scrollPane.setBounds(955, 68, 570, 200);
         this.add(scrollPane);
@@ -328,6 +317,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     //----------------------------------------------------------------------------------------------------------------------
     public void updateTimer() {
 //        repaint();
+
         elapsedTime++;
 //        repaint();
         timerLabel.setText("Time: " + elapsedTime + " seconds");
@@ -440,8 +430,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             if (gantt.isRunning(elapsedTime)) {
 //                System.out.println(i);
                 Process curr = gantt.getProcessOnCore(elapsedTime);
-                curr.setBurstTime(curr.getBurstTime()- 1);
-
 //                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid()+ "Affinity: "+ curr.getCoreIDAffinity());
                 int coreIndex = i - 4; // Calculate core index based on loop index
                 drawBallOnCore(g2D, curr, curr.getCoreIDAffinity());
@@ -598,6 +586,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             if (delta >= 1){
                 //
                 update();
+
                 repaint();
                 delta --;
                 drawCount++;
@@ -681,6 +670,29 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                 ganttModel.setValueAt("Idle",0,columnIndex);
 
             }
+        }
+    }
+    void removeTableContents(){
+        model.setRowCount(0);
+        populateTable();
+    }
+    void populateTable(){
+        allGantts.sortByProcessID();
+        for (int i = 0; i < allGantts.getProcessessSize(); i++) {
+            Object[] row = {
+                    allGantts.getProcesses().get(i).getPid(),
+                    allGantts.getProcesses().get(i).getPrioritySchedule(),
+                    allGantts.getProcesses().get(i).getProcessPriority(),
+                    allGantts.getProcesses().get(i).getBurstTime(),
+                    allGantts.getProcesses().get(i).getArrivalTime(),
+                    timeQuantumArray.get(i),
+                    allGantts.getProcesses().get(i).getWaitingTime(),
+                    allGantts.getProcesses().get(i).getTurnAroundTime(),
+                    allGantts.getProcesses().get(i).getCoreIDAffinity(),
+                    allGantts.getProcesses().get(i).getResponseTime(),
+                    allGantts.getProcesses().get(i).getStatus(),
+            };
+            model.addRow(row);
         }
     }
 }

@@ -31,7 +31,7 @@ public class Process {
     private int readyQueueY;
     private int coreIDAffinity;
     ArrayList <Integer> timeOnCore;
-
+    private String status;
 
     public Process(int pid, int arrivalTime, int burstTime, int schedulerPriority) {
         this.pid = pid;
@@ -53,6 +53,7 @@ public class Process {
         readyQueueX = 0;
         readyQueueY = 0;
         timeOnCore = new ArrayList<>();
+        this.status = " ";
     }
     public Process() {
         this.pid = 0;
@@ -62,6 +63,8 @@ public class Process {
         timesEnded = new ArrayList<>();
         timeOnCore = new ArrayList<>();
         timesStarted = new ArrayList<>();
+        this.status = " ";
+
 
     }
 
@@ -83,6 +86,7 @@ public class Process {
         readyQueueX = 0;
         readyQueueY = 0;
         timeOnCore = new ArrayList<>();
+        this.status = " ";
     }
 
     public void setPreempted(boolean preempted) {
@@ -292,7 +296,6 @@ public class Process {
         return responseTime;
     }
     public void calculateTurnAroundTime() {
-//        this.turnAroundTime = this.timeEnd - this.timeStarted;
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.turnAroundTime = this.timeEnd - this.arrivalTime;
         }else
@@ -300,10 +303,13 @@ public class Process {
             System.out.println("Turn around time: "+this.turnAroundTime);
     }
     public void updateTimes() {
+        if (this.pid != -1){
+            calculateTurnAroundTime();
+            calculateWaitingTime();
+            calculateResponseTime();
+        }
         System.out.println("PID: "+ this.pid+"Scheduler: "+ this.schedulerPriority);
-        calculateTurnAroundTime();
-        calculateWaitingTime();
-        calculateResponseTime();
+
     }
 
     private void calculateResponseTime() {
@@ -311,23 +317,11 @@ public class Process {
     }
 
     public void calculateWaitingTime() {
-//        this.waitingTime = this.turnAroundTime - this.originalBurst;
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.waitingTime = this.timeStarted - this.arrivalTime;
         }else
             this.waitingTime = this.turnAroundTime-this.burstTime;
-//            for (int i = 0; i < timesStarted.size(); i++) {
-//                if (this.pid == -1 ){
-//                    break;
-//                }
-//                if (i == 0) {
-//                    System.out.println("Iteration: "+ i);
-//                    waitingTime += (timesStarted.get(i) - arrivalTime);
-//                } else {
-//                    System.out.println("Iteration: "+ i);
-//                    waitingTime += (timesStarted.get(i) - timesEnded.get(i - 1));
-//                }
-//            }
+
         System.out.println("Waiting time: "+ this.waitingTime);;
     }
     void decrementBurst(){
@@ -364,6 +358,13 @@ public class Process {
 
     public int getCoreIDAffinity() {
         return coreIDAffinity;
+    }
+    void setStatus(String status){
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
     //add Draw readyQueue here
 }

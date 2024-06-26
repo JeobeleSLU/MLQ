@@ -120,16 +120,12 @@ public void runProcesses(int time){
         System.out.println("SRTF is Executing");
     }
     else {
-        //todo:create an idle timer logic here
         idle.addTimeStarted(timer);
         System.out.println("Core:"+this.coreID+" is idling");
         System.out.println("No process");
     }
 
-        /*
-        Todo: Add Gantt Chart Logic to add process here
-         may be it can use the ganttChart from each algorithm?
-         */
+
     }
         void addProcess (ArrayList<Process> process){
             process.addAll(this.processes);
@@ -152,7 +148,6 @@ public void runProcesses(int time){
         int getNumberOfSJFProcess(){
             return this.shortestJobFirst3.getNumberOfProcesses();
         }
-        //this may be used for multi something
         int getNumberOfCores(){
             return numberOfCores;
         }
