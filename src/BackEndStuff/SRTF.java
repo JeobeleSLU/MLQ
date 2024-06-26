@@ -135,7 +135,6 @@ public class SRTF implements Sorter, ProcessInterface {
         this.timer = time;
         System.out.println("SRTF running");
         // sort all the burst time of the processes in the ready queue
-//        readyQueue = Sorter.sortByBurstTime(readyQueue); // i think this is not needed?
         processOnQueue.addAll(readyQueue); // add all the process inside the POQ
         readyQueue.removeAll(processOnQueue); // remove the process from the ready queue since
         System.out.println("SRTF readqueue remove");
@@ -155,11 +154,8 @@ public class SRTF implements Sorter, ProcessInterface {
         }
 
         //check if the pid is same as the previous
-//        if (this.lastProcess != processOnQueue.getFirst()) {
-//            System.out.println("hii");
-//            setTimePreempted(timer); // add time ended to the last process since it was preempted
-//        }
-        if (processOnQueue.getFirst().getBurstTime() != 0) {//ang gagi ayun nanaman problem
+
+        if (processOnQueue.getFirst().getBurstTime() != 0) {
             processOnQueue.getFirst().decrementBurst();
             processOnQueue.getFirst().addTimeOnCore(timer);
             System.out.println("#2 Decremented Process: " + processOnQueue.getFirst().getPid() + "at time: " + time);
@@ -193,7 +189,7 @@ public class SRTF implements Sorter, ProcessInterface {
                     process.addTimeEnded(timer );
                 }
                 processDone.add(process);
-                break; // break since nahanap na
+                break;
             }else {
                 System.out.println("process not found");
             }

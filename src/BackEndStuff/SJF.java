@@ -24,12 +24,7 @@ public class SJF implements  Sorter, ProcessInterface {
         this.processDone = new ArrayList<>();
         ganttChart = new GanttChart();
     }
-    /*
 
-    Todo: Refactor this code so that you can call the run method to execute the
-    process and minus the remaining burst time based on this algorithm
-
-      */
 
     public int getCurrentTime() {
         return this.timer;
@@ -71,19 +66,6 @@ public class SJF implements  Sorter, ProcessInterface {
     }
 
 
-
-
-
-
-
-            // Add arriving processes to ready queue
-//            int finalTimer = this.timer;
-//            readyQueue.addAll(processToQueue.stream()
-//                    .filter(process -> process.getArrivalTime() == finalTimer)
-//                    .toList());
-
-
-//            processToQueue.removeAll(readyQueue);
             /*
             Get the process with least burst time
             execcute it
@@ -97,7 +79,7 @@ public class SJF implements  Sorter, ProcessInterface {
 
                     processOnQueue.getFirst().addTimeStarted(timer);
                     readyQueue.removeFirst();
-                    processOnQueue.getFirst().setTimeStarted(this.timer); //this is a bug? because it would differ
+                    processOnQueue.getFirst().setTimeStarted(this.timer);
                 }
 
                 if (processOnQueue.getFirst().getRemainingBurstTime() != 0 ){

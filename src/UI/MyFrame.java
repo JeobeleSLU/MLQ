@@ -7,6 +7,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MyFrame extends JFrame {
@@ -39,6 +42,8 @@ public class MyFrame extends JFrame {
      static public ArrayList<Process> processes;
     public int firstQuantum;
     public static SchedulingAlgo sched;
+
+    JButton readFromFile;
     //--------------------------------------------------------------------------------------------------------------
     public MyFrame() {
         setTitle("Process Scheduler");
@@ -122,6 +127,12 @@ public class MyFrame extends JFrame {
         gbc.gridy++;
         userInput.add(continueButton, gbc);
 
+
+        readFromFile = new JButton("ReadFile");
+        readFromFile.setEnabled(true);
+        readFromFile.addActionListener(e-> readFile());
+        userInput.add(readFromFile);
+        gbc.gridy++;
         return userInput;
     }
 
@@ -180,10 +191,10 @@ public class MyFrame extends JFrame {
 
             if (randomPriority == 3) {
                 int randomProcessPriority = (int) (Math.random() * 10) + 1;
-                priorityField.setText(String.valueOf(randomProcessPriority)); ///////
+                priorityField.setText(String.valueOf(randomProcessPriority));
             }
             System.out.println(priorityField.getText());
-//
+
             addToTable();
         }
 
@@ -305,6 +316,56 @@ public class MyFrame extends JFrame {
                 continueButton.setEnabled(true);
             }
 
+        }
+    }
+    private void readFile() {
+        int i = 1;
+        int t1 = 1;
+        try (BufferedReader br = new BufferedReader(new FileReader("src/resources/processess"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] numberStrings = line.split(",");
+                if (numberStrings.length == 3) {
+                    try {
+                        int arrivalTime = Integer.parseInt(numberStrings[0].trim()); // Arrival Time
+                        int burstTime = Integer.parseInt(numberStrings[1].trim()); // Burst Time
+                        int processLevel = Integer.parseInt(numberStrings[2].trim()); // Process Level
+
+                        Process process;
+                        if (processLevel == 3) {
+                            process = new Process(i, arrivalTime, burstTime, processLevel);
+                        } else {
+                            process = new Process(i, arrivalTime, burstTime, processLevel);
+                        }
+
+                        processes.add(process);
+                        processIDArray.add("P" + i);
+                        processPriorityArray.add(String.valueOf(processLevel));
+                        burstTimeArray.add(String.valueOf(burstTime));
+                        arrivalTimeArray.add(String.valueOf(arrivalTime));
+                        timeQuantumArray.add(String.valueOf(t1));
+                        if (processLevel == 3) {
+                            priorityArray.add(String.valueOf(priority));
+                        } else {
+                            priorityArray.add("");
+                        }
+
+                        Object[] rowData = new Object[]{
+                                "P" + i, String.valueOf(processLevel), processLevel == 3 ? String.valueOf(priority) : "", String.valueOf(burstTime), String.valueOf(arrivalTime), ""
+                        };
+                        model.addRow(rowData);
+
+                        i++;
+                    } catch (NumberFormatException e) {
+                        System.err.println("Skipping invalid number: " + line);
+                    }
+                } else {
+                    System.err.println("Skipping invalid line (wrong number of integers): " + line);
+                }
+            }
+            continueButton.setEnabled(true);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -49,7 +49,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     public static final int velocityX = 20;
     public static final int velocityY = 20;
     JLabel timerLabel;
-    int elapsedTime = 0;
+    int elapsedTime = -1;
     DefaultTableModel model ; // time in seconds
 
     int xVelocity = 2;
@@ -105,7 +105,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(1000, e -> {
+        labelTimer = new Timer(500, e -> {
             updateTimer();
             removeTableContents();
             allGantts.updateStatus(elapsedTime);
@@ -268,6 +268,8 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
        model= new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         computationTable.setModel(model);
+        computationTable.setFocusable(false);
+        computationTable.setEnabled(false);
 
         computationTable.setBackground(Color.lightGray);
         computationTable.setGridColor(Color.WHITE);
@@ -346,7 +348,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         JLabel averageWaitingTime = new JLabel("Average Waiting Time:1 "+ getAverageWait(1) );
         averageWaitingTime.setBounds(1074, 270, 150, 12);
         this.add(averageWaitingTime);
-        //tama naman na lahat diba? except itong mga waiting time di nag didisplay
 
         JLabel averageTurn = new JLabel("Average TurnAround:1 "+ getAverageTurn(1));
         averageTurn.setBounds(1380, 270, 150, 12);
@@ -389,6 +390,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         JLabel core4Label = new JLabel("Core 4");
         core4Label.setBounds(700, 548, 66, 12);
         this.add(core4Label);
+        System.out.println();
     }
 
     private int getAverageTurn(int i) {
@@ -421,8 +423,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     }
 
     private void drawBallsOnCores(Graphics2D g2D) {
-        //FIXME: process not drawing on core
-        //todo: create ganttCahrt drawing
+
         for (int i = 4; i <= 7; i++) {
             // Check each core's Gantt chart and draw ball if process is running
             GanttChart gantt = SchedulingAlgo.gantts.get(i);
@@ -632,8 +633,8 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     }
 
     public void updateGanttChart(int currentTime) {
-        for (int core = 0; core < 4; core++) {
-            GanttChart gantt = SchedulingAlgo.gantts.get(core + 4); // Adjust index as needed
+        for (int core = 0; core <4; core++) {
+            GanttChart gantt = SchedulingAlgo.gantts.get(core+4); // Adjust index as needed
             Process currProcess = gantt.getProcessOnCore(currentTime);
 
             if (currProcess != null) {
@@ -641,7 +642,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 
                 // Get the corresponding table model for this core
                 DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
-
                 // Check if the column for this time already exists
                 int columnIndex = ganttModel.findColumn(columnName);
                 if (columnIndex == -1) {
@@ -655,9 +655,9 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
                     System.out.println("Gantt: "+"\n"+ currProcess.getCoreIDAffinity()+ "Process: "+ currProcess.getPid()+"\n Time: "+ elapsedTime );
                 }
-              }else {
+              }
+            else {
                 String columnName = "Time " + elapsedTime;
-                // Get the corresponding table model for this core
                 DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
 
                 // Check if the column for this time already exists

@@ -1,6 +1,5 @@
 package BackEndStuff;
 
-import UI.GanttTable;
 import UI.MyPanel;
 
 import java.awt.*;
@@ -49,9 +48,6 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCores.add(new Core(i));
         }
         this.timer = 0;
-//       for (int i = 0; i < numberOfCores; i++){
-//           gantts.add(new GanttChart());
-//       }
     }
 
     public SchedulingAlgo(ArrayList<Process> processes, int numberOfCores) {
@@ -136,7 +132,7 @@ public class SchedulingAlgo implements Sorter {
     }
 
     private void sortCoreToLeastProcess(int prio) {
-       if (prio == 1){//change since mali ata order ko
+       if (prio == 1){
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
              .collect(Collectors.toList());
@@ -171,7 +167,6 @@ public class SchedulingAlgo implements Sorter {
             System.out.println("Remaining Burst Time: "+ process.getBurstTime());
             arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
             process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
-//            drawRR(Graphics2D g2);
 
         }
         for (Process process : srtf) {
@@ -188,7 +183,6 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCores.get(0).addToSJFScheduler(process);
             process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
 
-//            drawSJF();
         }
         for (Process process : npps) {
             sortCoreToLeastProcess(3);
@@ -196,7 +190,6 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCores.get(0).addToNPPSScheduler(process);
 
             process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
-//            drawNPPS();
         }
         arrived.forEach(e-> this.processToQueueList.remove(e));
     }
