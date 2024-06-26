@@ -229,7 +229,12 @@ public class MyFrame extends JFrame {
         if (inputCount < maxInputs) {
 
             if (inputCount == 0){
-                firstQuantum = Integer.parseInt(timeQuantumField.getText());
+                try{
+                    firstQuantum = Integer.parseInt(timeQuantumField.getText());
+                }catch (NumberFormatException e){
+                    firstQuantum = -1;
+
+                }
             }
 
             this.priority = (String.valueOf(priorityField.getText()));
@@ -282,6 +287,7 @@ public class MyFrame extends JFrame {
 
             setPriority(priority);
             setBurstTime(burstTime);
+            setBurstTime(burstTime);
             setArrivalTime(arrivalTime);
             setTimeQuantum(timeQuantum);
             setProcessPriority(processPriority);
@@ -305,7 +311,9 @@ public class MyFrame extends JFrame {
     //--------------------------------------------------------------------------------------------------------------
     private void continueProcess() {
         sched = new SchedulingAlgo(processes,4);
-        sched.setTimeQuantum(firstQuantum);
+        if (firstQuantum >0){
+            sched.setTimeQuantum(firstQuantum);
+        }
         sched.run();
         System.out.println("Frame :");
         processes.forEach(e-> {

@@ -303,6 +303,11 @@ public class Process {
         System.out.println("PID: "+ this.pid+"Scheduler: "+ this.schedulerPriority);
         calculateTurnAroundTime();
         calculateWaitingTime();
+        calculateResponseTime();
+    }
+
+    private void calculateResponseTime() {
+        this.responseTime = this.timesStarted.getFirst() - this.arrivalTime;
     }
 
     public void calculateWaitingTime() {

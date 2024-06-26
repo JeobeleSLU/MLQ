@@ -38,6 +38,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     Timer ballTimer;
     Timer labelTimer;
     boolean labelsAdded = false;
+    JTable computationTable;
 
     JButton startButton;
     JButton stopButton;
@@ -48,7 +49,8 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     public static final int velocityX = 20;
     public static final int velocityY = 20;
     JLabel timerLabel;
-    int elapsedTime = 0; // time in seconds
+    int elapsedTime = 0;
+    DefaultTableModel model ; // time in seconds
 
     int xVelocity = 2;
     int yVelocity = 2;
@@ -258,9 +260,9 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             allGantts.getUniqueProccess().forEach(e-> System.out.println("UNIQUE PID: "+ e.getPid()));
         }
         allGantts.sortByProcessID();
-        JTable computationTable = new JTable();
+        computationTable = new JTable();
         Object[] columns = {"PID", "Level P", "Priority", "Burst", "Arrival", "Time Quantum", "Waiting","Turn","Affinity",  "Res", "Stat"};
-        DefaultTableModel model = new DefaultTableModel();
+       model= new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         computationTable.setModel(model);
 
@@ -286,6 +288,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     allGantts.getProcesses().get(i).getWaitingTime(),
                     allGantts.getProcesses().get(i).getTurnAroundTime(),
                     allGantts.getProcesses().get(i).getCoreIDAffinity(),
+                    allGantts.getProcesses().get(i).getResponseTime(),
             };
             model.addRow(row);
         }
@@ -417,8 +420,9 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
 
-        g2D.drawImage(bg, 0, 0, null);
 
+        g2D.drawImage(bg, 0, 0, null);
+        computationTable.repaint();
         // Draw the labels
         if (!labelsAdded) {
             addLabels();
@@ -440,6 +444,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             if (gantt.isRunning(elapsedTime)) {
 //                System.out.println(i);
                 Process curr = gantt.getProcessOnCore(elapsedTime);
+                curr.setBurstTime(curr.getBurstTime()- 1);
 
 //                System.out.println("Core: " + (i - 4) + "\nCurrent process: " + curr.getPid()+ "Affinity: "+ curr.getCoreIDAffinity());
                 int coreIndex = i - 4; // Calculate core index based on loop index
@@ -663,6 +668,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                 // Set the process ID (PID) in the appropriate row and column
                 if (currProcess.getPid()!= -1){
                     ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
+                    System.out.println("Gantt: "+"\n"+ currProcess.getCoreIDAffinity()+ "Process: "+ currProcess.getPid()+"\n Time: "+ elapsedTime );
                 }
 
             }else {
