@@ -136,6 +136,14 @@ public class SchedulingAlgo implements Sorter {
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
              .collect(Collectors.toList());
+           for (Core arrayListOfCore : arrayListOfCores) {
+               String coreID = "Core id";
+               String coreProcess = "Process number";
+               System.out.printf("%-20s %-20s",coreID,coreProcess);
+               String id = String.valueOf(arrayListOfCore.coreID);
+               String processess = String.valueOf(arrayListOfCore.getNumberOfRoundRobinProcess());
+               System.out.printf("%-20s %-20s",id,processess);
+           }
        }else if (prio == 2) {
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfSJFProcess))
@@ -160,6 +168,8 @@ public class SchedulingAlgo implements Sorter {
         ArrayList<Process> srtf = Sorter.filterPriority(arrived, 4);
         ArrayList<Process> sjf = Sorter.filterPriority(arrived, 2);
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 3);
+         rr = Sorter.sortByPID(rr);
+
 
         for (Process process : rr) {
             sortCoreToLeastProcess(1);

@@ -105,7 +105,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(500, e -> {
+        labelTimer = new Timer(200, e -> {
             updateTimer();
             removeTableContents();
             allGantts.updateStatus(elapsedTime);
@@ -631,17 +631,14 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         once found get the coreID coords
          */
     }
-
+        int column = 0;
     public void updateGanttChart(int currentTime) {
         for (int core = 0; core <4; core++) {
-            GanttChart gantt = SchedulingAlgo.gantts.get(core+4); // Adjust index as needed
+            GanttChart gantt = SchedulingAlgo.gantts.get(core + 4); // Adjust index as needed
             Process currProcess = gantt.getProcessOnCore(currentTime);
-
-            if (currProcess != null) {
+            if (currProcess ==null){
+                DefaultTableModel ganttModel =(DefaultTableModel) ganttChartTables[core].getModel();
                 String columnName = "Time " + elapsedTime;
-
-                // Get the corresponding table model for this core
-                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
                 // Check if the column for this time already exists
                 int columnIndex = ganttModel.findColumn(columnName);
                 if (columnIndex == -1) {
@@ -649,27 +646,25 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     ganttModel.addColumn(columnName);
                     columnIndex = ganttModel.getColumnCount() - 1;
                 }
-
-                // Set the process ID (PID) in the appropriate row and column
-                if (currProcess.getPid()!= -1){
-                    ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
-                    System.out.println("Gantt: "+"\n"+ currProcess.getCoreIDAffinity()+ "Process: "+ currProcess.getPid()+"\n Time: "+ elapsedTime );
-                }
-              }
-            else {
-                String columnName = "Time " + elapsedTime;
-                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
-
-                // Check if the column for this time already exists
-                int columnIndex = ganttModel.findColumn(columnName);
-                if (columnIndex == -1) {
-                    // Add a new column for the current time
-                    ganttModel.addColumn(columnName);
-                    columnIndex = ganttModel.getColumnCount() - 1;
-                }
-                ganttModel.setValueAt("Idle",0,columnIndex);
-
+                ganttModel.setValueAt("Idle", 0, columnIndex);
+                continue;
             }
+            // Get the corresponding table model for this core
+            DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
+            String columnName = "Time " + elapsedTime;
+            // Check if the column for this time already exists
+            int columnIndex = ganttModel.findColumn(columnName);
+            if (columnIndex == -1) {
+                // Add a new column for the current time
+                ganttModel.addColumn(columnName);
+                columnIndex = ganttModel.getColumnCount() - 1;
+            }
+                // Set the process ID (PID) in the appropriate row and column
+                if (currProcess.getPid() != -1) {
+                    ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
+                    System.out.println("Gantt: " + "\n" + currProcess.getCoreIDAffinity() + "Process: " + currProcess.getPid() + "\n Time: " + elapsedTime);
+                }else
+                    ganttModel.setValueAt("Idle",0,columnIndex);
         }
     }
     void removeTableContents(){
