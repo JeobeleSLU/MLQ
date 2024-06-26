@@ -353,43 +353,39 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         core1Label.setBounds(700, 67, 66, 12);
 
 
-        //FixME! :: not displaying wtf?
-//-----------------------------//
-        JLabel averageWaitingTime = new JLabel("Average Waiting Time: "+ getAverageWait(1) );
-        averageWaitingTime.setBounds(1074, 170, 150, 12);
+        JLabel averageWaitingTime = new JLabel("Average Waiting Time:1 "+ getAverageWait(1) );
+        averageWaitingTime.setBounds(1074, 270, 150, 12);
         this.add(averageWaitingTime);
         //tama naman na lahat diba? except itong mga waiting time di nag didisplay
 
-        JLabel averageTurn = new JLabel("Average TurnAround: "+ getAverageTurn(1));
-        averageTurn.setBounds(1380, 170, 150, 12);
+        JLabel averageTurn = new JLabel("Average TurnAround:1 "+ getAverageTurn(1));
+        averageTurn.setBounds(1380, 270, 150, 12);
         this.add(averageTurn);
 //-----------------------------//
 
-        JLabel averageWaitingTime2 = new JLabel("Average Waiting Time: "+ getAverageWait(2) );
-        averageWaitingTime2.setBounds(1074, 270, 150, 12);
+        JLabel averageWaitingTime2 = new JLabel("Average Waiting Time:2 "+ getAverageWait(2) );
+        averageWaitingTime2.setBounds(1074, 375, 150, 12);
         this.add(averageWaitingTime2);
 
-        JLabel averageTurn2 = new JLabel("Average TurnAround: "+ getAverageTurn(2));
-        averageTurn2.setBounds(1380, 270, 150, 12);
+        JLabel averageTurn2 = new JLabel("Average TurnAround:3 "+ getAverageTurn(2));
+        averageTurn2.setBounds(1380, 375, 150, 12);
         this.add(averageTurn2);
 //-----------------------------//
-        JLabel averageWaitingTime3 = new JLabel("Average Waiting Time: "+ getAverageWait(3) );
-        averageWaitingTime.setBounds(1074, 370, 150, 12);
+        JLabel averageWaitingTime3 = new JLabel("Average Waiting Time:3 "+ getAverageWait(3) );
+        averageWaitingTime3.setBounds(1074, 470, 150, 12);
         this.add(averageWaitingTime3);
 
-        JLabel averageTurn3 = new JLabel("Average TurnAround: "+ getAverageTurn(3));
-        averageTurn3.setBounds(1380, 370, 150, 12);
+        JLabel averageTurn3 = new JLabel("Average TurnAround:3 "+ getAverageTurn(3));
+        averageTurn3.setBounds(1380, 470, 150, 12);
         this.add(averageTurn3);
 //-----------------------------//
-        JLabel averageWaitingTime4 = new JLabel("Average Waiting Time: "+ getAverageWait(4) );
-        averageWaitingTime.setBounds(1074, 470, 150, 12);
+        JLabel averageWaitingTime4 = new JLabel("Average Waiting Time: 4 "+ getAverageWait(4) );
+        averageWaitingTime4.setBounds(1074, 563, 150, 12);
         this.add(averageWaitingTime4);
 
-        JLabel averageTurn4 = new JLabel("Average TurnAround: "+ getAverageTurn(4));
-        averageTurn4.setBounds(1380, 470, 150, 12);
+        JLabel averageTurn4 = new JLabel("Average TurnAround: 4"+ getAverageTurn(4));
+        averageTurn4.setBounds(1380, 563, 150, 12);
         this.add(averageTurn4);
-
-
 
 
 
@@ -670,10 +666,8 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
                     System.out.println("Gantt: "+"\n"+ currProcess.getCoreIDAffinity()+ "Process: "+ currProcess.getPid()+"\n Time: "+ elapsedTime );
                 }
-
-            }else {
+              }else {
                 String columnName = "Time " + elapsedTime;
-
                 // Get the corresponding table model for this core
                 DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
 
