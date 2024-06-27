@@ -102,6 +102,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             i++;
         }
         processOnQueue = new ArrayList<>();
+
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
@@ -631,14 +632,45 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         once found get the coreID coords
          */
     }
+    ArrayList<Process> executing = new ArrayList<>();
         int column = 0;
     public void updateGanttChart(int currentTime) {
-        for (int core = 0; core <4; core++) {
-            GanttChart gantt = SchedulingAlgo.gantts.get(core + 4); // Adjust index as needed
-            Process currProcess = gantt.getProcessOnCore(currentTime);
-            if (currProcess ==null){
-                DefaultTableModel ganttModel =(DefaultTableModel) ganttChartTables[core].getModel();
+        // Get the processes currently being executed at the given time
+        executing = allGantts.getExecutedProcess(elapsedTime);
+
+        for (int core = 0; core < ganttChartTables.length; core++) {
+            boolean isCoreIdle = true; // Assume the core is idle initially
+
+            // Iterate over the executing processes
+            for (Process process1 : executing) {
+                if (process1 != null && process1.getCoreIDAffinity() == core) {
+                    DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
+                    String columnName = "Time " + elapsedTime;
+
+                    int columnIndex = ganttModel.findColumn(columnName);
+                    if (columnIndex == -1) {
+                        // Add a new column for the current time
+                        ganttModel.addColumn(columnName);
+                        columnIndex = ganttModel.getColumnCount() - 1;
+                    }
+
+                    // Set the process ID (PID) in the appropriate row and column
+                    if (process1.getPid() != -1) {
+                        ganttModel.setValueAt("PID " + process1.getPid(), 0, columnIndex);
+                    } else {
+                        ganttModel.setValueAt("Idle", 0, columnIndex);
+                    }
+
+                    isCoreIdle = false; // The core is not idle since a process is assigned
+                    break; // Break out of the inner loop as we've found a process for this core
+                }
+            }
+
+            // If no process was assigned to the core, mark it as idle
+            if (isCoreIdle) {
+                DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
                 String columnName = "Time " + elapsedTime;
+
                 // Check if the column for this time already exists
                 int columnIndex = ganttModel.findColumn(columnName);
                 if (columnIndex == -1) {
@@ -646,27 +678,12 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     ganttModel.addColumn(columnName);
                     columnIndex = ganttModel.getColumnCount() - 1;
                 }
+
                 ganttModel.setValueAt("Idle", 0, columnIndex);
-                continue;
             }
-            // Get the corresponding table model for this core
-            DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[currProcess.getCoreIDAffinity()].getModel();
-            String columnName = "Time " + elapsedTime;
-            // Check if the column for this time already exists
-            int columnIndex = ganttModel.findColumn(columnName);
-            if (columnIndex == -1) {
-                // Add a new column for the current time
-                ganttModel.addColumn(columnName);
-                columnIndex = ganttModel.getColumnCount() - 1;
-            }
-                // Set the process ID (PID) in the appropriate row and column
-                if (currProcess.getPid() != -1) {
-                    ganttModel.setValueAt("PID " + currProcess.getPid(), 0, columnIndex);
-                    System.out.println("Gantt: " + "\n" + currProcess.getCoreIDAffinity() + "Process: " + currProcess.getPid() + "\n Time: " + elapsedTime);
-                }else
-                    ganttModel.setValueAt("Idle",0,columnIndex);
         }
     }
+
     void removeTableContents(){
         model.setRowCount(0);
         populateTable();

@@ -162,13 +162,13 @@ public class SchedulingAlgo implements Sorter {
 
     void assignProcess() {
         ArrayList<Process> arrived = Sorter.getArrivedProcess(processToQueueList, timer);
+        arrived.sort(Comparator.comparingInt(Process::getPid));
 
         ArrayList<Process> rr = Sorter.filterPriority(arrived, 1);
         rr.forEach(e-> System.out.println("Burst time before assigning: "+ e.getBurstTime()));
         ArrayList<Process> srtf = Sorter.filterPriority(arrived, 4);
         ArrayList<Process> sjf = Sorter.filterPriority(arrived, 2);
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 3);
-         rr = Sorter.sortByPID(rr);
 
 
         for (Process process : rr) {
@@ -247,6 +247,7 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCore.setQuantum(firstQuantum);
         }
     }
+
 }
 
 

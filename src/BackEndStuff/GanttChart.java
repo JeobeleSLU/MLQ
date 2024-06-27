@@ -149,4 +149,25 @@ public class GanttChart {
             }
         }
     }
+    public void printProcessandCoreID(){
+        String coreID = "Core ID:";
+        String PID = "PID:";
+        System.out.printf("\n%-20s %-20s",PID,coreID);
+        for (Process process : processes) {
+           String pid  = String.valueOf(process.getPid());
+           String core = String.valueOf(process.getCoreIDAffinity());
+            System.out.printf("\n%-20s %-20s",pid,core);
+
+        }
+    }
+
+    public ArrayList<Process> getExecutedProcess(int elapsedTime) {
+        ArrayList<Process> executing = new ArrayList<>();
+        for (Process process : processes) {
+            if (process.isExecuting(elapsedTime)) {
+                executing.add(process);
+            }
+        }
+        return executing;
+    }
 }
