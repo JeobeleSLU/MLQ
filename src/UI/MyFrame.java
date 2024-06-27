@@ -131,8 +131,8 @@ public class MyFrame extends JFrame {
         readFromFile = new JButton("ReadFile");
         readFromFile.setEnabled(true);
         readFromFile.addActionListener(e-> readFile());
+        readFromFile.setBounds(0,0,15,50);
         userInput.add(readFromFile);
-        gbc.gridy++;
         return userInput;
     }
 

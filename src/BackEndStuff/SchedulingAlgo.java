@@ -75,7 +75,7 @@ public class SchedulingAlgo implements Sorter {
 
     // Main run method for scheduling processes
     public void run() {
-        this.timer = 1;
+        this.timer = 0;
         while ( !processToQueueList.isEmpty() || checkCoresWithProcess()){
             System.out.println(checkCoresWithProcess());
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -172,6 +172,10 @@ public class SchedulingAlgo implements Sorter {
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 3);
 
         rr.sort(Comparator.comparingInt(Process::getPid));
+        npps.sort(Comparator.comparingInt(Process::getProcessPriority));
+//        sjf.sort(Comparator.comparingInt(Process::getBurstTime));
+        srtf.sort(Comparator.comparingInt(Process::getBurstTime));
+
         for (Process process : rr) {
             sortCoreToLeastProcess(1);
             System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
@@ -220,6 +224,7 @@ public class SchedulingAlgo implements Sorter {
             srtf.addAll(arrayListOfCore.getSRTFQueue());
             sjf.addAll(arrayListOfCore.getSJFPRocess());
             npps.addAll(arrayListOfCore.getNPPS());
+
         }
         for (Process process : rr) {
             //draw rr ball

@@ -66,14 +66,14 @@ public class Main {
 //        processes.add(new Process(3,20,3,4,3));
 //        processes.add(new Process(4,15,3,4,3));
 // pre, working na daw ba gantt
-        processes.add(new Process(1,10,9,3,4));
-        processes.add(new Process(2,85,14,3,3));
-        processes.add(new Process(3,0,12,3,2));
-        processes.add(new Process(4,89,10,3,2)); // missing process?
-        processes.add(new Process(5,101,7,3,2));
-        processes.add(new Process(6,15,15,3,1));
-        processes.add(new Process(7,95,3,3,1));
-        processes.add(new Process(8,5,3,3,3));
+        processes.add(new Process(1,10,9,2));
+        processes.add(new Process(2,85,14,2));
+        processes.add(new Process(3,0,12,2));
+        processes.add(new Process(4,89,10,2)); // missing process?
+        processes.add(new Process(5,101,7,2));
+        processes.add(new Process(6,15,15,2));
+        processes.add(new Process(7,95,3,2));
+        processes.add(new Process(8,5,3,2));
 
 //        processes.add(new Process(3,0,12,3,2));
 //        processes.add(new Process(4,89,10,3,2));

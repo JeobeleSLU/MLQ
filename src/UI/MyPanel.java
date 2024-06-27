@@ -49,7 +49,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     public static final int velocityX = 20;
     public static final int velocityY = 20;
     JLabel timerLabel;
-    int elapsedTime = 0;
+    int elapsedTime = -1;
     DefaultTableModel model ; // time in seconds
 
     int xVelocity = 2;
@@ -80,12 +80,8 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 
 
     GanttChart allGantts = new GanttChart();
-
-    Process process;
-
     //----------------------------------------------------------------------------------------------------------------------
     public MyPanel() {
-
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(null);
         this.setBackground(Color.white);
@@ -106,7 +102,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(200, e -> {
+        labelTimer = new Timer(50, e -> {
             updateTimer();
             removeTableContents();
             allGantts.updateStatus(elapsedTime);

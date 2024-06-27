@@ -366,5 +366,7 @@ public class Process {
     public String getStatus() {
         return status;
     }
+
+
     //add Draw readyQueue here
 }
