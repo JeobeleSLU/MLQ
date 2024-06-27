@@ -49,7 +49,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     public static final int velocityX = 20;
     public static final int velocityY = 20;
     JLabel timerLabel;
-    int elapsedTime = -1;
+    int elapsedTime = 0;
     DefaultTableModel model ; // time in seconds
 
     int xVelocity = 2;

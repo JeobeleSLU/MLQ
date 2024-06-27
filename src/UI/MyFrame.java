@@ -330,7 +330,6 @@ public class MyFrame extends JFrame {
                         int arrivalTime = Integer.parseInt(numberStrings[0].trim()); // Arrival Time
                         int burstTime = Integer.parseInt(numberStrings[1].trim()); // Burst Time
                         int processLevel = Integer.parseInt(numberStrings[2].trim()); // Process Level
-
                         Process process;
                         if (processLevel == 3) {
                             process = new Process(i, arrivalTime, burstTime, processLevel);
@@ -359,7 +358,37 @@ public class MyFrame extends JFrame {
                     } catch (NumberFormatException e) {
                         System.err.println("Skipping invalid number: " + line);
                     }
-                } else {
+                } else if (numberStrings.length ==4){
+                    try {
+                        int arrivalTime = Integer.parseInt(numberStrings[0].trim()); // Arrival Time
+                        int burstTime = Integer.parseInt(numberStrings[1].trim()); // Burst Time
+                        int processLevel = Integer.parseInt(numberStrings[2].trim()); // Process Level
+                        int priority = Integer.parseInt(numberStrings[3].trim());
+                        Process process;
+
+                            process = new Process(i, arrivalTime, burstTime, processLevel,priority);
+
+                        processes.add(process);
+                        processIDArray.add("P" + i);
+                        processPriorityArray.add(String.valueOf(processLevel));
+                        burstTimeArray.add(String.valueOf(burstTime));
+                        arrivalTimeArray.add(String.valueOf(arrivalTime));
+                        timeQuantumArray.add(String.valueOf(t1));
+                        if (processLevel == 3) {
+                            priorityArray.add(String.valueOf(priority));
+                        } else {
+                            priorityArray.add("");
+                        }
+
+                        Object[] rowData = new Object[]{
+                                "P" + i, String.valueOf(processLevel), processLevel == 3 ? String.valueOf(priority) : "", String.valueOf(burstTime), String.valueOf(arrivalTime), ""
+                        };
+                        model.addRow(rowData);
+
+                        i++;
+                    } catch (NumberFormatException e) {
+                        System.err.println("Skipping invalid number: " + line);
+                    }
                     System.err.println("Skipping invalid line (wrong number of integers): " + line);
                 }
             }

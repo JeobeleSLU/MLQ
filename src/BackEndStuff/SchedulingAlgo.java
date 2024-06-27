@@ -47,7 +47,7 @@ public class SchedulingAlgo implements Sorter {
         for (int i = 0; i < numberOfCores; i++){
             arrayListOfCores.add(new Core(i));
         }
-        this.timer = 0;
+        this.timer = 1;
     }
 
     public SchedulingAlgo(ArrayList<Process> processes, int numberOfCores) {
@@ -75,7 +75,7 @@ public class SchedulingAlgo implements Sorter {
 
     // Main run method for scheduling processes
     public void run() {
-
+        this.timer = 1;
         while ( !processToQueueList.isEmpty() || checkCoresWithProcess()){
             System.out.println(checkCoresWithProcess());
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -132,6 +132,7 @@ public class SchedulingAlgo implements Sorter {
     }
 
     private void sortCoreToLeastProcess(int prio) {
+
        if (prio == 1){
            arrayListOfCores = (ArrayList<Core>) arrayListOfCores.stream()
                    .sorted(Comparator.comparingInt(Core::getNumberOfRoundRobinProcess))
@@ -170,7 +171,7 @@ public class SchedulingAlgo implements Sorter {
         ArrayList<Process> sjf = Sorter.filterPriority(arrived, 2);
         ArrayList<Process> npps = Sorter.filterPriority(arrived, 3);
 
-
+        rr.sort(Comparator.comparingInt(Process::getPid));
         for (Process process : rr) {
             sortCoreToLeastProcess(1);
             System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
@@ -247,10 +248,7 @@ public class SchedulingAlgo implements Sorter {
             arrayListOfCore.setQuantum(firstQuantum);
         }
     }
-
 }
-
-
         /* everytime this is called it should adjust the ball positions
         that it has occupied to not stack the balls together
          */
