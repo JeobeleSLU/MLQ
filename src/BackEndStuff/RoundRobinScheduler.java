@@ -117,6 +117,8 @@ public class RoundRobinScheduler implements ProcessInterface {
                 processDone.add(processOnQueue.getFirst());
                 processOnQueue.getFirst().setTimeEnd(timer + 1 );
                 processOnQueue.getFirst().addTimeEnded(time +1);
+                processOnQueue.getFirst().addTimeOnCore(time+1);
+
                 processOnQueue.remove(processOnQueue.getFirst());
                 quantumTimer = quantumTime;
             }
@@ -126,6 +128,8 @@ public class RoundRobinScheduler implements ProcessInterface {
             readyQueue.addLast(processOnQueue.getFirst());// add it to the tail of the ready Queue
             processOnQueue.getFirst().addTimeEnded(timer+1);
             processDone.add(processOnQueue.getFirst());
+            processOnQueue.getFirst().addTimeOnCore(timer+1);
+
             processOnQueue.clear();
             quantumTimer = quantumTime;
             run(timer); // call the method again since the run, ran because it checks if the qT is > 0 and will skip process if not done?

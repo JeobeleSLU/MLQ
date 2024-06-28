@@ -52,7 +52,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     public static final int velocityX = 20;
     public static final int velocityY = 20;
     JLabel timerLabel;
-    int elapsedTime = -1;
+    int elapsedTime = 0;
     DefaultTableModel model ; // time in seconds
 
     int xVelocity = 2;
@@ -643,7 +643,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             for (Process process1 : executing) {
                 if (process1 != null && process1.getCoreIDAffinity() == core) {
                     DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
-                    String columnName = "Time " + (elapsedTime +1);
+                    String columnName = "Time " + (elapsedTime);
 
                     int columnIndex = ganttModel.findColumn(columnName);
                     if (columnIndex == -1) {
@@ -714,6 +714,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                         cell.setBackground(Color.red);
                         cell.setForeground(Color.WHITE);
                         cell.setFocusable(true);
+
                     } else if("Waiting".equals(value)) {
                         cell.setBackground(new Color(227, 218, 68));
                         cell.setForeground(Color.WHITE);
