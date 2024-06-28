@@ -4,10 +4,13 @@ package UI;
 import BackEndStuff.GanttChart;
 import BackEndStuff.Process;
 import BackEndStuff.SchedulingAlgo;
+import org.w3c.dom.css.RGBColor;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -102,10 +105,10 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(50, e -> {
+        labelTimer = new Timer(1000, e -> {
             updateTimer();
             removeTableContents();
-            allGantts.updateStatus(elapsedTime);
+
             updateGanttChart(elapsedTime);
         });
         timerLabel = new JLabel("Time: 0 seconds");
@@ -268,7 +271,6 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
         computationTable.setFocusable(false);
         computationTable.setEnabled(false);
 
-        computationTable.setBackground(Color.lightGray);
         computationTable.setGridColor(Color.WHITE);
         computationTable.setForeground(Color.black);
         computationTable.setSelectionBackground(Color.black);
@@ -641,7 +643,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
             for (Process process1 : executing) {
                 if (process1 != null && process1.getCoreIDAffinity() == core) {
                     DefaultTableModel ganttModel = (DefaultTableModel) ganttChartTables[core].getModel();
-                    String columnName = "Time " + elapsedTime;
+                    String columnName = "Time " + (elapsedTime +1);
 
                     int columnIndex = ganttModel.findColumn(columnName);
                     if (columnIndex == -1) {
@@ -686,6 +688,9 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
     }
     void populateTable(){
         allGantts.sortByProcessID();
+        allGantts.updateStatus(elapsedTime);
+        allGantts.getExecutedProcess(elapsedTime).forEach(e-> e.setBurstTime(e.getBurstTime()-1));
+
         for (int i = 0; i < allGantts.getProcessessSize(); i++) {
             Object[] row = {
                     allGantts.getProcesses().get(i).getPid(),
@@ -700,10 +705,37 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
                     allGantts.getProcesses().get(i).getResponseTime(),
                     allGantts.getProcesses().get(i).getStatus(),
             };
+            TableColumn statusColumn = computationTable.getColumnModel().getColumn(10);
+            statusColumn.setCellRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    if ("Terminated".equals(value)) {
+                        cell.setBackground(Color.red);
+                        cell.setForeground(Color.WHITE);
+                        cell.setFocusable(true);
+                    } else if("Waiting".equals(value)) {
+                        cell.setBackground(new Color(227, 218, 68));
+                        cell.setForeground(Color.WHITE);
+
+                    }else if("Executing".equals(value)) {
+                        cell.setBackground(new Color(24, 252, 0));
+                        cell.setForeground(new Color(255, 255, 255));
+                        cell.setEnabled(true);
+
+                    }else
+                    {
+                        cell.setBackground(new Color(101, 101, 101));
+                        cell.setForeground(Color.WHITE);
+                    }
+                    return cell;
+                }
+            });
             model.addRow(row);
+
+        }
         }
     }
-}
 
 
 
