@@ -75,7 +75,7 @@ public class SchedulingAlgo implements Sorter {
 
     // Main run method for scheduling processes
     public void run() {
-        this.timer = 0;
+        this.timer = 1;
         while ( !processToQueueList.isEmpty() || checkCoresWithProcess()){
             System.out.println(checkCoresWithProcess());
             processOnQueueList.addAll(Sorter.getArrivedProcess(processToQueueList, timer));
@@ -178,11 +178,16 @@ public class SchedulingAlgo implements Sorter {
 
         for (Process process : rr) {
             sortCoreToLeastProcess(1);
-            System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
-            System.out.println("Remaining Burst Time: "+ process.getBurstTime());
-            arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
-            process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
-
+            if (arrayListOfCores.get(1).isEmpty() || arrayListOfCores.get(1) == arrayListOfCores.getFirst()){
+                arrayListOfCores.get(1).addLastToRoundRobinScheduler(process);
+                process.setCoreIDAffinity(arrayListOfCores.get(1).getCoreID());
+            }
+            else {
+                System.out.println("Assigning RR: "+ arrayListOfCores.getFirst().getCoreID());
+                System.out.println("Remaining Burst Time: "+ process.getBurstTime());
+                arrayListOfCores.get(0).addLastToRoundRobinScheduler(process);
+                process.setCoreIDAffinity(arrayListOfCores.getFirst().getCoreID());
+            }
         }
         for (Process process : srtf) {
             setProcessToDraw(process);

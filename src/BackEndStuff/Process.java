@@ -297,10 +297,11 @@ public class Process {
     }
     public void calculateTurnAroundTime() {
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
-            this.turnAroundTime = this.timeEnd - this.arrivalTime;
-        }else
-            this.turnAroundTime = this.timesEnded.getLast() - this.arrivalTime;
-            System.out.println("Turn around time: "+this.turnAroundTime);
+            this.turnAroundTime = (this.timeEnd - this.arrivalTime) - 1;
+        }else{
+            this.turnAroundTime = (this.timesEnded.getLast() - this.arrivalTime) - 1;
+
+        }
     }
     public void updateTimes() {
         if (this.pid != -1){
@@ -319,8 +320,13 @@ public class Process {
     public void calculateWaitingTime() {
         if (this.schedulerPriority == 2 || this.schedulerPriority == 3){
             this.waitingTime = this.timeStarted - this.arrivalTime;
-        }else
+        }else{
             this.waitingTime = this.turnAroundTime-this.burstTime;
+        }
+        this.waitingTime  -= 1;
+        if(this.waitingTime < 0 ){
+            this.waitingTime = 0;
+        }
 
         System.out.println("Waiting time: "+ this.waitingTime);;
     }

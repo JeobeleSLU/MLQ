@@ -164,7 +164,6 @@ public class SRTF implements Sorter, ProcessInterface {
         if (processOnQueue.getFirst().getRemainingBurstTime() == 0) {
             processOnQueue.getFirst().setTimeEnd(time+ 1);
             processOnQueue.getFirst().addTimeEnded(time+1);
-            processOnQueue.getFirst().addTimeOnCore(timer+1);
             System.out.println("Adding process on ");
             processDone.add(processOnQueue.getFirst());
             System.out.println("#2 Process Finished: " + processOnQueue.getFirst().getPid());
@@ -188,7 +187,6 @@ public class SRTF implements Sorter, ProcessInterface {
                 System.out.println("Process on Queue SRTF PID: "+ processOnQueue.getFirst());
                 if (process.getRemainingBurstTime() > 0){
                     process.addTimeEnded(timer );
-                    process.addTimeOnCore(timer);
 
                 }
                 processDone.add(process);

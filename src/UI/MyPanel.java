@@ -105,7 +105,7 @@ public class MyPanel extends JPanel implements ActionListener, Runnable{
 //        updater = new Thread();
         //----------------------------------------------------------------------------------------------------------------------
         ballTimer = new Timer(0, this);
-        labelTimer = new Timer(1000, e -> {
+        labelTimer = new Timer(300, e -> {
             updateTimer();
             removeTableContents();
 

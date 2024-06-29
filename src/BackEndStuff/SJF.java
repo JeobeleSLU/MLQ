@@ -98,7 +98,6 @@ public class SJF implements  Sorter, ProcessInterface {
                     System.out.println("process onQueue adding to process done: "+ processOnQueue.getFirst().getPid());
                     processDone.add(processOnQueue.getFirst());
                     processOnQueue.getFirst().setTimeEnd(timer+1);
-                    processOnQueue.getFirst().addTimeOnCore(timer+1);
                     processOnQueue.clear();
                 }
      }
